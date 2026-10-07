@@ -1,22 +1,34 @@
 "use client";
 
-import { ArrowRight, BookOpen, Check, Clock3, FileText, Plus, RotateCcw } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  BookOpenText,
+  Check,
+  ChevronRight,
+  Clock3,
+  FileText,
+  Github,
+  LockKeyhole,
+  Plus,
+  RotateCcw,
+  Sparkles,
+} from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
-import { DemoNotice, ProjectDemoTopbar, buttonStyle } from "./project-demo-shared";
 
 const courses = [
   {
     title: "Applied Machine Learning",
     subject: "AI & data",
     progress: 68,
-    color: "bg-violet-500",
-    tone: "border-violet-300 bg-violet-50 text-violet-900 dark:border-violet-400/30 dark:bg-violet-400/10 dark:text-violet-100",
-    description: "Train your eye for patterns, useful features, and fair model evaluation.",
+    description: "Build intuition for patterns, useful features, and fair model evaluation.",
     chapters: ["A practical map of machine learning", "Preparing a reliable dataset", "Training your first model", "Evaluating beyond accuracy"],
     noteTitle: "A model learns from examples",
     noteIntro: "Machine learning turns examples into a rule that can help with new decisions. The goal is not to memorize the training set; it is to find patterns that hold up in the world outside it.",
     takeaway: "A useful evaluation checks examples the model has not seen during training.",
-    noteDetails: "Keep training data for fitting, validation data for comparing choices, and a held-out test set for one final estimate. Using the test set repeatedly can quietly turn it into part of the training process.",
+    noteDetails: "Keep training data for fitting, validation data for comparing choices, and a held-out test set for one final estimate. Reusing the test set during development can quietly make it part of the training process.",
     cardQuestion: "Why should evaluation include examples a model has never seen?",
     cardAnswer: "To estimate whether the learned pattern generalizes beyond the training examples.",
     quizQuestion: "Which set gives a final estimate after model choices are complete?",
@@ -28,8 +40,6 @@ const courses = [
     title: "Modern Web Systems",
     subject: "Engineering",
     progress: 32,
-    color: "bg-cyan-500",
-    tone: "border-cyan-300 bg-cyan-50 text-cyan-950 dark:border-cyan-400/30 dark:bg-cyan-400/10 dark:text-cyan-100",
     description: "Trace a browser request through the layers that make a web app feel instant.",
     chapters: ["From URL to first render", "Designing resilient APIs", "Caching at the edge", "Keeping interfaces accessible"],
     noteTitle: "A request takes a useful route",
@@ -47,8 +57,6 @@ const courses = [
     title: "Research Methods",
     subject: "Study skills",
     progress: 84,
-    color: "bg-rose-500",
-    tone: "border-rose-300 bg-rose-50 text-rose-950 dark:border-rose-400/30 dark:bg-rose-400/10 dark:text-rose-100",
     description: "Turn a broad curiosity into a clear question and a careful study plan.",
     chapters: ["Shaping a research question", "Choosing a study design", "Sampling and measurement", "Writing a grounded conclusion"],
     noteTitle: "A good question guides the method",
@@ -63,12 +71,63 @@ const courses = [
     questions: [["What makes a question researchable?", "It can be investigated with evidence that is available and appropriate to the claim."], ["Why describe limitations?", "Readers can judge where the findings apply and where further study is needed."]],
   },
 ];
+
 const tabs = ["overview", "notes", "flashcards", "quiz", "q&a"] as const;
 type StudyTab = (typeof tabs)[number];
+
+const tabLabels: Record<StudyTab, string> = {
+  overview: "Course plan",
+  notes: "Lesson notes",
+  flashcards: "Flashcard",
+  quiz: "Quick quiz",
+  "q&a": "Course Q&A",
+};
+
+function PreviewHeader({ embedded }: { embedded: boolean }) {
+  return (
+    <header className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#171217] pb-4">
+      <div className="flex min-w-0 items-center gap-3">
+        {!embedded && (
+          <Link
+            href="/"
+            aria-label="Back to portfolio"
+            className="grid size-9 shrink-0 place-items-center rounded-full border border-[#d9ccd4] bg-white text-[#171217] transition-colors hover:bg-[#fff0f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]"
+          >
+            <ArrowLeft className="size-4" />
+          </Link>
+        )}
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f6a6cc] text-[#171217]">
+          <BookOpenText className="size-5" aria-hidden />
+        </span>
+        <div className="min-w-0">
+          <p className="font-bold tracking-tight">Studyroom</p>
+          <p className="truncate text-xs text-[#655963]">AI Learning Management System · sample workspace</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e7c7d7] bg-[#fff0f6] px-2.5 py-1 text-xs font-medium text-[#5e3048]">
+          <span className="size-1.5 rounded-full bg-[#d63384]" aria-hidden />
+          Preview mode
+        </span>
+        <a
+          href="https://github.com/patelpreet404-alt/ai-learning-management-system"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View AI Learning Management System source on GitHub"
+          className="inline-flex min-h-9 items-center gap-2 rounded-full border border-[#171217] bg-white px-3 text-xs font-semibold transition-colors hover:bg-[#171217] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]"
+        >
+          <Github className="size-4" aria-hidden />
+          <span className="hidden sm:inline">Source</span>
+        </a>
+      </div>
+    </header>
+  );
+}
 
 export function LearningManagementDemo({ embedded = false }: { embedded?: boolean }) {
   const [courseIndex, setCourseIndex] = useState(0);
   const [tab, setTab] = useState<StudyTab>("overview");
+  const [activeChapter, setActiveChapter] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
@@ -77,76 +136,307 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
   function chooseCourse(index: number) {
     setCourseIndex(index);
     setTab("overview");
+    setActiveChapter(0);
     setFlipped(false);
     setSelectedAnswer("");
     setShowFeedback(false);
   }
 
-  return (
-    <main className={embedded ? "w-full text-foreground" : "relative left-1/2 w-[calc(100vw-2rem)] max-w-[1380px] -translate-x-1/2 text-foreground sm:w-[calc(100vw-3rem)]"}>
-      <ProjectDemoTopbar embedded={embedded} title="AI Learning Management System" source="https://github.com/patelpreet404-alt/ai-learning-management-system" />
-      <div className="mb-5 flex flex-wrap items-end justify-between gap-4 px-1">
-        <div className="max-w-2xl">
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Your study desk</h1>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">A guided course space for notes, flashcards, quizzes, and quick review.</p>
-        </div>
-        <DemoNotice><BookOpen className="size-3.5" /> Sample course data · no sign-in</DemoNotice>
-      </div>
+  function chooseTab(item: StudyTab) {
+    setTab(item);
+    setFlipped(false);
+    setSelectedAnswer("");
+    setShowFeedback(false);
+  }
 
-      <div className="grid gap-4 lg:grid-cols-[258px_minmax(0,1fr)]">
-        <aside className="rounded-xl border border-border bg-card p-4 shadow-sm">
-          <div className="mb-3 flex items-center justify-between"><h2 className="text-sm font-semibold">My courses</h2><span className="text-xs text-muted-foreground">3</span></div>
-          <div className="space-y-2">
-            {courses.map((item, index) => (
-              <button key={item.title} type="button" onClick={() => chooseCourse(index)} aria-pressed={courseIndex === index} className={"w-full rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " + (courseIndex === index ? item.tone : "border-border hover:bg-muted/60")}>
-                <span className="mb-2 flex items-center justify-between"><span className={"size-2 rounded-full " + item.color} /><span className="text-[11px] opacity-75">{item.progress}% complete</span></span>
-                <span className="block text-xs font-semibold">{item.title}</span><span className="mt-1 block text-[11px] opacity-75">{item.subject}</span>
-              </button>
-            ))}
+  const content = (
+    <div className="flex flex-col gap-5">
+      <PreviewHeader embedded={embedded} />
+
+      <section className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+        <div>
+          <h1 className="max-w-2xl text-2xl font-bold tracking-tight sm:text-3xl">Make a little progress today.</h1>
+          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-[#655963] sm:text-base">
+            Pick a course, settle into one idea, and give it your attention.
+          </p>
+        </div>
+        <p className="inline-flex w-fit items-center gap-2 text-xs font-medium text-[#655963]">
+          <LockKeyhole className="size-3.5" aria-hidden />
+          Sample content · no account needed
+        </p>
+      </section>
+
+      <div className="grid gap-5 lg:grid-cols-[245px_minmax(0,1fr)]">
+        <aside className="flex flex-col gap-5 border-b-2 border-[#171217] pb-5 lg:border-b-0 lg:border-r-2 lg:pb-0 lg:pr-5" aria-label="Course navigation">
+          <div>
+            <div className="mb-2 flex items-baseline justify-between">
+              <h2 className="text-xs font-bold uppercase tracking-[0.12em]">Your courses</h2>
+              <span className="text-xs text-[#655963]">{courses.length} samples</span>
+            </div>
+            <div className="space-y-1">
+              {courses.map((item, index) => (
+                <button
+                  key={item.title}
+                  type="button"
+                  onClick={() => chooseCourse(index)}
+                  aria-pressed={courseIndex === index}
+                  className={"group w-full rounded-xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (courseIndex === index ? "border-[#171217] bg-[#ffe3ef]" : "border-transparent hover:bg-[#fff0f6]")}
+                >
+                  <span className="flex items-start justify-between gap-2">
+                    <span className="text-sm font-semibold leading-snug">{item.title}</span>
+                    <ChevronRight className={"mt-0.5 size-4 shrink-0 transition-transform " + (courseIndex === index ? "translate-x-0.5" : "text-[#8b7985] group-hover:translate-x-0.5")} aria-hidden />
+                  </span>
+                  <span className="mt-1 block text-xs text-[#655963]">{item.subject}</span>
+                  <span className="mt-2 flex items-center gap-2">
+                    <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white">
+                      <span className="block h-full rounded-full bg-[#d63384]" style={{ width: item.progress + "%" }} />
+                    </span>
+                    <span className="text-[11px] tabular-nums text-[#655963]">{item.progress}%</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              disabled
+              title="Course creation is not connected in this sample."
+              className="mt-3 inline-flex min-h-10 w-full items-center justify-start gap-2 rounded-xl border border-dashed border-[#cbb9c4] px-3 text-xs font-medium text-[#766a72] disabled:cursor-not-allowed disabled:opacity-75"
+            >
+              <Plus className="size-3.5" aria-hidden />
+              Create a course
+              <span className="ml-auto text-[10px]">Preview only</span>
+            </button>
           </div>
-          <button type="button" disabled className={buttonStyle + " mt-3 w-full justify-start text-xs"}><Plus className="size-3.5" /> Create course <span className="ml-auto text-[10px] text-muted-foreground">Preview only</span></button>
-          <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 p-3 text-amber-950 dark:border-amber-300/20 dark:bg-amber-300/10 dark:text-amber-100"><div className="flex items-center gap-2 text-xs font-semibold"><Clock3 className="size-3.5" /> Your weekly rhythm</div><p className="mt-1.5 text-xs leading-relaxed opacity-75">A little review each day helps new ideas stick.</p></div>
+
+          <div className="rounded-xl bg-[#171217] p-4 text-white">
+            <p className="flex items-center gap-2 text-xs font-semibold">
+              <Clock3 className="size-3.5 text-[#ffb6d7]" aria-hidden />
+              A steady rhythm
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-white/75">Short, regular reviews make it easier to return to a new idea.</p>
+            <div className="mt-3 flex items-center gap-1.5" aria-label="Example weekly study plan">
+              {["M", "T", "W", "T", "F"].map((day, index) => (
+                <span key={day + index} className={"grid size-7 place-items-center rounded-full text-[10px] font-semibold " + (index < 3 ? "bg-[#ffb6d7] text-[#171217]" : "border border-white/25 text-white/65")}>{day}</span>
+              ))}
+            </div>
+          </div>
         </aside>
 
-        <section className="min-h-[680px] overflow-hidden rounded-xl border border-border bg-card shadow-sm sm:min-h-[740px]">
-          <div className="border-b border-border p-4 sm:p-6">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div><div className="mb-2 flex items-center gap-2 text-xs"><span className={"rounded-full border px-2 py-0.5 font-medium " + course.tone}>{course.subject}</span><span className="text-muted-foreground">Self-paced</span></div><h2 className="text-xl font-semibold tracking-tight sm:text-2xl">{course.title}</h2><p className="mt-1.5 max-w-xl text-sm text-muted-foreground">{course.description}</p></div>
-              <button type="button" className={buttonStyle} onClick={() => setTab("notes")}><BookOpen className="size-4" /> Continue learning</button>
+        <div className="min-w-0 space-y-5">
+          <section className="relative overflow-hidden rounded-2xl border-2 border-[#171217] bg-[#f6a6cc] p-5 sm:p-7">
+            <div className="absolute -right-10 -top-16 size-48 rounded-full border-[24px] border-white/25" aria-hidden />
+            <div className="relative max-w-3xl">
+              <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em]">
+                <Sparkles className="size-3.5" aria-hidden />
+                Pick up where you left off
+              </p>
+              <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
+                <div className="max-w-xl">
+                  <p className="text-xs font-semibold">{course.subject} · self-paced</p>
+                  <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{course.title}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-[#3d2935]">{course.description}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => chooseTab("notes")}
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-[#171217] bg-[#171217] px-4 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#f6a6cc]"
+                >
+                  Continue lesson
+                  <ArrowRight className="size-4" aria-hidden />
+                </button>
+              </div>
+              <div className="mt-5 flex items-center gap-3">
+                <div className="h-2 flex-1 overflow-hidden rounded-full border border-[#171217]/15 bg-white/70" role="progressbar" aria-label={course.title + " progress"} aria-valuemin={0} aria-valuemax={100} aria-valuenow={course.progress}>
+                  <div className="h-full rounded-full bg-[#171217]" style={{ width: course.progress + "%" }} />
+                </div>
+                <span className="text-xs font-bold tabular-nums">{course.progress}% complete</span>
+              </div>
             </div>
-            <div className="mt-5 flex items-center gap-3"><div className="h-2 flex-1 overflow-hidden rounded-full bg-muted"><div className={"h-full rounded-full transition-all " + course.color} style={{ width: course.progress + "%" }} /></div><span className="text-xs font-medium tabular-nums text-muted-foreground">{course.progress}%</span></div>
-          </div>
+          </section>
 
-          <div className="flex gap-1 overflow-x-auto border-b border-border px-3 sm:px-5" role="tablist" aria-label="Study materials">
-            {tabs.map((item) => <button key={item} type="button" role="tab" aria-selected={tab === item} onClick={() => { setTab(item); setFlipped(false); setSelectedAnswer(""); setShowFeedback(false); }} className={"shrink-0 border-b-2 px-3 py-3 text-xs font-medium capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " + (tab === item ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground")}>{item === "q&a" ? "Q&A" : item}</button>)}
-          </div>
+          <section className="overflow-hidden rounded-2xl border-2 border-[#171217] bg-white">
+            <div className="flex gap-1 overflow-x-auto border-b-2 border-[#171217] p-2 sm:px-4" role="tablist" aria-label="Study materials">
+              {tabs.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  role="tab"
+                  aria-selected={tab === item}
+                  onClick={() => chooseTab(item)}
+                  className={"min-h-10 shrink-0 rounded-lg px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (tab === item ? "bg-[#171217] text-white" : "text-[#655963] hover:bg-[#fff0f6] hover:text-[#171217]")}
+                >
+                  {tabLabels[item]}
+                </button>
+              ))}
+            </div>
 
-          <div className="p-4 sm:p-6">
-            {tab === "overview" && <div>
-              <div className="mb-4 flex items-center justify-between"><div><h3 className="text-base font-semibold">Course outline</h3><p className="mt-1 text-xs text-muted-foreground">Pick up where you left off or revisit a chapter.</p></div><span className={"rounded-full px-2.5 py-1 text-xs font-medium " + course.tone}>{course.chapters.length} chapters</span></div>
-              <div className="divide-y divide-border rounded-xl border border-border">{course.chapters.map((chapter, index) => <button key={chapter} type="button" onClick={() => setTab("notes")} className="flex w-full items-center gap-3 p-4 text-left transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"><span className={"grid size-8 shrink-0 place-items-center rounded-full text-xs font-semibold " + (index < Math.max(1, Math.round(course.progress / 25)) ? course.tone : "bg-muted text-muted-foreground")}>{index < Math.max(1, Math.round(course.progress / 25)) ? <Check className="size-4" /> : String(index + 1).padStart(2, "0")}</span><span className="min-w-0 flex-1"><span className="block text-sm font-medium">{chapter}</span><span className="mt-1 block text-xs text-muted-foreground">{index < Math.max(1, Math.round(course.progress / 25)) ? "Reviewed · Notes, cards, quiz" : "Notes, flashcards, quiz"}</span></span><ArrowRight className="size-4 shrink-0 text-muted-foreground" /></button>)}</div>
-            </div>}
+            <div className="p-4 sm:p-6">
+              {tab === "overview" && (
+                <div>
+                  <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                      <h3 className="text-lg font-bold">Course plan</h3>
+                      <p className="mt-1 text-sm text-[#655963]">Choose a lesson to open the sample notes.</p>
+                    </div>
+                    <span className="rounded-full bg-[#fff0f6] px-3 py-1 text-xs font-semibold text-[#5e3048]">{course.chapters.length} lessons</span>
+                  </div>
+                  <div className="divide-y divide-[#eadfe5] border-y border-[#eadfe5]">
+                    {course.chapters.map((chapter, index) => {
+                      const reviewed = index < Math.max(1, Math.round(course.progress / 25));
+                      return (
+                        <button
+                          key={chapter}
+                          type="button"
+                          onClick={() => {
+                            setActiveChapter(index);
+                            chooseTab("notes");
+                          }}
+                          className="flex w-full items-center gap-3 py-4 text-left transition-colors hover:bg-[#fff8fc] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#d63384]"
+                        >
+                          <span className={"grid size-9 shrink-0 place-items-center rounded-full border border-[#d9ccd4] text-xs font-bold " + (reviewed ? "bg-[#ffe3ef]" : "bg-white text-[#655963]")}>
+                            {reviewed ? <Check className="size-4" aria-label="Reviewed" /> : String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block text-sm font-semibold">{chapter}</span>
+                            <span className="mt-1 block text-xs text-[#655963]">Sample lesson notes available</span>
+                          </span>
+                          <ArrowRight className="size-4 shrink-0 text-[#655963]" aria-hidden />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
-            {tab === "notes" && <article className="prose prose-sm max-w-3xl dark:prose-invert"><div className="not-prose mb-5 flex items-center gap-3"><span className={"grid size-10 place-items-center rounded-xl " + course.tone}><BookOpen className="size-5" /></span><div><p className="text-xs font-medium text-muted-foreground">STUDY NOTES · CHAPTER 01</p><h3 className="mt-1 text-lg font-semibold text-foreground">{course.noteTitle}</h3></div></div><p>{course.noteIntro}</p><div className={"not-prose my-5 rounded-xl border p-4 " + course.tone}><p className="text-xs font-semibold">Remember this</p><p className="mt-1 text-sm leading-relaxed opacity-80">{course.takeaway}</p></div><h4>Put it into practice</h4><p>{course.noteDetails}</p></article>}
+              {tab === "notes" && (
+                <article className="max-w-3xl">
+                  <div className="mb-5 flex items-start gap-3">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#ffe3ef]">
+                      <FileText className="size-5" aria-hidden />
+                    </span>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-[#7a596b]">Sample lesson · {String(activeChapter + 1).padStart(2, "0")}</p>
+                      <h3 className="mt-1 text-lg font-bold">{activeChapter === 0 ? course.noteTitle : course.chapters[activeChapter]}</h3>
+                    </div>
+                  </div>
+                  <p className="text-sm leading-7 text-[#493d45]">{course.noteIntro}</p>
+                  <div className="my-5 rounded-xl border-2 border-[#171217] bg-[#fff0f6] p-4">
+                    <p className="text-xs font-bold uppercase tracking-wide">Keep in mind</p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-[#493d45]">{course.takeaway}</p>
+                  </div>
+                  <h4 className="font-bold">Put it into practice</h4>
+                  <p className="mt-2 text-sm leading-7 text-[#493d45]">{course.noteDetails}</p>
+                </article>
+              )}
 
-            {tab === "flashcards" && <div className="mx-auto max-w-xl">
-              <div className="mb-4 flex items-center justify-between"><div><h3 className="text-base font-semibold">Quick review</h3><p className="mt-1 text-xs text-muted-foreground">Card 1 of 12 · select to flip</p></div><button type="button" className={buttonStyle} onClick={() => setFlipped(!flipped)}><RotateCcw className="size-3.5" /> Flip card</button></div>
-              <button type="button" aria-pressed={flipped} onClick={() => setFlipped(!flipped)} className={"flex min-h-64 w-full flex-col items-center justify-center rounded-2xl border p-8 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " + course.tone}><span className="text-[11px] font-semibold uppercase tracking-wider opacity-70">{flipped ? "Answer" : "Question"}</span><span className="mt-4 max-w-md text-lg font-medium leading-relaxed">{flipped ? course.cardAnswer : course.cardQuestion}</span><span className="mt-6 text-xs opacity-70">Select the card to reveal</span></button>
-            </div>}
+              {tab === "flashcards" && (
+                <div className="mx-auto max-w-xl">
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h3 className="text-lg font-bold">One idea to remember</h3>
+                      <p className="mt-1 text-sm text-[#655963]">Flip the card to reveal the answer.</p>
+                    </div>
+                    <button type="button" onClick={() => setFlipped(!flipped)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#171217] px-3.5 text-xs font-semibold transition-colors hover:bg-[#fff0f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]">
+                      <RotateCcw className="size-3.5" aria-hidden />
+                      Flip card
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    aria-pressed={flipped}
+                    onClick={() => setFlipped(!flipped)}
+                    className="flex min-h-64 w-full flex-col items-center justify-center rounded-2xl border-2 border-[#171217] bg-[#ffe3ef] p-8 text-center transition-colors hover:bg-[#ffd4e7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]"
+                  >
+                    <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#6c3f56]">{flipped ? "Answer" : "Question"}</span>
+                    <span className="mt-4 max-w-md text-xl font-semibold leading-relaxed">{flipped ? course.cardAnswer : course.cardQuestion}</span>
+                    <span className="mt-6 text-xs text-[#655963]">Select the card to {flipped ? "see the question" : "reveal the answer"}</span>
+                  </button>
+                </div>
+              )}
 
-            {tab === "quiz" && <div className="mx-auto max-w-2xl">
-              <div className="mb-5 flex items-center justify-between"><div><h3 className="text-base font-semibold">Check your understanding</h3><p className="mt-1 text-xs text-muted-foreground">Question 1 of 8</p></div><span className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">Untimed practice</span></div>
-              <p className="text-sm font-medium leading-relaxed">{course.quizQuestion}</p>
-              <div className="mt-4 space-y-2">{course.options.map((option, index) => <button key={option} type="button" onClick={() => { setSelectedAnswer(option); setShowFeedback(true); }} className={"flex w-full items-center gap-3 rounded-lg border p-3 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " + (selectedAnswer === option ? course.tone : "border-border hover:bg-muted/50")}><span className="grid size-6 shrink-0 place-items-center rounded-full border border-current/20 text-xs">{String.fromCharCode(65 + index)}</span>{option}</button>)}</div>
-              {showFeedback && <p role="status" className={"mt-4 rounded-lg p-3 text-sm " + (selectedAnswer === course.correct ? "bg-emerald-500/10 text-emerald-800 dark:text-emerald-200" : "bg-amber-500/10 text-amber-800 dark:text-amber-200")}>{selectedAnswer === course.correct ? "That's right. Nice work connecting the idea to the method." : "Take another look at the key idea, then try once more."}</p>}
-            </div>}
+              {tab === "quiz" && (
+                <div className="mx-auto max-w-2xl">
+                  <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h3 className="text-lg font-bold">Quick check</h3>
+                      <p className="mt-1 text-sm text-[#655963]">One sample question · untimed</p>
+                    </div>
+                    <span className="rounded-full bg-[#fff0f6] px-3 py-1 text-xs font-semibold text-[#5e3048]">Practice</span>
+                  </div>
+                  <p className="text-sm font-semibold leading-relaxed">{course.quizQuestion}</p>
+                  <div className="mt-4 space-y-2">
+                    {course.options.map((option, index) => {
+                      const isSelected = selectedAnswer === option;
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          aria-pressed={isSelected}
+                          onClick={() => {
+                            setSelectedAnswer(option);
+                            setShowFeedback(true);
+                          }}
+                          className={"flex w-full items-center gap-3 rounded-xl border p-3 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (isSelected ? "border-[#171217] bg-[#ffe3ef]" : "border-[#eadfe5] hover:bg-[#fff8fc]")}
+                        >
+                          <span className="grid size-7 shrink-0 place-items-center rounded-full border border-[#d9ccd4] text-xs font-semibold">{String.fromCharCode(65 + index)}</span>
+                          <span className="flex-1">{option}</span>
+                          {isSelected && selectedAnswer === course.correct && <Check className="size-4" aria-hidden />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {showFeedback && (
+                    <p role="status" className={"mt-4 rounded-xl border p-3 text-sm font-medium " + (selectedAnswer === course.correct ? "border-[#a9c9ac] bg-[#f1faf1] text-[#23532c]" : "border-[#e7c7d7] bg-[#fff0f6] text-[#5e3048]")}>
+                      {selectedAnswer === course.correct ? "That’s right. Nice work connecting the idea to the method." : "Not quite. Revisit the key idea, then try another answer."}
+                    </p>
+                  )}
+                </div>
+              )}
 
-            {tab === "q&a" && <div className="mx-auto max-w-2xl"><h3 className="text-base font-semibold">Questions and answers</h3><p className="mt-1 text-xs text-muted-foreground">A few helpful prompts from this course.</p><div className="mt-4 space-y-3">{course.questions.map(([question, answer], index) => <details key={question} open={index === 0} className="rounded-lg border border-border p-4"><summary className="cursor-pointer text-sm font-medium">{question}</summary><p className="mt-3 text-sm leading-relaxed text-muted-foreground">{answer}</p></details>)}</div></div>}
+              {tab === "q&a" && (
+                <div className="mx-auto max-w-2xl">
+                  <div className="flex items-center gap-3">
+                    <span className="grid size-9 place-items-center rounded-full bg-[#ffe3ef]"><BookOpen className="size-4" aria-hidden /></span>
+                    <div>
+                      <h3 className="font-bold">Questions from this course</h3>
+                      <p className="mt-0.5 text-xs text-[#655963]">Prepared sample answers</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 divide-y divide-[#eadfe5] border-y border-[#eadfe5]">
+                    {course.questions.map(([question, answer], index) => (
+                      <details key={question} open={index === 0} className="py-4">
+                        <summary className="cursor-pointer list-none text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]">
+                          <span className="flex items-center justify-between gap-3">{question}<ChevronRight className="size-4 shrink-0 transition-transform open:rotate-90" aria-hidden /></span>
+                        </summary>
+                        <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#655963]">{answer}</p>
+                      </details>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-            <p className="mt-8 border-t border-border pt-4 text-center text-[11px] text-muted-foreground"><FileText className="mr-1 inline size-3" /> Front-end preview with sample content. Course generation, sign-in, and saved progress are not connected.</p>
-          </div>
-        </section>
+              <p className="mt-7 flex items-start gap-2 border-t border-[#eadfe5] pt-4 text-xs leading-relaxed text-[#655963]">
+                <BookOpen className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+                Sample content only. Course generation, sign-in, and saved progress are not connected in this preview.
+              </p>
+            </div>
+          </section>
+        </div>
       </div>
+    </div>
+  );
+
+  if (embedded) {
+    return (
+      <section aria-label="AI Learning Management sample preview" className="rounded-xl bg-[#fff8fc] p-3 text-[#171217] sm:p-5">
+        {content}
+      </section>
+    );
+  }
+
+  return (
+    <main className="relative left-1/2 min-h-dvh w-[calc(100vw-2rem)] max-w-[1320px] -translate-x-1/2 bg-[#fff8fc] px-4 py-5 text-[#171217] sm:w-[calc(100vw-3rem)] sm:px-6 sm:py-8">
+      <div className="mx-auto w-full max-w-[1320px]">{content}</div>
     </main>
   );
 }

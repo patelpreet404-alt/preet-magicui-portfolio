@@ -49,39 +49,59 @@ export default function Page() {
           </BlurFade>
           <BlurFade delay={BLUR_FADE_DELAY * 4}>
             <div className="prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
-              <Markdown>
-                {DATA.summary}
-              </Markdown>
+              <Markdown>{DATA.summary}</Markdown>
             </div>
           </BlurFade>
         </div>
       </section>
+      <section id="focus">
+        <div className="flex min-h-0 flex-col gap-y-5">
+          <div>
+            <h2 className="text-xl font-bold">What I build</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+              I like projects that connect solid engineering with a clear use for the person on the other side.
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3 md:divide-x md:divide-border">
+            {DATA.focusAreas.map((area, index) => (
+              <BlurFade key={area.title} delay={BLUR_FADE_DELAY * (5 + index * 0.5)}>
+                <article className="h-full border-t border-border pt-4 md:border-t-0 md:px-5 md:pt-0 first:md:pl-0 last:md:pr-0">
+                  <h3 className="font-semibold">{area.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{area.detail}</p>
+                  <p className="mt-3 text-xs font-medium text-foreground/75">{area.proof}</p>
+                </article>
+              </BlurFade>
+            ))}
+          </div>
+        </div>
+      </section>
       <section id="work">
         <div className="flex min-h-0 flex-col gap-y-6">
-          <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <h2 className="text-xl font-bold">Work Experience</h2>
+          <BlurFade delay={BLUR_FADE_DELAY * 7}>
+            <h2 className="text-xl font-bold">Experience</h2>
           </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 6}>
+          <BlurFade delay={BLUR_FADE_DELAY * 8}>
             <WorkSection />
           </BlurFade>
         </div>
       </section>
       <section id="education">
         <div className="flex min-h-0 flex-col gap-y-6">
-          <BlurFade delay={BLUR_FADE_DELAY * 7}>
+          <div>
             <h2 className="text-xl font-bold">Education</h2>
-          </BlurFade>
+            <p className="mt-2 text-sm text-muted-foreground">Computer Science and Engineering, Delhi Technological University · 2023–2027</p>
+          </div>
           <div className="flex flex-col gap-8">
             {DATA.education.map((education, index) => (
               <BlurFade
                 key={education.school}
-                delay={BLUR_FADE_DELAY * 8 + index * 0.05}
+                delay={BLUR_FADE_DELAY * 9 + index * 0.05}
               >
                 <Link
                   href={education.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-x-3 justify-between group"
+                  className="flex items-center gap-x-3 justify-between group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <div className="flex items-center gap-x-3 flex-1 min-w-0">
                     {education.logoUrl ? (
@@ -95,7 +115,7 @@ export default function Page() {
                         {education.school.split(" ").map((word) => word[0]).slice(0, 3).join("")}
                       </div>
                     )}
-                    <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                    <div className="flex-1 min-w-0 flex flex-col gap-1">
                       <div className="font-semibold leading-none flex items-center gap-2">
                         {education.school}
                         <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" aria-hidden />
@@ -106,29 +126,33 @@ export default function Page() {
                     </div>
                   </div>
                   <div className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground text-right flex-none">
-                    <span>
-                      {education.start} - {education.end}
-                    </span>
+                    <span>{education.start} - {education.end}</span>
                   </div>
                 </Link>
               </BlurFade>
             ))}
           </div>
+          <p className="border-t border-border pt-4 text-sm leading-relaxed text-muted-foreground">
+            Academic interests: {DATA.educationFocus.join(" · ")}.
+          </p>
         </div>
       </section>
       <section id="skills">
-        <div className="flex min-h-0 flex-col gap-y-4">
-          <BlurFade delay={BLUR_FADE_DELAY * 9}>
-            <h2 className="text-xl font-bold">Skills</h2>
-          </BlurFade>
-          <div className="flex flex-wrap gap-2">
-            {DATA.skills.map((skill, id) => (
-              <BlurFade key={skill.name} delay={BLUR_FADE_DELAY * 10 + id * 0.05}>
-                <div className="border bg-background border-border ring-2 ring-border/20 rounded-xl h-8 w-fit px-4 flex items-center gap-2">
-                  {skill.icon && <skill.icon className="size-4 rounded overflow-hidden object-contain" />}
-                  <span className="text-foreground text-sm font-medium">{skill.name}</span>
+        <div className="flex min-h-0 flex-col gap-y-5">
+          <div>
+            <h2 className="text-xl font-bold">Technical toolkit</h2>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">The languages, frameworks, and tools I’ve used across these projects.</p>
+          </div>
+          <div className="divide-y divide-border border-y border-border">
+            {DATA.skillGroups.map((group) => (
+              <div key={group.title} className="grid gap-3 py-4 sm:grid-cols-[190px_minmax(0,1fr)] sm:gap-6">
+                <h3 className="text-sm font-semibold">{group.title}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {group.skills.map((skill) => (
+                    <span key={skill} className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">{skill}</span>
+                  ))}
                 </div>
-              </BlurFade>
+              </div>
             ))}
           </div>
         </div>
@@ -139,9 +163,55 @@ export default function Page() {
       <BlurFade delay={BLUR_FADE_DELAY * 12}>
         <ProjectPreviewsSection />
       </BlurFade>
+      <section id="research-learning">
+        <div className="flex min-h-0 flex-col gap-y-5">
+          <div>
+            <h2 className="text-xl font-bold">Research & learning</h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">Topics I’m exploring alongside coursework and project work.</p>
+          </div>
+          <div className="grid gap-8 border-y border-border py-5 md:grid-cols-[1.4fr_1fr] md:gap-12">
+            <article>
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Ongoing research</p>
+              <h3 className="mt-2 font-semibold">{DATA.research.title}</h3>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">{DATA.research.detail}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {DATA.research.tools.map((tool) => <span key={tool} className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">{tool}</span>)}
+              </div>
+            </article>
+            <article>
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Certifications</p>
+              <ul className="mt-2 divide-y divide-border">
+                {DATA.certifications.map((item) => (
+                  <li key={item.provider} className="py-3 first:pt-0 last:pb-0">
+                    <p className="font-semibold">{item.provider}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{item.focus}</p>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
       <BlurFade delay={BLUR_FADE_DELAY * 13}>
         <HackathonsSection />
       </BlurFade>
+      <section id="other-portfolio" aria-labelledby="other-portfolio-heading">
+        <div className="grid gap-5 rounded-2xl border border-border bg-muted/40 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:p-6">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Another side of my work</p>
+            <h2 id="other-portfolio-heading" className="mt-2 text-lg font-semibold tracking-tight">Try this to know more about me</h2>
+            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Explore my terminal-style portfolio and the projects, skills, and experience behind it.</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link href="https://preet-patel-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+              Try the portfolio <ArrowUpRight className="size-4" aria-hidden />
+            </Link>
+            <Link href="https://github.com/patelpreet404-alt/preet-patel-portfolio" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+              GitHub source <ArrowUpRight className="size-4" aria-hidden />
+            </Link>
+          </div>
+        </div>
+      </section>
       <section id="contact">
         <BlurFade delay={BLUR_FADE_DELAY * 16}>
           <ContactSection />

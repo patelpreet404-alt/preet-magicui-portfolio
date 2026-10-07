@@ -1,13 +1,5 @@
 import { Icons } from "@/components/icons";
 import { FileTextIcon, HomeIcon } from "lucide-react";
-import { ReactLight } from "@/components/ui/svgs/reactLight";
-import { NextjsIconDark } from "@/components/ui/svgs/nextjsIconDark";
-import { Typescript } from "@/components/ui/svgs/typescript";
-import { Nodejs } from "@/components/ui/svgs/nodejs";
-import { Python } from "@/components/ui/svgs/python";
-import { Postgresql } from "@/components/ui/svgs/postgresql";
-import { Docker } from "@/components/ui/svgs/docker";
-import { Java } from "@/components/ui/svgs/java";
 
 export const DATA = {
   name: "Preet Patel",
@@ -16,25 +8,55 @@ export const DATA = {
   location: "Delhi, India",
   locationLink: "https://www.google.com/maps/place/Delhi",
   description:
-    "Computer Science student building backend systems, AI tools, and developer-focused software.",
+    "Computer Science and Engineering student at DTU building practical AI tools, backend systems, and developer-focused software.",
   summary:
-    "I'm a Computer Science and Engineering student at Delhi Technological University. I enjoy turning complex ideas into useful software, from an [AI learning platform](https://github.com/patelpreet404-alt/ai-learning-management-system) and a [research paper Q&A tool](https://github.com/patelpreet404-alt/researchpaper-ai) to an [optimizing compiler](https://github.com/patelpreet404-alt/OptiLang). Most recently, I built an attendance and analytics platform during my software development internship at Rang Technologies.",
+    "I'm studying Computer Science and Engineering at Delhi Technological University in Delhi. I like working across the stack: designing APIs and data flows, then shaping them into tools people can use. My recent work spans an AI learning platform, a research paper Q&A tool with citations, and a C++17 compiler. During my software development internship at Rang Technologies, I built an attendance and analytics platform for 50+ employees.",
   avatarUrl: "/preet-patel-avatar.jpg",
-  skills: [
-    { name: "Python", icon: Python },
-    { name: "TypeScript", icon: Typescript },
-    { name: "Java", icon: Java },
-    { name: "C++", icon: null },
-    { name: "React", icon: ReactLight },
-    { name: "Next.js", icon: NextjsIconDark },
-    { name: "Node.js", icon: Nodejs },
-    { name: "FastAPI", icon: null },
-    { name: "Flask", icon: null },
-    { name: "PostgreSQL", icon: Postgresql },
-    { name: "Supabase", icon: null },
-    { name: "RAG / LangChain", icon: null },
-    { name: "Docker", icon: Docker },
+  focusAreas: [
+    {
+      title: "Backend systems",
+      detail: "Flask, FastAPI, and Supabase services for attendance, analytics, and data workflows.",
+      proof: "Rang Technologies internship",
+    },
+    {
+      title: "Applied AI",
+      detail: "Retrieval-grounded research tools and structured learning experiences with RAG, LangChain, Gemini, and FAISS.",
+      proof: "ResearchPaper AI and AI Learning Management System",
+    },
+    {
+      title: "Compilers and systems",
+      detail: "C++17 language tooling from lexical analysis and parsing through optimization and LLVM IR.",
+      proof: "OptiLang",
+    },
   ],
+  skillGroups: [
+    {
+      title: "Languages",
+      skills: ["Python", "C", "C++17", "Java", "JavaScript", "TypeScript", "SQL"],
+    },
+    {
+      title: "Backend and data",
+      skills: ["FastAPI", "Flask", "Node.js", "Express.js", "REST APIs", "PostgreSQL", "Supabase", "MySQL", "MongoDB", "SQLite"],
+    },
+    {
+      title: "AI and machine learning",
+      skills: ["RAG", "LangChain", "Gemini", "OpenAI API", "FAISS", "Scikit-learn", "TensorFlow", "Pandas", "NumPy"],
+    },
+    {
+      title: "Web and engineering tools",
+      skills: ["React", "Next.js", "HTML", "CSS", "Docker", "Git", "Pytest", "Drizzle ORM", "Inngest", "Flex", "Bison", "LLVM IR"],
+    },
+  ],
+  educationFocus: ["Low-level systems", "Compiler design", "AI/ML infrastructure", "Database architecture"],
+  certifications: [
+    { provider: "IBM SkillsBuild", focus: "RAG and Generative AI" },
+    { provider: "Kaggle", focus: "Machine Learning and Python" },
+  ],
+  research: {
+    title: "Early identification of crypto-ransomware",
+    detail: "Ongoing research combining behavioral features from Cuckoo Sandbox with Random Forest classification and SHA-256 signature matching.",
+    tools: ["Cuckoo Sandbox", "Python", "Random Forest", "SHA-256", "MySQL"],
+  },
   navbar: [{ href: "/", icon: HomeIcon, label: "Home" }],
   contact: {
     email: "patelpreet404@gmail.com",
