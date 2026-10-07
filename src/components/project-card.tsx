@@ -63,6 +63,7 @@ export function ProjectCard({
   className,
   variant = 0,
 }: Props) {
+  const hrefIsExternal = Boolean(href?.startsWith("http"));
   const cover = video ? (
     <video
       src={video}
@@ -103,8 +104,8 @@ export function ProjectCard({
         {href ? (
           <Link
             href={href}
-            target="_blank"
-            rel="noopener noreferrer"
+            target={hrefIsExternal ? "_blank" : undefined}
+            rel={hrefIsExternal ? "noopener noreferrer" : undefined}
             aria-label={`Open ${title}`}
             className="block"
           >
@@ -115,23 +116,26 @@ export function ProjectCard({
         )}
         {links && links.length > 0 && (
           <div className="absolute top-2 right-2 flex flex-wrap gap-2">
-            {links.map((link, idx) => (
-              <Link
-                href={link.href}
-                key={idx}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Badge
-                  className="flex items-center gap-1.5 text-xs bg-black text-white hover:bg-black/90"
-                  variant="default"
+            {links.map((link, idx) => {
+              const linkIsExternal = link.href.startsWith("http");
+              return (
+                <Link
+                  href={link.href}
+                  key={idx}
+                  target={linkIsExternal ? "_blank" : undefined}
+                  rel={linkIsExternal ? "noopener noreferrer" : undefined}
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  {link.icon}
-                  {link.type}
-                </Badge>
-              </Link>
-            ))}
+                  <Badge
+                    className="flex items-center gap-1.5 text-xs bg-black text-white hover:bg-black/90"
+                    variant="default"
+                  >
+                    {link.icon}
+                    {link.type}
+                  </Badge>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
@@ -144,8 +148,8 @@ export function ProjectCard({
           {href && (
             <Link
               href={href}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={hrefIsExternal ? "_blank" : undefined}
+              rel={hrefIsExternal ? "noopener noreferrer" : undefined}
               className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-sm"
               aria-label={`Open ${title}`}
             >

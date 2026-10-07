@@ -42,6 +42,33 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+body:has(#project-previews:hover) [data-floating-nav],
+body:has(#project-previews:focus-within) [data-floating-nav] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.optilang-theme {
+  color-scheme: dark;
+  --background: oklch(0.105 0.025 145);
+  --foreground: oklch(0.94 0.035 145);
+  --card: oklch(0.145 0.03 145);
+  --card-foreground: oklch(0.94 0.035 145);
+  --popover: oklch(0.145 0.03 145);
+  --popover-foreground: oklch(0.94 0.035 145);
+  --primary: oklch(0.82 0.23 140);
+  --primary-foreground: oklch(0.11 0.025 145);
+  --secondary: oklch(0.19 0.045 145);
+  --secondary-foreground: oklch(0.94 0.035 145);
+  --muted: oklch(0.18 0.035 145);
+  --muted-foreground: oklch(0.72 0.055 145);
+  --accent: oklch(0.22 0.055 145);
+  --accent-foreground: oklch(0.94 0.035 145);
+  --border: oklch(0.38 0.06 145 / 45%);
+  --input: oklch(0.38 0.06 145 / 45%);
+  --ring: oklch(0.82 0.23 140);
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

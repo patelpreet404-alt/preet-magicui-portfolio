@@ -19,7 +19,7 @@ export const DATA = {
     "Computer Science student building backend systems, AI tools, and developer-focused software.",
   summary:
     "I'm a Computer Science and Engineering student at Delhi Technological University. I enjoy turning complex ideas into useful software, from an [AI learning platform](https://github.com/patelpreet404-alt/ai-learning-management-system) and a [research paper Q&A tool](https://github.com/patelpreet404-alt/researchpaper-ai) to an [optimizing compiler](https://github.com/patelpreet404-alt/OptiLang). Most recently, I built an attendance and analytics platform during my software development internship at Rang Technologies.",
-  avatarUrl: "",
+  avatarUrl: "/preet-patel-avatar.jpg",
   skills: [
     { name: "Python", icon: Python },
     { name: "TypeScript", icon: Typescript },
@@ -98,27 +98,32 @@ export const DATA = {
   projects: [
     {
       title: "AI Learning Management System",
-      href: "https://github.com/patelpreet404-alt/ai-learning-management-system",
-      dates: "Featured project",
+      href: "https://preet-magicui-portfolio.vercel.app/projects/ai-learning-management",
+      dates: "Interactive preview",
       description:
-        "An AI course builder that creates structured outlines, notes, flashcards, quizzes, and Q&A. Background jobs generate content while learners track progress in the app.",
+        "A guided course space for notes, flashcards, quizzes, and Q&A, with a browser-only sample course to explore.",
       technologies: ["Next.js", "Gemini", "Clerk", "Drizzle ORM", "PostgreSQL", "Inngest"],
       links: [
+        {
+          type: "Demo",
+          href: "https://preet-magicui-portfolio.vercel.app/projects/ai-learning-management",
+          icon: <Icons.globe className="size-3" />,
+        },
         {
           type: "Source",
           href: "https://github.com/patelpreet404-alt/ai-learning-management-system",
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "",
+      image: "/projects/ai-learning-management.png",
       video: "",
     },
     {
       title: "ResearchPaper AI",
       href: "https://researchpaper-ai-demo.vercel.app",
-      dates: "Interactive sample live",
+      dates: "Interactive preview",
       description:
-        "A research paper Q&A platform with semantic retrieval, streaming answers, conversation memory, and page-level citations. [Try the browser-local sample](https://researchpaper-ai-demo.vercel.app) with a bundled PDF and prepared answers.",
+        "A PDF research workspace with a sample document, prepared answers, and page-level citations. Uploads and live AI are unavailable in this preview.",
       technologies: ["Python", "FastAPI", "LangChain", "FAISS", "OpenAI API", "SQLite"],
       links: [
         {
@@ -137,19 +142,24 @@ export const DATA = {
     },
     {
       title: "OptiLang",
-      href: "https://github.com/patelpreet404-alt/OptiLang",
-      dates: "Featured project",
+      href: "https://preet-magicui-portfolio.vercel.app/projects/optilang",
+      dates: "Interactive preview",
       description:
-        "A C++17 compiler with an eight-stage pipeline, five optimization passes, LLVM IR output, and a CLI test suite. Its optimizer cut instruction count by 35% in benchmark programs.",
+        "A C++17 compiler preview that walks through lexical analysis, semantic checks, and optimization with a before-and-after code sample.",
       technologies: ["C++17", "Flex", "Bison", "LLVM IR", "Compiler design"],
       links: [
+        {
+          type: "Demo",
+          href: "https://preet-magicui-portfolio.vercel.app/projects/optilang",
+          icon: <Icons.globe className="size-3" />,
+        },
         {
           type: "Source",
           href: "https://github.com/patelpreet404-alt/OptiLang",
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "",
+      image: "/projects/optilang.png",
       video: "",
     },
     {
