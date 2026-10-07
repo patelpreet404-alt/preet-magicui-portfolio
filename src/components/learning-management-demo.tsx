@@ -16,7 +16,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const courses = [
   {
@@ -80,6 +80,7 @@ const courses = [
 
 const tabs = ["overview", "notes", "flashcards", "quiz", "q&a"] as const;
 type StudyTab = (typeof tabs)[number];
+const tourTabs: StudyTab[] = ["overview", "notes", "flashcards", "quiz"];
 
 const tabLabels: Record<StudyTab, string> = {
   overview: "Course plan",
@@ -137,9 +138,31 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
   const [flipped, setFlipped] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
+  const [tourPlaying, setTourPlaying] = useState(false);
+  const [tourIndex, setTourIndex] = useState(0);
   const course = courses[courseIndex];
+  useEffect(() => {
+    if (embedded || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setTimeout(() => setTourPlaying(true), 0);
+    return () => window.clearTimeout(timer);
+  }, [embedded]);
+
+  useEffect(() => {
+    if (!tourPlaying || embedded) return;
+    const nextIndex = (tourIndex + 1) % tourTabs.length;
+    const nextTab = tourTabs[nextIndex];
+    const timer = window.setTimeout(() => {
+      setTourIndex(nextIndex);
+      setTab(nextTab);
+      setFlipped(nextTab === "flashcards");
+      setSelectedAnswer(nextTab === "quiz" ? course.correct : "");
+      setShowFeedback(nextTab === "quiz");
+    }, 3600);
+    return () => window.clearTimeout(timer);
+  }, [course.correct, embedded, tourIndex, tourPlaying]);
 
   function chooseCourse(index: number) {
+    setTourPlaying(false);
     setCourseIndex(index);
     setTab("overview");
     setActiveChapter(0);
@@ -149,6 +172,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
   }
 
   function chooseTab(item: StudyTab) {
+    setTourPlaying(false);
     setTab(item);
     setFlipped(false);
     setSelectedAnswer("");
@@ -158,6 +182,18 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
   const content = (
     <div className="studyroom-shell flex flex-col gap-5">
       <PreviewHeader embedded={embedded} />
+
+      {!embedded && (
+        <div className="studyroom-tour flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#eadfe5] bg-white px-4 py-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="studyroom-tour-pulse grid size-8 shrink-0 place-items-center rounded-full bg-[#fff0f6] text-[#d63384]" aria-hidden><Sparkles className="size-4" /></span>
+            <div className="min-w-0"><p className="text-xs font-bold">A quick look around</p><p className="truncate text-[11px] text-[#766a72]">{tabLabels[tourTabs[tourIndex]]} <span aria-hidden>·</span> course to lesson to practice</p></div>
+          </div>
+          <button type="button" onClick={() => { if (tourPlaying) setTourPlaying(false); else { setTourIndex(0); setTab("overview"); setFlipped(false); setShowFeedback(false); setTourPlaying(true); } }} className="studyroom-tour-button inline-flex min-h-9 items-center gap-2 rounded-full border border-[#e7e0e4] bg-white px-3.5 text-xs font-semibold transition-all hover:border-[#d63384] hover:text-[#a32761] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]" aria-pressed={tourPlaying}>
+            <span className={tourPlaying ? "studyroom-tour-dot is-playing" : "studyroom-tour-dot"} aria-hidden />{tourPlaying ? "Pause tour" : "Play tour"}
+          </button>
+        </div>
+      )}
 
       <section className="studyroom-enter grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
@@ -385,6 +421,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                           type="button"
                           aria-pressed={isSelected}
                           onClick={() => {
+                            setTourPlaying(false);
                             setSelectedAnswer(option);
                             setShowFeedback(true);
                           }}

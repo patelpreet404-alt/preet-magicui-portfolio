@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, ArrowUpRight, BookOpen, FileText, LoaderCircle, MessageSquareText, Plus, Sparkles, Upload } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { DemoNotice, ProjectDemoTopbar, buttonStyle, primaryButtonStyle } from "./project-demo-shared";
 
 const suggestions = [
@@ -21,10 +21,46 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
   ]);
   const [draft, setDraft] = useState("");
   const [loading, setLoading] = useState(false);
+  const [initialPreview, setInitialPreview] = useState(true);
+  const [visibleCharacters, setVisibleCharacters] = useState(suggestions[0].answer.length);
+  const [isTyping, setIsTyping] = useState(false);
+  const [previewRun, setPreviewRun] = useState(0);
+  const typingTimer = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (embedded || !initialPreview) return;
+    const answerLength = suggestions[0].answer.length;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const startTimer = window.setTimeout(() => {
+      setVisibleCharacters(0);
+      setIsTyping(true);
+      let count = 0;
+      typingTimer.current = window.setInterval(() => {
+        count = Math.min(count + 2, answerLength);
+        setVisibleCharacters(count);
+        if (count >= answerLength) {
+          window.clearInterval(typingTimer.current);
+          typingTimer.current = undefined;
+          setIsTyping(false);
+        }
+      }, 24);
+    }, previewRun === 0 ? 700 : 100);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      if (typingTimer.current !== undefined) window.clearInterval(typingTimer.current);
+      typingTimer.current = undefined;
+    };
+  }, [embedded, initialPreview, previewRun]);
 
   function ask(question: string) {
     const clean = question.trim();
     if (!clean || loading) return;
+    setInitialPreview(false);
+    setIsTyping(false);
+    setVisibleCharacters(suggestions[0].answer.length);
+    if (typingTimer.current !== undefined) window.clearInterval(typingTimer.current);
     const normalized = clean.toLowerCase();
     const answer = suggestions.find((item) =>
       item.question.toLowerCase().split(" ").some((word) => word.length > 4 && normalized.includes(word))
@@ -93,9 +129,12 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
                 <p className="truncate text-xs text-muted-foreground">Introduction to Retrieval-Augmented Generation</p>
               </div>
             </div>
-            <button type="button" onClick={() => { setMessages([]); setDraft(""); setLoading(false); }} className={buttonStyle + " research-action min-h-9 px-3 text-xs"}>
-              <Plus className="size-3.5" /> New chat
-            </button>
+            <div className="flex items-center gap-2">
+              {!embedded && <button type="button" onClick={() => { setMessages([{ role: "user", text: suggestions[0].question }, { role: "assistant", text: suggestions[0].answer, citation: suggestions[0] }]); setDraft(""); setLoading(false); setInitialPreview(true); setVisibleCharacters(0); setIsTyping(false); setPreviewRun((run) => run + 1); }} className={buttonStyle + " research-action min-h-9 px-3 text-xs"}><Sparkles className="size-3.5" /> Replay demo</button>}
+              <button type="button" onClick={() => { setMessages([]); setDraft(""); setLoading(false); setInitialPreview(false); setIsTyping(false); if (typingTimer.current !== undefined) window.clearInterval(typingTimer.current); }} className={buttonStyle + " research-action min-h-9 px-3 text-xs"}>
+                <Plus className="size-3.5" /> New chat
+              </button>
+            </div>
           </div>
 
           <div className="border-b border-border bg-muted/20 px-4 py-4 sm:px-6">
@@ -124,8 +163,8 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
                 ) : (
                   <div className="w-full max-w-[780px] space-y-3">
                     <div className="flex items-center gap-2 text-xs font-semibold"><span className="grid size-6 place-items-center rounded-full bg-primary/10 text-primary"><Sparkles className="size-3" /></span> Sample response</div>
-                    <p className="text-sm leading-7 text-foreground/90">{message.text}</p>
-                    {message.citation && (
+                    <p className="text-sm leading-7 text-foreground/90">{initialPreview && index === 1 ? suggestions[0].answer.slice(0, visibleCharacters) : message.text}{initialPreview && index === 1 && isTyping && <span className="research-type-caret" aria-hidden />}</p>
+                    {message.citation && !(initialPreview && isTyping) && (
                       <a href={"/samples/rag-study-guide.pdf#page=" + message.citation.page} target="_blank" rel="noopener noreferrer" className="research-citation group block max-w-xl rounded-lg border border-border bg-background p-3 transition-colors hover:border-primary/40 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                         <div className="mb-2 flex items-center justify-between gap-3">
                           <span className="flex min-w-0 items-center gap-2 text-xs font-medium"><FileText className="size-3.5 shrink-0 text-primary" /><span className="truncate">{message.citation.source}</span></span>

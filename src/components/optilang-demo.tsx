@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, ArrowUpRight, Check, Code2, Layers3, LoaderCircle, Play, Zap } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DemoNotice, ProjectDemoTopbar, primaryButtonStyle } from "./project-demo-shared";
 
 const sourceCode = [
@@ -43,10 +43,27 @@ const stages = [
 ];
 
 export function OptiLangDemo({ embedded = false }: { embedded?: boolean }) {
-  const [stage, setStage] = useState(4);
+  const [stage, setStage] = useState(0);
   const [optimized, setOptimized] = useState(true);
   const [running, setRunning] = useState(false);
   const [ran, setRan] = useState(false);
+  const [tourPlaying, setTourPlaying] = useState(false);
+
+  useEffect(() => {
+    if (embedded || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setTimeout(() => setTourPlaying(true), 0);
+    return () => window.clearTimeout(timer);
+  }, [embedded]);
+
+  useEffect(() => {
+    if (!tourPlaying || embedded) return;
+    const nextStage = (stage + 1) % stages.length;
+    const timer = window.setTimeout(() => {
+      setStage(nextStage);
+      setOptimized(nextStage >= 4);
+    }, 1450);
+    return () => window.clearTimeout(timer);
+  }, [embedded, stage, tourPlaying]);
 
   function runSample() {
     setRunning(true);
@@ -66,7 +83,10 @@ export function OptiLangDemo({ embedded = false }: { embedded?: boolean }) {
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary"><span className="size-1.5 rounded-full bg-primary" /> Compiler preview · built in C++17</div>
             <h1 className="text-3xl font-semibold tracking-tight sm:text-5xl">See the compiler <span className="text-primary">work.</span></h1>
             <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">Trace one program from source to optimized instructions. Every stage has a purpose, and every change has a reason.</p>
-            <button type="button" onClick={runSample} disabled={running} className={primaryButtonStyle + " optilang-run mt-6 min-h-11 rounded-full px-5"}>{running ? <LoaderCircle className="size-4 animate-spin" /> : <Play className="size-4" />}{running ? "Preparing comparison…" : ran ? "Replay the sample" : "Run the sample"}<ArrowRight className="size-4" /></button>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <button type="button" onClick={() => { setTourPlaying(false); runSample(); }} disabled={running} className={primaryButtonStyle + " optilang-run min-h-11 rounded-full px-5"}>{running ? <LoaderCircle className="size-4 animate-spin" /> : <Play className="size-4" />}{running ? "Preparing comparison…" : ran ? "Replay the sample" : "Run the sample"}<ArrowRight className="size-4" /></button>
+              {!embedded && <button type="button" onClick={() => { if (tourPlaying) setTourPlaying(false); else { setStage(0); setOptimized(false); setTourPlaying(true); } }} className="optilang-tour inline-flex min-h-10 items-center gap-2 rounded-full border border-primary/30 bg-white/5 px-4 text-xs font-semibold text-primary transition-all hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary" aria-pressed={tourPlaying}><span className={tourPlaying ? "optilang-tour-dot is-playing" : "optilang-tour-dot"} aria-hidden />{tourPlaying ? "Pause walkthrough" : "Replay walkthrough"}</button>}
+            </div>
           </div>
           <div className="optilang-hero-sample rounded-xl border border-primary/25 bg-[#07130b] p-4 font-mono text-xs shadow-[0_24px_48px_-24px_rgba(0,0,0,.7)]" aria-label="Optimization example">
             <div className="mb-4 flex items-center justify-between border-b border-primary/15 pb-3 font-sans text-[11px] font-medium text-muted-foreground"><span>main.mc → optimized.tac</span><span className="flex items-center gap-1.5 text-primary"><span className="size-1.5 rounded-full bg-primary" /> READY</span></div>
@@ -87,7 +107,7 @@ export function OptiLangDemo({ embedded = false }: { embedded?: boolean }) {
 
         <div className="border-b border-border bg-muted/20 p-4 sm:p-6">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-sm font-semibold">Compilation pipeline</h3><p className="mt-1 text-xs text-muted-foreground">Select a stage to see what it does.</p></div><span className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-muted-foreground">8 stages · 5 optimization passes</span></div>
-          <div className="flex gap-2 overflow-x-auto pb-2" aria-label="Compiler pipeline stages">{stages.map((item, index) => <button key={item.name} type="button" onClick={() => setStage(index)} aria-pressed={stage === index} className={"flex min-w-28 items-center gap-2 rounded-lg border px-3 py-2 text-left text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " + (stage === index ? "border-primary/40 bg-primary/10 text-foreground" : "border-border bg-background text-muted-foreground hover:bg-muted")}><span className="grid size-5 shrink-0 place-items-center rounded-full bg-muted text-[10px] tabular-nums">{index + 1}</span>{item.name}</button>)}</div>
+          <div className="flex gap-2 overflow-x-auto pb-2" aria-label="Compiler pipeline stages">{stages.map((item, index) => <button key={item.name} type="button" onClick={() => { setTourPlaying(false); setStage(index); setOptimized(index >= 4); }} aria-pressed={stage === index} className={"flex min-w-28 items-center gap-2 rounded-lg border px-3 py-2 text-left text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring " + (stage === index ? "optilang-stage-active border-primary/40 bg-primary/10 text-foreground" : "border-border bg-background text-muted-foreground hover:bg-muted")}><span className="grid size-5 shrink-0 place-items-center rounded-full bg-muted text-[10px] tabular-nums">{index + 1}</span>{item.name}</button>)}</div>
           <div className="mt-2 rounded-lg border border-border bg-background px-4 py-3"><div className="flex items-center gap-2 text-xs font-semibold"><Zap className="size-3.5 text-primary" />{stages[stage].name}</div><p className="mt-1 text-xs leading-relaxed text-muted-foreground">{stages[stage].detail}</p></div>
         </div>
 
@@ -97,7 +117,7 @@ export function OptiLangDemo({ embedded = false }: { embedded?: boolean }) {
             <pre className="optilang-code min-h-64 overflow-x-auto rounded-xl border border-border bg-[#07110b] p-4 text-xs leading-6 text-foreground sm:text-sm"><code>{sourceCode}</code></pre>
           </div>
           <div className="p-4 sm:p-6">
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-sm font-semibold">Three-address code</h3><p className="mt-1 text-xs text-muted-foreground">See how optimization reduces repeated work.</p></div><div className="flex rounded-lg border border-border bg-muted/50 p-1" role="group" aria-label="Choose output view"><button type="button" aria-pressed={!optimized} onClick={() => setOptimized(false)} className={"rounded-md px-2.5 py-1.5 text-[11px] font-medium " + (!optimized ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>Before</button><button type="button" aria-pressed={optimized} onClick={() => setOptimized(true)} className={"rounded-md px-2.5 py-1.5 text-[11px] font-medium " + (optimized ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>After</button></div></div>
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-3"><div><h3 className="text-sm font-semibold">Three-address code</h3><p className="mt-1 text-xs text-muted-foreground">See how optimization reduces repeated work.</p></div><div className="flex rounded-lg border border-border bg-muted/50 p-1" role="group" aria-label="Choose output view"><button type="button" aria-pressed={!optimized} onClick={() => { setTourPlaying(false); setOptimized(false); }} className={"rounded-md px-2.5 py-1.5 text-[11px] font-medium " + (!optimized ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>Before</button><button type="button" aria-pressed={optimized} onClick={() => { setTourPlaying(false); setOptimized(true); }} className={"rounded-md px-2.5 py-1.5 text-[11px] font-medium " + (optimized ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground")}>After</button></div></div>
             <pre key={String(optimized)} className="optilang-code optilang-code-enter min-h-64 overflow-x-auto rounded-xl border border-border bg-[#07110b] p-4 text-xs leading-6 text-foreground sm:text-sm"><code>{optimized ? afterCode : beforeCode}</code></pre>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-background px-3 py-2.5"><span className="text-xs text-muted-foreground">{optimized ? "Prepared optimized output" : "Prepared unoptimized output"}</span><span className="inline-flex items-center gap-1.5 text-xs font-semibold tabular-nums">{optimized ? "5" : "7"} instructions{optimized && <span className="text-emerald-700 dark:text-emerald-300"><Check className="ml-1 inline size-3.5" /> fewer</span>}</span></div>
             {ran && <p role="status" className="mt-3 text-xs text-emerald-700 dark:text-emerald-300">Sample comparison complete. This preview displays prepared output; it does not run custom code.</p>}

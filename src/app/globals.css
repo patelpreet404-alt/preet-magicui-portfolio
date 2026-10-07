@@ -285,6 +285,7 @@ body:has(.project-demo-fullscreen) .site-grid {
 }
 
 .studyroom-feature {
+  isolation: isolate;
   background-image: radial-gradient(circle at 96% 9%, #ffedf4 0, transparent 38%);
   box-shadow: 0 16px 40px -30px rgb(51 21 36 / 22%);
 }
@@ -297,6 +298,20 @@ body:has(.project-demo-fullscreen) .site-grid {
   content: "";
 }
 
+.studyroom-feature::after {
+  position: absolute;
+  top: -128px;
+  right: -66px;
+  width: 280px;
+  height: 280px;
+  border: 1px solid rgb(214 51 132 / 12%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 24px rgb(214 51 132 / 3%), 0 0 0 56px rgb(214 51 132 / 2%);
+  content: "";
+  pointer-events: none;
+  animation: studyroom-parallax 9s ease-in-out infinite;
+}
+
 .studyroom-material {
   box-shadow: 0 18px 44px -34px rgb(51 21 36 / 18%);
 }
@@ -305,6 +320,7 @@ body:has(.project-demo-fullscreen) .site-grid {
   background-image: radial-gradient(circle at 50% 0, #fff1f7 0, #fff 60%);
   box-shadow: 0 14px 28px -24px rgb(180 41 112 / 42%);
   transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  animation: studyroom-card-float 4.5s ease-in-out infinite;
 }
 
 .studyroom-flashcard:hover {
@@ -320,6 +336,57 @@ body:has(.project-demo-fullscreen) .site-grid {
 .studyroom-tab-panel,
 .optilang-code-enter {
   animation: project-demo-enter 360ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.studyroom-feature,
+.studyroom-material,
+.optilang-hero,
+.research-hero {
+  animation: project-demo-enter 520ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.studyroom-material { animation-delay: 90ms; }
+.optilang-hero-sample { animation: compiler-float 6s ease-in-out infinite; }
+.optilang-hero-sample:hover { animation-play-state: paused; }
+.research-hero { animation-delay: 70ms; }
+
+.studyroom-tour {
+  animation: project-demo-enter 420ms cubic-bezier(.2,.8,.2,1) both;
+  box-shadow: 0 12px 32px -28px rgb(176 48 111 / 34%);
+}
+
+.studyroom-tour-button {
+  box-shadow: 0 5px 0 -2px #eadfe5, 0 12px 22px -16px rgb(214 51 132 / 40%);
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease, color 180ms ease;
+}
+
+.studyroom-tour-button:hover {
+  transform: translateY(-2px) perspective(500px) rotateX(2deg);
+  box-shadow: 0 7px 0 -2px #eadfe5, 0 16px 25px -16px rgb(214 51 132 / 45%);
+}
+
+.studyroom-tour-pulse {
+  animation: studyroom-orbit 3.4s ease-in-out infinite;
+}
+
+.studyroom-tour-dot,
+.optilang-tour-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #9a8e96;
+}
+
+.studyroom-tour-dot.is-playing {
+  background: #d63384;
+  box-shadow: 0 0 0 4px rgb(214 51 132 / 12%);
+  animation: tour-dot 1.5s ease-in-out infinite;
+}
+
+.optilang-tour-dot.is-playing {
+  background: #80ee5e;
+  box-shadow: 0 0 0 4px rgb(128 238 94 / 12%);
+  animation: tour-dot 1.5s ease-in-out infinite;
 }
 
 .optilang-hero-sample {
@@ -357,6 +424,59 @@ body:has(.project-demo-fullscreen) .site-grid {
   box-shadow: 0 7px 0 -6px #2a7e1e, 0 12px 16px -12px rgb(92 244 61 / 55%);
 }
 
+.optilang-stage-active {
+  animation: stage-focus 1.45s ease-in-out infinite;
+}
+
+.optilang-tour {
+  box-shadow: 0 7px 0 -3px #1b4727, 0 15px 28px -20px rgb(113 250 87 / 48%);
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease;
+}
+
+.optilang-tour:hover {
+  transform: translateY(-2px) perspective(500px) rotateX(2deg);
+  box-shadow: 0 9px 0 -3px #1b4727, 0 19px 30px -18px rgb(113 250 87 / 58%);
+}
+
+.research-type-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: currentColor;
+  animation: caret-blink .8s steps(2, start) infinite;
+}
+
+@keyframes tour-dot {
+  50% { box-shadow: 0 0 0 7px transparent; }
+}
+
+@keyframes studyroom-parallax {
+  50% { transform: translate3d(-12px, 14px, 0) rotate(7deg) scale(1.04); }
+}
+
+@keyframes studyroom-card-float {
+  50% { box-shadow: 0 20px 38px -23px rgb(180 41 112 / 34%); }
+}
+
+@keyframes compiler-float {
+  0%, 100% { transform: perspective(800px) rotateY(-8deg) rotateX(3deg) translateY(0); }
+  50% { transform: perspective(800px) rotateY(-5deg) rotateX(1deg) translateY(-5px); }
+}
+
+@keyframes studyroom-orbit {
+  50% { transform: translateY(-2px) rotate(5deg); }
+}
+
+@keyframes stage-focus {
+  50% { box-shadow: 0 0 22px -9px rgb(113 250 87 / 38%); }
+}
+
+@keyframes caret-blink {
+  to { visibility: hidden; }
+}
+
 .optilang-workspace ::selection {
   background: #a5f181;
   color: #07110b;
@@ -368,10 +488,35 @@ body:has(.project-demo-fullscreen) .site-grid {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .studyroom-tour,
+  .studyroom-tour-button,
+  .studyroom-tour-button:hover,
+  .optilang-tour,
+  .optilang-tour:hover {
+    animation: none;
+    transform: none;
+    transition: none;
+  }
+
+  .studyroom-feature,
+  .studyroom-material,
+  .optilang-hero,
+  .optilang-hero-sample,
+  .research-hero,
+  .studyroom-feature::after,
+  .studyroom-flashcard {
+    animation: none;
+  }
+
   .studyroom-enter,
+  .studyroom-tour-pulse,
   .studyroom-tab-panel,
   .studyroom-card-face,
-  .optilang-code-enter {
+  .optilang-code-enter,
+  .optilang-stage-active,
+  .research-type-caret,
+  .studyroom-tour-dot.is-playing,
+  .optilang-tour-dot.is-playing {
     animation: none;
   }
 
