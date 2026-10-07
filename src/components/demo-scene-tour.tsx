@@ -3,6 +3,17 @@
 import { ChevronDown, ChevronUp, Pause, Play, Video } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+function getSceneTargets() {
+  const desktop = window.matchMedia("(min-width: 1024px)").matches;
+  return Array.from(document.querySelectorAll<HTMLElement>("[data-demo-scene]"))
+    .map((target, index) => {
+      const order = Number(target.dataset[desktop ? "demoOrderDesktop" : "demoOrderMobile"]);
+      return { target, index, order: Number.isFinite(order) ? order : index };
+    })
+    .sort((left, right) => left.order - right.order || left.index - right.index)
+    .map(({ target }) => target);
+}
+
 export function DemoSceneTour() {
   const [scenes, setScenes] = useState<string[]>([]);
   const [activeScene, setActiveScene] = useState(0);
@@ -12,7 +23,7 @@ export function DemoSceneTour() {
   const playingRef = useRef(false);
 
   useEffect(() => {
-    const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-demo-scene]"));
+    const targets = getSceneTargets();
     const labels = targets.map((target, index) => {
       target.dataset.demoSceneIndex = String(index);
       return target.dataset.demoScene || `Scene ${index + 1}`;
@@ -27,10 +38,9 @@ export function DemoSceneTour() {
 
     const updateSceneFromScroll = () => {
       cancelAnimationFrame(frame);
-      cancelAnimationFrame(sceneFrame);
       frame = requestAnimationFrame(() => {
         if (playingRef.current) return;
-        const currentTargets = Array.from(document.querySelectorAll<HTMLElement>("[data-demo-scene]"));
+        const currentTargets = getSceneTargets();
         const marker = 120;
         let nearestIndex = 0;
         let nearestDistance = Number.POSITIVE_INFINITY;
@@ -47,12 +57,23 @@ export function DemoSceneTour() {
       });
     };
 
+    const updateSceneOrderForViewport = () => {
+      const currentTargets = getSceneTargets();
+      const nextLabels = currentTargets.map((target, index) => {
+        target.dataset.demoSceneIndex = String(index);
+        return target.dataset.demoScene || `Scene ${index + 1}`;
+      });
+      setScenes(nextLabels);
+      updateSceneFromScroll();
+    };
+
     const stopTourForManualScroll = (event: Event) => {
       const target = event.target;
       if (target instanceof Element && target.closest("[data-demo-scene-controller]")) return;
       setPlaying(false);
     };
     window.addEventListener("scroll", updateSceneFromScroll, { passive: true });
+    window.addEventListener("resize", updateSceneOrderForViewport, { passive: true });
     window.addEventListener("wheel", stopTourForManualScroll, { passive: true });
     window.addEventListener("touchstart", stopTourForManualScroll, { passive: true });
     window.addEventListener("pointerdown", stopTourForManualScroll, { passive: true });
@@ -60,6 +81,7 @@ export function DemoSceneTour() {
       cancelAnimationFrame(frame);
       motionPreference.removeEventListener("change", updateMotionPreference);
       window.removeEventListener("scroll", updateSceneFromScroll);
+      window.removeEventListener("resize", updateSceneOrderForViewport);
       window.removeEventListener("wheel", stopTourForManualScroll);
       window.removeEventListener("touchstart", stopTourForManualScroll);
       window.removeEventListener("pointerdown", stopTourForManualScroll);
@@ -71,7 +93,7 @@ export function DemoSceneTour() {
   }, [playing]);
 
   const goToScene = useCallback((nextIndex: number) => {
-    const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-demo-scene]"));
+    const targets = getSceneTargets();
     if (!targets.length) return;
     const boundedIndex = Math.max(0, Math.min(nextIndex, targets.length - 1));
     setActiveScene(boundedIndex);

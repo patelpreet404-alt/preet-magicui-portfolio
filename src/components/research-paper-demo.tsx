@@ -96,7 +96,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
 
       <div className="grid gap-4 lg:grid-cols-[258px_minmax(0,1fr)]">
         <aside className="order-2 flex flex-col gap-4 lg:order-1">
-          <section data-demo-scene="Document library" className="rounded-xl border border-border bg-card p-4 shadow-sm">
+          <section data-demo-scene="Document library" data-demo-order-desktop="1" data-demo-order-mobile="4" className="rounded-xl border border-border bg-card p-4 shadow-sm">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-semibold">Your library</h2>
               <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">1 document</span>
@@ -112,7 +112,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
               <span>Uploads are unavailable in this demo</span>
             </button>
           </section>
-          <section data-demo-scene="Sample paper" className="rounded-xl border border-border bg-card p-4 shadow-sm">
+          <section data-demo-scene="Sample paper" data-demo-order-desktop="2" data-demo-order-mobile="5" className="rounded-xl border border-border bg-card p-4 shadow-sm">
             <h2 className="text-sm font-semibold">Sample document</h2>
             <p className="mt-2 text-xs leading-relaxed text-muted-foreground">This workspace keeps its example paper and prepared answers in the browser. It does not accept files or contact an AI service.</p>
             <a href="/samples/rag-study-guide.pdf" target="_blank" rel="noopener noreferrer" className={buttonStyle + " mt-3 w-full text-xs"}>
@@ -121,7 +121,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
           </section>
         </aside>
 
-        <section data-demo-scene="Question and answer" className="order-1 flex min-h-[690px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm sm:min-h-[740px] lg:order-2">
+        <section className="order-1 flex min-h-[690px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm sm:min-h-[740px] lg:order-2">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
               <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary"><MessageSquareText className="size-4" /></div>
@@ -138,7 +138,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
             </div>
           </div>
 
-          <div data-demo-scene="Suggested questions" className="border-b border-border bg-muted/20 px-4 py-4 sm:px-6">
+          <div data-demo-scene="Suggested questions" data-demo-order-desktop="4" data-demo-order-mobile="2" className="border-b border-border bg-muted/20 px-4 py-4 sm:px-6">
             <div className="mb-2 flex items-center justify-between gap-3">
               <h3 className="text-[11px] font-semibold tracking-wide text-muted-foreground">SUGGESTED QUESTIONS</h3>
               <span className="text-[11px] text-muted-foreground">Select one to explore</span>
@@ -150,7 +150,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
             </div>
           </div>
 
-          <div data-demo-scene="Answer and citation" className="flex-1 space-y-5 overflow-y-auto px-4 py-5 sm:px-6" aria-live="polite">
+          <div data-demo-scene="Answer and citation" data-demo-order-desktop="5" data-demo-order-mobile="3" className="flex-1 space-y-5 overflow-y-auto px-4 py-5 sm:px-6" aria-live="polite">
             {messages.length === 0 && !loading ? (
               <div className="flex min-h-[330px] flex-col items-center justify-center text-center">
                 <div className="grid size-12 place-items-center rounded-2xl bg-muted text-muted-foreground"><MessageSquareText className="size-5" /></div>
