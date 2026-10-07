@@ -75,6 +75,7 @@ export function ProjectCard({
   variant = 0,
 }: Props) {
   const previewRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [previewIsVisible, setPreviewIsVisible] = useState(false);
   const hrefIsExternal = Boolean(href?.startsWith("http"));
   const frame = previewFrames[variant % previewFrames.length];
@@ -88,7 +89,17 @@ export function ProjectCard({
     }
 
     let intersects = false;
-    const updateVisibility = () => setPreviewIsVisible(intersects && !document.hidden);
+    const updateVisibility = () => {
+      const shouldPlay = intersects && !document.hidden;
+      setPreviewIsVisible(shouldPlay);
+      const videoElement = videoRef.current;
+      if (!videoElement) return;
+      if (shouldPlay) {
+        void videoElement.play().catch(() => undefined);
+      } else {
+        videoElement.pause();
+      }
+    };
     const observer = new IntersectionObserver(
       ([entry]) => {
         intersects = entry.isIntersecting;
@@ -109,6 +120,7 @@ export function ProjectCard({
 
   const cover = video ? (
     <video
+      ref={videoRef}
       src={video}
       poster={image}
       autoPlay

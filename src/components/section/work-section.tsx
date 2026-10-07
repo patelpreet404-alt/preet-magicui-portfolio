@@ -7,14 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import { DATA } from "@/data/resume";
 import { ChevronDown, MapPin } from "lucide-react";
-
-function LogoMark({ label }: { label: string }) {
-  return (
-    <div className="grid size-10 shrink-0 place-items-center rounded-full border border-border bg-muted text-xs font-semibold text-foreground" aria-hidden="true">
-      {label.split(" ").map((word) => word[0]).slice(0, 2).join("")}
-    </div>
-  );
-}
+import { InstitutionLogo } from "@/components/institution-logo";
 
 export default function WorkSection() {
   return (
@@ -28,7 +21,7 @@ export default function WorkSection() {
           <AccordionTrigger className="group p-4 text-left no-underline hover:no-underline sm:p-5 [&>svg]:hidden">
             <div className="flex w-full items-center justify-between gap-4">
               <div className="flex min-w-0 items-center gap-4">
-                <LogoMark label={work.company} />
+                <InstitutionLogo name={work.company} src={work.logoUrl} />
                 <div className="min-w-0">
                   <span className="font-semibold">{work.company}</span>
                   <p className="mt-1 text-sm text-muted-foreground">{work.title}</p>

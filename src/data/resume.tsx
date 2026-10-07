@@ -92,7 +92,7 @@ export const DATA = {
       company: "Rang Technologies",
       location: "New Jersey (Remote)",
       title: "Software Development Intern",
-      logoUrl: "",
+      logoUrl: "/organizations/rang-logo.jpg",
       start: "Jun 2026",
       end: "Aug 2026",
       description:
@@ -104,7 +104,7 @@ export const DATA = {
       school: "Delhi Technological University",
       href: "https://dtu.ac.in/",
       degree: "B.Tech, Computer Science and Engineering",
-      logoUrl: "",
+      logoUrl: "/organizations/dtu-logo.jpg",
       start: "2023",
       end: "2027",
     },
@@ -112,7 +112,7 @@ export const DATA = {
       school: "International Indian School Al Jubail",
       href: "https://www.iisjubail.org/",
       degree: "Senior Secondary, PCM with Computer Science",
-      logoUrl: "",
+      logoUrl: "/organizations/iis-logo.jpg",
       start: "2021",
       end: "2023",
     },
@@ -137,8 +137,8 @@ export const DATA = {
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "/projects/ai-learning-management.png",
-      video: "",
+      image: "/projects/ai-learning-management-poster.jpg",
+      video: "/projects/ai-learning-management-demo.mp4",
     },
     {
       title: "ResearchPaper AI",
@@ -181,8 +181,8 @@ export const DATA = {
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "/projects/optilang.png",
-      video: "",
+      image: "/projects/optilang-poster.jpg",
+      video: "/projects/optilang-demo.mp4",
     },
     {
       title: "Crypto Ransomware Research",
@@ -203,7 +203,7 @@ export const DATA = {
       location: "India",
       description:
         "Worked with a multidisciplinary team on a software solution for a real-world problem.",
-      image: "",
+      image: "/organizations/sih-logo.jpg",
       links: [],
     },
     {
