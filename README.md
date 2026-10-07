@@ -1,47 +1,32 @@
-<div align="center">
-<img alt="Portfolio" src="https://github.com/dillionverma/portfolio/assets/16860528/57ffca81-3f0a-4425-b31d-094f61725455" width="90%">
-</div>
+# Preet Patel — Portfolio
 
-# Portfolio [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdillionverma%2Fportfolio)
+A personal portfolio built with Next.js 16, React 19, Tailwind CSS, and Magic UI. It is based on the [Magic UI portfolio template](https://github.com/magicuidesign/portfolio) and uses information from Preet's résumé and existing portfolio.
 
-Built with next.js, [shadcn/ui](https://ui.shadcn.com/), and [magic ui](https://magicui.design/), deployed on Vercel.
+## Run locally
 
-# Features
+Requires Node.js 18+ and pnpm.
 
-- Setup only takes a few minutes by editing the [single config file](./src/data/resume.tsx)
-- Built using Next.js 14, React, Typescript, Shadcn/UI, TailwindCSS, Framer Motion, Magic UI
-- Includes a blog
-- Responsive for different devices
-- Optimized for Next.js and Vercel
+```bash
+pnpm install
+pnpm dev
+```
 
-# Getting Started Locally
+Open [http://localhost:3000](http://localhost:3000).
 
-1. Clone this repository to your local machine:
+## Edit content
 
-   ```bash
-   git clone https://github.com/dillionverma/portfolio
-   ```
+- Profile, contact links, experience, education, skills, and projects: `src/data/resume.tsx`
+- Home page sections: `src/app/page.tsx`
+- Blog posts, when ready to publish: `content/*.mdx`
 
-2. Move to the cloned directory
+The original sample blog posts have been removed. The blog stays available at `/blog` and shows an empty state until original posts are added.
 
-   ```bash
-   cd portfolio
-   ```
+The ResearchPaper AI card links to a live sample and shows a screenshot. The other project cards use designed covers until screenshots or demos are available. Add an image path or video URL to a project in `src/data/resume.tsx` when ready.
 
-3. Install dependencies:
+## Deploy
 
-   ```bash
-   pnpm install
-   ```
+This project can be deployed as a Next.js site on Vercel. The default site URL is `https://preet-magicui-portfolio.vercel.app`; set `NEXT_PUBLIC_SITE_URL` if you use a different domain so social sharing metadata points to the right site. Project source links work without any environment variables.
 
-4. Start the local Server:
+## License
 
-   ```bash
-   pnpm dev
-   ```
-
-5. Open the [Config file](./src/data/resume.tsx) and make changes
-
-# License
-
-Licensed under the [MIT license](https://github.com/dillionverma/portfolio/blob/main/LICENSE.md).
+The template is MIT licensed. See [LICENSE](LICENSE) for the original copyright notice.

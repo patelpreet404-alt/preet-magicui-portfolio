@@ -109,7 +109,7 @@ export default async function Blog({
     url: `${DATA.url}/blog/${slug}`,
     author: {
       "@type": "Person",
-      name: DATA.name,
+      name: post.author || DATA.name,
     },
   }).replace(/</g, "\\u003c");
 

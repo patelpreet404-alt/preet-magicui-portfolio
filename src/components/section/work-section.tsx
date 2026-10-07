@@ -16,7 +16,9 @@ function LogoImage({ src, alt }: { src: string; alt: string }) {
 
   if (!src || imageError) {
     return (
-      <div className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border bg-muted flex-none" />
+      <div className="size-8 md:size-10 border rounded-full shadow ring-2 ring-border bg-muted flex-none grid place-items-center text-[10px] font-semibold text-foreground" aria-hidden="true">
+        {alt.split(" ").map((word) => word[0]).slice(0, 2).join("")}
+      </div>
     );
   }
 
@@ -84,4 +86,3 @@ export default function WorkSection() {
     </Accordion>
   );
 }
-

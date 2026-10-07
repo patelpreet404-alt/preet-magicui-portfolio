@@ -35,7 +35,7 @@ export default function Page() {
             <BlurFade delay={BLUR_FADE_DELAY} className="order-1 md:order-2">
               <Avatar className="size-24 md:size-32 border rounded-full shadow-lg ring-4 ring-muted">
                 <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
-                <AvatarFallback>{DATA.initials}</AvatarFallback>
+                <AvatarFallback className="bg-muted text-2xl font-semibold tracking-tight">{DATA.initials}</AvatarFallback>
               </Avatar>
             </BlurFade>
           </div>
@@ -90,7 +90,9 @@ export default function Page() {
                         className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border overflow-hidden object-contain flex-none"
                       />
                     ) : (
-                      <div className="size-8 md:size-10 p-1 border rounded-full shadow ring-2 ring-border bg-muted flex-none" />
+                      <div className="size-8 md:size-10 border rounded-full shadow ring-2 ring-border bg-muted flex-none grid place-items-center text-[10px] font-semibold text-foreground" aria-hidden="true">
+                        {education.school.split(" ").map((word) => word[0]).slice(0, 3).join("")}
+                      </div>
                     )}
                     <div className="flex-1 min-w-0 flex flex-col gap-0.5">
                       <div className="font-semibold leading-none flex items-center gap-2">
@@ -130,16 +132,12 @@ export default function Page() {
           </div>
         </div>
       </section>
-      <section id="projects">
-        <BlurFade delay={BLUR_FADE_DELAY * 11}>
-          <ProjectsSection />
-        </BlurFade>
-      </section>
-      <section id="hackathons">
-        <BlurFade delay={BLUR_FADE_DELAY * 13}>
-          <HackathonsSection />
-        </BlurFade>
-      </section>
+      <BlurFade delay={BLUR_FADE_DELAY * 11}>
+        <ProjectsSection />
+      </BlurFade>
+      <BlurFade delay={BLUR_FADE_DELAY * 13}>
+        <HackathonsSection />
+      </BlurFade>
       <section id="contact">
         <BlurFade delay={BLUR_FADE_DELAY * 16}>
           <ContactSection />
