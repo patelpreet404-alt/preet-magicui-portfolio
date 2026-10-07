@@ -21,6 +21,8 @@ export function DemoSceneTour() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [direction, setDirection] = useState(1);
   const playingRef = useRef(false);
+  const programmaticScrollRef = useRef(false);
+  const scrollLockTimerRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const targets = getSceneTargets();
@@ -39,7 +41,7 @@ export function DemoSceneTour() {
     const updateSceneFromScroll = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        if (playingRef.current) return;
+        if (playingRef.current || programmaticScrollRef.current) return;
         const currentTargets = getSceneTargets();
         const marker = 120;
         let nearestIndex = 0;
@@ -59,6 +61,7 @@ export function DemoSceneTour() {
 
     const updateSceneOrderForViewport = () => {
       const currentTargets = getSceneTargets();
+      programmaticScrollRef.current = false;
       const nextLabels = currentTargets.map((target, index) => {
         target.dataset.demoSceneIndex = String(index);
         return target.dataset.demoScene || `Scene ${index + 1}`;
@@ -70,6 +73,8 @@ export function DemoSceneTour() {
     const stopTourForManualScroll = (event: Event) => {
       const target = event.target;
       if (target instanceof Element && target.closest("[data-demo-scene-controller]")) return;
+      programmaticScrollRef.current = false;
+      if (scrollLockTimerRef.current !== undefined) window.clearTimeout(scrollLockTimerRef.current);
       setPlaying(false);
     };
     window.addEventListener("scroll", updateSceneFromScroll, { passive: true });
@@ -79,6 +84,8 @@ export function DemoSceneTour() {
     window.addEventListener("pointerdown", stopTourForManualScroll, { passive: true });
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(sceneFrame);
+      if (scrollLockTimerRef.current !== undefined) window.clearTimeout(scrollLockTimerRef.current);
       motionPreference.removeEventListener("change", updateMotionPreference);
       window.removeEventListener("scroll", updateSceneFromScroll);
       window.removeEventListener("resize", updateSceneOrderForViewport);
@@ -96,6 +103,11 @@ export function DemoSceneTour() {
     const targets = getSceneTargets();
     if (!targets.length) return;
     const boundedIndex = Math.max(0, Math.min(nextIndex, targets.length - 1));
+    programmaticScrollRef.current = true;
+    if (scrollLockTimerRef.current !== undefined) window.clearTimeout(scrollLockTimerRef.current);
+    scrollLockTimerRef.current = window.setTimeout(() => {
+      programmaticScrollRef.current = false;
+    }, 900);
     setActiveScene(boundedIndex);
     targets[boundedIndex]?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
   }, [reducedMotion]);
