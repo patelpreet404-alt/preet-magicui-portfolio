@@ -10,6 +10,7 @@ import HackathonsSection from "@/components/section/hackathons-section";
 import ProjectsSection from "@/components/section/projects-section";
 import ProjectPreviewsSection from "@/components/section/project-previews-section";
 import WorkSection from "@/components/section/work-section";
+import TerminalPortfolioEmbed from "@/components/section/terminal-portfolio-embed";
 import { ArrowUpRight } from "lucide-react";
 
 const BLUR_FADE_DELAY = 0.04;
@@ -196,21 +197,7 @@ export default function Page() {
         <HackathonsSection />
       </BlurFade>
       <section id="other-portfolio" aria-labelledby="other-portfolio-heading">
-        <div className="grid gap-5 rounded-2xl border border-border bg-muted/40 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:p-6">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Another side of my work</p>
-            <h2 id="other-portfolio-heading" className="mt-2 text-lg font-semibold tracking-tight">Try this to know more about me</h2>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Explore my terminal-style portfolio and the projects, skills, and experience behind it.</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Link href="https://preet-patel-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-              Try the portfolio <ArrowUpRight className="size-4" aria-hidden />
-            </Link>
-            <Link href="https://github.com/patelpreet404-alt/preet-patel-portfolio" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-border bg-background px-4 text-sm font-medium transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-              GitHub source <ArrowUpRight className="size-4" aria-hidden />
-            </Link>
-          </div>
-        </div>
+        <TerminalPortfolioEmbed />
       </section>
       <section id="contact">
         <BlurFade delay={BLUR_FADE_DELAY * 16}>
