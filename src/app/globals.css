@@ -312,6 +312,11 @@ body:has(.project-demo-fullscreen) .site-grid {
   animation: studyroom-parallax 9s ease-in-out infinite;
 }
 
+.studyroom-feature > .relative {
+  animation: studyroom-camera 8s cubic-bezier(.45,0,.55,1) infinite;
+  transform-origin: left center;
+}
+
 .studyroom-material {
   box-shadow: 0 18px 44px -34px rgb(51 21 36 / 18%);
 }
@@ -461,8 +466,13 @@ body:has(.project-demo-fullscreen) .site-grid {
 }
 
 @keyframes compiler-float {
-  0%, 100% { transform: perspective(800px) rotateY(-8deg) rotateX(3deg) translateY(0); }
-  50% { transform: perspective(800px) rotateY(-5deg) rotateX(1deg) translateY(-5px); }
+  0%, 100% { transform: perspective(800px) rotateY(-8deg) rotateX(3deg) translateY(0) scale(.985); }
+  50% { transform: perspective(800px) rotateY(-5deg) rotateX(1deg) translateY(-5px) scale(1.035); }
+}
+
+@keyframes studyroom-camera {
+  0%, 100% { transform: scale(.99); }
+  50% { transform: scale(1.012); }
 }
 
 @keyframes studyroom-orbit {
@@ -504,6 +514,7 @@ body:has(.project-demo-fullscreen) .site-grid {
   .optilang-hero-sample,
   .research-hero,
   .studyroom-feature::after,
+  .studyroom-feature > .relative,
   .studyroom-flashcard {
     animation: none;
   }
