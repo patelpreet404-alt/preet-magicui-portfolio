@@ -85,27 +85,27 @@ const tabLabels: Record<StudyTab, string> = {
 
 function PreviewHeader({ embedded }: { embedded: boolean }) {
   return (
-    <header className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-[#171217] pb-4">
+    <header className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e7e0e4] pb-4">
       <div className="flex min-w-0 items-center gap-3">
         {!embedded && (
           <Link
             href="/"
             aria-label="Back to portfolio"
-            className="grid size-9 shrink-0 place-items-center rounded-full border border-[#d9ccd4] bg-white text-[#171217] transition-colors hover:bg-[#fff0f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]"
+            className="grid size-9 shrink-0 place-items-center rounded-full border border-[#e7e0e4] bg-white text-[#171217] transition-colors hover:bg-[#fff8fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]"
           >
             <ArrowLeft className="size-4" />
           </Link>
         )}
-        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f6a6cc] text-[#171217]">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-[#eadfe5] bg-white text-[#d63384]">
           <BookOpenText className="size-5" aria-hidden />
         </span>
         <div className="min-w-0">
           <p className="font-bold tracking-tight">Studyroom</p>
-          <p className="truncate text-xs text-[#655963]">AI Learning Management System · sample workspace</p>
+          <p className="truncate text-xs text-[#5f565c]">AI Learning Management System · sample workspace</p>
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#e7c7d7] bg-[#fff0f6] px-2.5 py-1 text-xs font-medium text-[#5e3048]">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#eadfe5] bg-white px-2.5 py-1 text-xs font-medium text-[#51464d]">
           <span className="size-1.5 rounded-full bg-[#d63384]" aria-hidden />
           Preview mode
         </span>
@@ -156,22 +156,22 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
       <section className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
           <h1 className="max-w-2xl text-2xl font-bold tracking-tight sm:text-3xl">Make a little progress today.</h1>
-          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-[#655963] sm:text-base">
+          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-[#5f565c] sm:text-base">
             Pick a course, settle into one idea, and give it your attention.
           </p>
         </div>
-        <p className="inline-flex w-fit items-center gap-2 text-xs font-medium text-[#655963]">
+        <p className="inline-flex w-fit items-center gap-2 text-xs font-medium text-[#5f565c]">
           <LockKeyhole className="size-3.5" aria-hidden />
           Sample content · no account needed
         </p>
       </section>
 
       <div className="grid gap-5 lg:grid-cols-[245px_minmax(0,1fr)]">
-        <aside className="flex flex-col gap-5 border-b-2 border-[#171217] pb-5 lg:border-b-0 lg:border-r-2 lg:pb-0 lg:pr-5" aria-label="Course navigation">
+        <aside className="flex flex-col gap-5 border-b border-[#e7e0e4] pb-5 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5" aria-label="Course navigation">
           <div>
             <div className="mb-2 flex items-baseline justify-between">
               <h2 className="text-xs font-bold uppercase tracking-[0.12em]">Your courses</h2>
-              <span className="text-xs text-[#655963]">{courses.length} samples</span>
+              <span className="text-xs text-[#5f565c]">{courses.length} samples</span>
             </div>
             <div className="space-y-1">
               {courses.map((item, index) => (
@@ -180,18 +180,18 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                   type="button"
                   onClick={() => chooseCourse(index)}
                   aria-pressed={courseIndex === index}
-                  className={"group w-full rounded-xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (courseIndex === index ? "border-[#171217] bg-[#ffe3ef]" : "border-transparent hover:bg-[#fff0f6]")}
+                  className={"group w-full rounded-xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (courseIndex === index ? "border-[#d63384] bg-white" : "border-transparent hover:bg-[#fff8fb]")}
                 >
                   <span className="flex items-start justify-between gap-2">
                     <span className="text-sm font-semibold leading-snug">{item.title}</span>
                     <ChevronRight className={"mt-0.5 size-4 shrink-0 transition-transform " + (courseIndex === index ? "translate-x-0.5" : "text-[#8b7985] group-hover:translate-x-0.5")} aria-hidden />
                   </span>
-                  <span className="mt-1 block text-xs text-[#655963]">{item.subject}</span>
+                  <span className="mt-1 block text-xs text-[#5f565c]">{item.subject}</span>
                   <span className="mt-2 flex items-center gap-2">
                     <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white">
                       <span className="block h-full rounded-full bg-[#d63384]" style={{ width: item.progress + "%" }} />
                     </span>
-                    <span className="text-[11px] tabular-nums text-[#655963]">{item.progress}%</span>
+                    <span className="text-[11px] tabular-nums text-[#5f565c]">{item.progress}%</span>
                   </span>
                 </button>
               ))}
@@ -223,39 +223,38 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
         </aside>
 
         <div className="min-w-0 space-y-5">
-          <section className="relative overflow-hidden rounded-2xl border-2 border-[#171217] bg-[#f6a6cc] p-5 sm:p-7">
-            <div className="absolute -right-10 -top-16 size-48 rounded-full border-[24px] border-white/25" aria-hidden />
+          <section className="relative overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white p-5 shadow-sm shadow-[#171217]/5 sm:p-7">
             <div className="relative max-w-3xl">
-              <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em]">
+              <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#d63384]">
                 <Sparkles className="size-3.5" aria-hidden />
                 Pick up where you left off
               </p>
               <div className="mt-3 flex flex-wrap items-end justify-between gap-4">
                 <div className="max-w-xl">
-                  <p className="text-xs font-semibold">{course.subject} · self-paced</p>
+                  <p className="text-xs font-semibold text-[#5f565c]">{course.subject} · self-paced</p>
                   <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{course.title}</h2>
-                  <p className="mt-2 text-sm leading-relaxed text-[#3d2935]">{course.description}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[#5f565c]">{course.description}</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => chooseTab("notes")}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-[#171217] bg-[#171217] px-4 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#f6a6cc]"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#171217] px-4 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   Continue lesson
                   <ArrowRight className="size-4" aria-hidden />
                 </button>
               </div>
               <div className="mt-5 flex items-center gap-3">
-                <div className="h-2 flex-1 overflow-hidden rounded-full border border-[#171217]/15 bg-white/70" role="progressbar" aria-label={course.title + " progress"} aria-valuemin={0} aria-valuemax={100} aria-valuenow={course.progress}>
-                  <div className="h-full rounded-full bg-[#171217]" style={{ width: course.progress + "%" }} />
+                <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#f2edf0]" role="progressbar" aria-label={course.title + " progress"} aria-valuemin={0} aria-valuemax={100} aria-valuenow={course.progress}>
+                  <div className="h-full rounded-full bg-[#d63384]" style={{ width: course.progress + "%" }} />
                 </div>
                 <span className="text-xs font-bold tabular-nums">{course.progress}% complete</span>
               </div>
             </div>
           </section>
 
-          <section className="overflow-hidden rounded-2xl border-2 border-[#171217] bg-white">
-            <div className="flex gap-1 overflow-x-auto border-b-2 border-[#171217] p-2 sm:px-4" role="tablist" aria-label="Study materials">
+          <section className="overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white shadow-sm shadow-[#171217]/5">
+            <div className="flex gap-1 overflow-x-auto border-b border-[#e7e0e4] p-2 sm:px-4" role="tablist" aria-label="Study materials">
               {tabs.map((item) => (
                 <button
                   key={item}
@@ -263,7 +262,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                   role="tab"
                   aria-selected={tab === item}
                   onClick={() => chooseTab(item)}
-                  className={"min-h-10 shrink-0 rounded-lg px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (tab === item ? "bg-[#171217] text-white" : "text-[#655963] hover:bg-[#fff0f6] hover:text-[#171217]")}
+                  className={"min-h-10 shrink-0 rounded-lg px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (tab === item ? "bg-[#171217] text-white" : "text-[#5f565c] hover:bg-[#fff8fb] hover:text-[#171217]")}
                 >
                   {tabLabels[item]}
                 </button>
@@ -276,9 +275,9 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                   <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
                     <div>
                       <h3 className="text-lg font-bold">Course plan</h3>
-                      <p className="mt-1 text-sm text-[#655963]">Choose a lesson to open the sample notes.</p>
+                      <p className="mt-1 text-sm text-[#5f565c]">Choose a lesson to open the sample notes.</p>
                     </div>
-                    <span className="rounded-full bg-[#fff0f6] px-3 py-1 text-xs font-semibold text-[#5e3048]">{course.chapters.length} lessons</span>
+                    <span className="rounded-full border border-[#eadfe5] bg-white px-3 py-1 text-xs font-semibold text-[#51464d]">{course.chapters.length} lessons</span>
                   </div>
                   <div className="divide-y divide-[#eadfe5] border-y border-[#eadfe5]">
                     {course.chapters.map((chapter, index) => {
@@ -291,16 +290,16 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                             setActiveChapter(index);
                             chooseTab("notes");
                           }}
-                          className="flex w-full items-center gap-3 py-4 text-left transition-colors hover:bg-[#fff8fc] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#d63384]"
+                          className="flex w-full items-center gap-3 py-4 text-left transition-colors hover:bg-[#fff8fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#d63384]"
                         >
-                          <span className={"grid size-9 shrink-0 place-items-center rounded-full border border-[#d9ccd4] text-xs font-bold " + (reviewed ? "bg-[#ffe3ef]" : "bg-white text-[#655963]")}>
-                            {reviewed ? <Check className="size-4" aria-label="Reviewed" /> : String(index + 1).padStart(2, "0")}
+                          <span className={"grid size-9 shrink-0 place-items-center rounded-full border border-[#e7e0e4] bg-white text-xs font-bold " + (reviewed ? "text-[#d63384]" : "text-[#5f565c")}>
+                            {reviewed ? <Check className="size-4 text-[#d63384]" aria-label="Reviewed" /> : String(index + 1).padStart(2, "0")}
                           </span>
                           <span className="min-w-0 flex-1">
                             <span className="block text-sm font-semibold">{chapter}</span>
-                            <span className="mt-1 block text-xs text-[#655963]">Sample lesson notes available</span>
+                            <span className="mt-1 block text-xs text-[#5f565c]">Sample lesson notes available</span>
                           </span>
-                          <ArrowRight className="size-4 shrink-0 text-[#655963]" aria-hidden />
+                          <ArrowRight className="size-4 shrink-0 text-[#5f565c]" aria-hidden />
                         </button>
                       );
                     })}
@@ -311,7 +310,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
               {tab === "notes" && (
                 <article className="max-w-3xl">
                   <div className="mb-5 flex items-start gap-3">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#ffe3ef]">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-[#eadfe5] bg-white text-[#d63384]">
                       <FileText className="size-5" aria-hidden />
                     </span>
                     <div>
@@ -320,7 +319,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                     </div>
                   </div>
                   <p className="text-sm leading-7 text-[#493d45]">{course.noteIntro}</p>
-                  <div className="my-5 rounded-xl border-2 border-[#171217] bg-[#fff0f6] p-4">
+                  <div className="my-5 rounded-xl border border-[#e7e0e4] bg-[#fff8fb] p-4">
                     <p className="text-xs font-bold uppercase tracking-wide">Keep in mind</p>
                     <p className="mt-1.5 text-sm leading-relaxed text-[#493d45]">{course.takeaway}</p>
                   </div>
@@ -334,9 +333,9 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <h3 className="text-lg font-bold">One idea to remember</h3>
-                      <p className="mt-1 text-sm text-[#655963]">Flip the card to reveal the answer.</p>
+                      <p className="mt-1 text-sm text-[#5f565c]">Flip the card to reveal the answer.</p>
                     </div>
-                    <button type="button" onClick={() => setFlipped(!flipped)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#171217] px-3.5 text-xs font-semibold transition-colors hover:bg-[#fff0f6] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]">
+                    <button type="button" onClick={() => setFlipped(!flipped)} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-[#e7e0e4] px-3.5 text-xs font-semibold transition-colors hover:bg-[#fff8fb] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]">
                       <RotateCcw className="size-3.5" aria-hidden />
                       Flip card
                     </button>
@@ -345,11 +344,11 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                     type="button"
                     aria-pressed={flipped}
                     onClick={() => setFlipped(!flipped)}
-                    className="flex min-h-64 w-full flex-col items-center justify-center rounded-2xl border-2 border-[#171217] bg-[#ffe3ef] p-8 text-center transition-colors hover:bg-[#ffd4e7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]"
+                    className="flex min-h-64 w-full flex-col items-center justify-center rounded-2xl border border-[#e7e0e4] bg-white p-8 text-center transition-colors hover:border-[#d63384] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]"
                   >
                     <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#6c3f56]">{flipped ? "Answer" : "Question"}</span>
                     <span className="mt-4 max-w-md text-xl font-semibold leading-relaxed">{flipped ? course.cardAnswer : course.cardQuestion}</span>
-                    <span className="mt-6 text-xs text-[#655963]">Select the card to {flipped ? "see the question" : "reveal the answer"}</span>
+                    <span className="mt-6 text-xs text-[#5f565c]">Select the card to {flipped ? "see the question" : "reveal the answer"}</span>
                   </button>
                 </div>
               )}
@@ -359,9 +358,9 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                   <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <h3 className="text-lg font-bold">Quick check</h3>
-                      <p className="mt-1 text-sm text-[#655963]">One sample question · untimed</p>
+                      <p className="mt-1 text-sm text-[#5f565c]">One sample question · untimed</p>
                     </div>
-                    <span className="rounded-full bg-[#fff0f6] px-3 py-1 text-xs font-semibold text-[#5e3048]">Practice</span>
+                    <span className="rounded-full border border-[#eadfe5] bg-white px-3 py-1 text-xs font-semibold text-[#51464d]">Practice</span>
                   </div>
                   <p className="text-sm font-semibold leading-relaxed">{course.quizQuestion}</p>
                   <div className="mt-4 space-y-2">
@@ -376,7 +375,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                             setSelectedAnswer(option);
                             setShowFeedback(true);
                           }}
-                          className={"flex w-full items-center gap-3 rounded-xl border p-3 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (isSelected ? "border-[#171217] bg-[#ffe3ef]" : "border-[#eadfe5] hover:bg-[#fff8fc]")}
+                          className={"flex w-full items-center gap-3 rounded-xl border p-3 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (isSelected ? "border-[#d63384] bg-[#fff8fb]" : "border-[#eadfe5] hover:bg-[#fff8fb]")}
                         >
                           <span className="grid size-7 shrink-0 place-items-center rounded-full border border-[#d9ccd4] text-xs font-semibold">{String.fromCharCode(65 + index)}</span>
                           <span className="flex-1">{option}</span>
@@ -386,7 +385,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                     })}
                   </div>
                   {showFeedback && (
-                    <p role="status" className={"mt-4 rounded-xl border p-3 text-sm font-medium " + (selectedAnswer === course.correct ? "border-[#a9c9ac] bg-[#f1faf1] text-[#23532c]" : "border-[#e7c7d7] bg-[#fff0f6] text-[#5e3048]")}>
+                    <p role="status" className={"mt-4 rounded-xl border p-3 text-sm font-medium " + (selectedAnswer === course.correct ? "border-[#eadfe5] bg-[#fff8fb] text-[#40383d]" : "border-[#eadfe5] bg-white text-[#51464d]")}>
                       {selectedAnswer === course.correct ? "That’s right. Nice work connecting the idea to the method." : "Not quite. Revisit the key idea, then try another answer."}
                     </p>
                   )}
@@ -396,10 +395,10 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
               {tab === "q&a" && (
                 <div className="mx-auto max-w-2xl">
                   <div className="flex items-center gap-3">
-                    <span className="grid size-9 place-items-center rounded-full bg-[#ffe3ef]"><BookOpen className="size-4" aria-hidden /></span>
+                    <span className="grid size-9 place-items-center rounded-full border border-[#eadfe5] bg-white text-[#d63384]"><BookOpen className="size-4" aria-hidden /></span>
                     <div>
                       <h3 className="font-bold">Questions from this course</h3>
-                      <p className="mt-0.5 text-xs text-[#655963]">Prepared sample answers</p>
+                      <p className="mt-0.5 text-xs text-[#5f565c]">Prepared sample answers</p>
                     </div>
                   </div>
                   <div className="mt-4 divide-y divide-[#eadfe5] border-y border-[#eadfe5]">
@@ -408,14 +407,14 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                         <summary className="cursor-pointer list-none text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]">
                           <span className="flex items-center justify-between gap-3">{question}<ChevronRight className="size-4 shrink-0 transition-transform open:rotate-90" aria-hidden /></span>
                         </summary>
-                        <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#655963]">{answer}</p>
+                        <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#5f565c]">{answer}</p>
                       </details>
                     ))}
                   </div>
                 </div>
               )}
 
-              <p className="mt-7 flex items-start gap-2 border-t border-[#eadfe5] pt-4 text-xs leading-relaxed text-[#655963]">
+              <p className="mt-7 flex items-start gap-2 border-t border-[#eadfe5] pt-4 text-xs leading-relaxed text-[#5f565c]">
                 <BookOpen className="mt-0.5 size-3.5 shrink-0" aria-hidden />
                 Sample content only. Course generation, sign-in, and saved progress are not connected in this preview.
               </p>
@@ -428,14 +427,14 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
 
   if (embedded) {
     return (
-      <section aria-label="AI Learning Management sample preview" className="rounded-xl bg-[#fff8fc] p-3 text-[#171217] sm:p-5">
+      <section aria-label="AI Learning Management sample preview" className="rounded-xl bg-white p-3 text-[#171217] sm:p-5">
         {content}
       </section>
     );
   }
 
   return (
-    <main className="relative left-1/2 min-h-dvh w-[calc(100vw-2rem)] max-w-[1320px] -translate-x-1/2 bg-[#fff8fc] px-4 py-5 text-[#171217] sm:w-[calc(100vw-3rem)] sm:px-6 sm:py-8">
+    <main className="relative left-1/2 min-h-dvh w-[calc(100vw-2rem)] max-w-[1320px] -translate-x-1/2 bg-white px-4 py-5 text-[#171217] sm:w-[calc(100vw-3rem)] sm:px-6 sm:py-8">
       <div className="mx-auto w-full max-w-[1320px]">{content}</div>
     </main>
   );
