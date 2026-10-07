@@ -110,10 +110,13 @@ export function ProjectCard({
   const cover = video ? (
     <video
       src={video}
+      poster={image}
       autoPlay
       loop
       muted
       playsInline
+      preload="metadata"
+      aria-hidden="true"
       className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.025]"
     />
   ) : image ? (
@@ -159,7 +162,7 @@ export function ProjectCard({
           ) : (
             cover
           )}
-          {variant < 3 && (
+          {variant < 3 && !video && (
             <span
               className="project-preview-cursor-track"
               data-active={previewIsVisible}

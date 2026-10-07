@@ -159,8 +159,8 @@ export const DATA = {
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "/projects/researchpaper-ai.png",
-      video: "",
+      image: "/projects/researchpaper-ai-poster.jpg",
+      video: "/projects/researchpaper-ai-demo.mp4",
     },
     {
       title: "OptiLang",
