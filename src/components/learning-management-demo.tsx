@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { DemoSceneTour } from "./demo-scene-tour";
+import { DemoPointerMotion } from "./demo-pointer-motion";
 
 const courses = [
   {
@@ -113,10 +113,6 @@ function PreviewHeader({ embedded }: { embedded: boolean }) {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#eadfe5] bg-white px-2.5 py-1 text-xs font-medium text-[#51464d]">
-          <span className="size-1.5 rounded-full bg-[#d63384]" aria-hidden />
-          Preview mode
-        </span>
         <a
           href="https://github.com/patelpreet404-alt/ai-learning-management-system"
           target="_blank"
@@ -143,13 +139,13 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
   const [tourIndex, setTourIndex] = useState(0);
   const course = courses[courseIndex];
   useEffect(() => {
-    if (embedded || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!window.matchMedia("(min-width: 1024px) and (prefers-reduced-motion: no-preference)").matches) return;
     const timer = window.setTimeout(() => setTourPlaying(true), 0);
     return () => window.clearTimeout(timer);
   }, [embedded]);
 
   useEffect(() => {
-    if (!tourPlaying || embedded) return;
+    if (!tourPlaying || !window.matchMedia("(min-width: 1024px) and (prefers-reduced-motion: no-preference)").matches) return;
     const nextIndex = (tourIndex + 1) % tourTabs.length;
     const nextTab = tourTabs[nextIndex];
     const timer = window.setTimeout(() => {
@@ -160,7 +156,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
       setShowFeedback(nextTab === "quiz");
     }, 3600);
     return () => window.clearTimeout(timer);
-  }, [course.correct, embedded, tourIndex, tourPlaying]);
+  }, [course.correct, tourIndex, tourPlaying]);
 
   function chooseCourse(index: number) {
     setTourPlaying(false);
@@ -184,19 +180,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
     <div className="studyroom-shell flex flex-col gap-5">
       <PreviewHeader embedded={embedded} />
 
-      {!embedded && (
-        <div className="studyroom-tour flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#eadfe5] bg-white px-4 py-3">
-          <div className="flex min-w-0 items-center gap-3">
-            <span className="studyroom-tour-pulse grid size-8 shrink-0 place-items-center rounded-full bg-[#fff0f6] text-[#d63384]" aria-hidden><Sparkles className="size-4" /></span>
-            <div className="min-w-0"><p className="text-xs font-bold">A quick look around</p><p className="truncate text-[11px] text-[#766a72]">{tabLabels[tourTabs[tourIndex]]} <span aria-hidden>·</span> course to lesson to practice</p></div>
-          </div>
-          <button type="button" onClick={() => { if (tourPlaying) setTourPlaying(false); else { setTourIndex(0); setTab("overview"); setFlipped(false); setShowFeedback(false); setTourPlaying(true); } }} className="studyroom-tour-button inline-flex min-h-9 items-center gap-2 rounded-full border border-[#e7e0e4] bg-white px-3.5 text-xs font-semibold transition-all hover:border-[#d63384] hover:text-[#a32761] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]" aria-pressed={tourPlaying}>
-            <span className={tourPlaying ? "studyroom-tour-dot is-playing" : "studyroom-tour-dot"} aria-hidden />{tourPlaying ? "Pause tour" : "Play tour"}
-          </button>
-        </div>
-      )}
-
-      <section data-demo-scene="Study dashboard" className="studyroom-enter grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+      <section data-demo-scene="Study dashboard" data-demo-depth className="studyroom-enter grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
           <h1 className="max-w-2xl text-2xl font-bold tracking-tight sm:text-3xl">Make a little progress today.</h1>
           <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-[#5f565c] sm:text-base">
@@ -253,7 +237,6 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
             >
               <Plus className="size-3.5" aria-hidden />
               Create a course
-              <span className="ml-auto text-[10px]">Preview only</span>
             </button>
           </div>
 
@@ -272,7 +255,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
         </aside>
 
         <div className="order-1 min-w-0 space-y-5 lg:order-2">
-          <section data-demo-scene="Course progress" className="studyroom-feature relative overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white p-5 shadow-sm shadow-[#171217]/5 sm:p-7">
+          <section data-demo-scene="Course progress" data-demo-depth className="studyroom-feature relative overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white p-5 shadow-sm shadow-[#171217]/5 sm:p-7">
             <div className="relative max-w-3xl">
               <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#d63384]">
                 <Sparkles className="size-3.5" aria-hidden />
@@ -302,7 +285,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
             </div>
           </section>
 
-          <section data-demo-scene="Lesson and practice" className="studyroom-material overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white shadow-sm shadow-[#171217]/5">
+          <section data-demo-scene="Lesson and practice" data-demo-depth className="studyroom-material overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white shadow-sm shadow-[#171217]/5">
             <div className="flex gap-1 overflow-x-auto border-b border-[#e7e0e4] p-2 sm:px-4" role="tablist" aria-label="Study materials">
               {tabs.map((item) => (
                 <button
@@ -318,7 +301,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
               ))}
             </div>
 
-            <div className="studyroom-tab-panel p-4 sm:p-6" key={course.title + tab}>
+            <div data-demo-local-scroll className="studyroom-tab-panel p-4 sm:p-6" key={course.title + tab}>
               {tab === "overview" && (
                 <div>
                   <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
@@ -478,16 +461,17 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
 
   if (embedded) {
     return (
-      <section aria-label="AI Learning Management sample preview" className="rounded-xl bg-white p-3 text-[#171217] sm:p-5">
+      <section aria-label="AI Learning Management sample preview" className="demo-motion-root rounded-xl bg-white p-3 text-[#171217] sm:p-5">
+        <DemoPointerMotion />
         {content}
       </section>
     );
   }
 
   return (
-    <main className="project-demo-fullscreen studyroom-page min-h-dvh w-full bg-white px-4 py-5 pb-28 text-[#171217] sm:px-6 sm:py-8 sm:pb-28">
-      <div className="mx-auto w-full max-w-[1320px]">{content}</div>
-      <DemoSceneTour />
+    <main className="demo-motion-root project-demo-fullscreen studyroom-page min-h-dvh w-full bg-white px-4 py-5 pb-28 text-[#171217] sm:px-6 sm:py-8 sm:pb-28">
+      <DemoPointerMotion />
+      <div data-demo-scroll-region className="demo-scroll-region mx-auto w-full max-w-[1320px]">{content}</div>
     </main>
   );
 }

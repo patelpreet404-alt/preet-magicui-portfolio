@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { ArrowUpRight, MousePointer2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { DemoPointerMotion } from "./demo-pointer-motion";
 import Markdown from "react-markdown";
 
 function ProjectImage({ src, alt }: { src: string; alt: string }) {
@@ -141,8 +142,10 @@ export function ProjectCard({
       <div className="relative shrink-0 p-[6px] pt-2" style={{ background: frame.background }}>
         <div
           ref={previewRef}
-          className="project-preview relative aspect-video overflow-hidden rounded-t-[8px] bg-background"
+          className="project-preview demo-motion-root relative aspect-video overflow-hidden rounded-t-[8px] bg-background"
+          data-demo-depth
         >
+          <DemoPointerMotion />
           {href ? (
             <Link
               href={href}
