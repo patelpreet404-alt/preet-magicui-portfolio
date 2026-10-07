@@ -3,24 +3,23 @@
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, MousePointer2 } from "lucide-react";
 import Link from "next/link";
-import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 
 function ProjectImage({ src, alt }: { src: string; alt: string }) {
   const [imageError, setImageError] = useState(false);
 
   if (!src || imageError) {
-    return <div className="w-full h-48 bg-muted" />;
+    return <div className="h-full w-full bg-muted" />;
   }
 
   return (
     <img
       src={src}
       alt={alt}
-      className="w-full h-48 object-cover transition-transform duration-700 ease-out group-hover/card:scale-[1.035]"
+      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.025]"
       onError={() => setImageError(true)}
     />
   );
@@ -44,14 +43,22 @@ interface Props {
   variant?: number;
 }
 
-const coverStyles = [
-  "from-violet-500/20 via-background to-blue-500/15",
-  "from-sky-500/20 via-background to-teal-500/15",
-  "from-amber-500/20 via-background to-orange-500/15",
-  "from-rose-500/20 via-background to-violet-500/15",
+const previewFrames = [
+  { background: "#f64d59", tag: "#f64d59" },
+  {
+    background: "linear-gradient(120deg, #f0d65c 0%, #f28db3 52%, #6478e8 100%)",
+    tag: "#df8ab1",
+  },
+  { background: "#f5f5f4", tag: "#a6a6a6" },
+  { background: "#ed9b58", tag: "#ed9b58" },
 ];
 
-const projectAccents = ["#ec4899", "#8b5cf6", "#84cc16", "#f97316"];
+const fallbackStyles = [
+  "from-rose-100 via-white to-rose-200 dark:from-rose-950 dark:via-zinc-950 dark:to-rose-900",
+  "from-amber-100 via-white to-indigo-200 dark:from-amber-950 dark:via-zinc-950 dark:to-indigo-950",
+  "from-zinc-100 via-white to-zinc-200 dark:from-zinc-900 dark:via-zinc-950 dark:to-zinc-800",
+  "from-orange-100 via-white to-rose-200 dark:from-orange-950 dark:via-zinc-950 dark:to-rose-950",
+];
 
 export function ProjectCard({
   title,
@@ -66,37 +73,38 @@ export function ProjectCard({
   className,
   variant = 0,
 }: Props) {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [previewIsVisible, setPreviewIsVisible] = useState(false);
   const hrefIsExternal = Boolean(href?.startsWith("http"));
-  const accent = projectAccents[variant % projectAccents.length];
-  const reduceMotion = useReducedMotion();
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
-  const smoothPointerX = useSpring(pointerX, { stiffness: 180, damping: 28, mass: 0.25 });
-  const smoothPointerY = useSpring(pointerY, { stiffness: 180, damping: 28, mass: 0.25 });
-  const rotateX = useMotionValue(0);
-  const rotateY = useMotionValue(0);
-  const smoothRotateX = useSpring(rotateX, { stiffness: 200, damping: 24, mass: 0.25 });
-  const smoothRotateY = useSpring(rotateY, { stiffness: 200, damping: 24, mass: 0.25 });
-  const spotlight = useMotionTemplate`radial-gradient(440px circle at ${smoothPointerX}px ${smoothPointerY}px, ${accent}22, transparent 58%)`;
+  const frame = previewFrames[variant % previewFrames.length];
 
-  function updatePointer(event: React.PointerEvent<HTMLElement>) {
-    if (event.pointerType !== "mouse" || reduceMotion) return;
+  useEffect(() => {
+    const preview = previewRef.current;
+    if (!preview) return;
 
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - bounds.left;
-    const y = event.clientY - bounds.top;
-    pointerX.set(x);
-    pointerY.set(y);
-    rotateX.set(-((y / bounds.height) - 0.5) * 3.5);
-    rotateY.set(((x / bounds.width) - 0.5) * 3.5);
-  }
+    if (!("IntersectionObserver" in window)) {
+      return;
+    }
 
-  function resetPointer() {
-    pointerX.set(0);
-    pointerY.set(0);
-    rotateX.set(0);
-    rotateY.set(0);
-  }
+    let intersects = false;
+    const updateVisibility = () => setPreviewIsVisible(intersects && !document.hidden);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        intersects = entry.isIntersecting;
+        updateVisibility();
+      },
+      { rootMargin: "80px" }
+    );
+    const handleVisibilityChange = () => updateVisibility();
+
+    observer.observe(preview);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   const cover = video ? (
     <video
@@ -105,137 +113,124 @@ export function ProjectCard({
       loop
       muted
       playsInline
-      className="w-full h-48 object-cover transition-transform duration-700 ease-out group-hover/card:scale-[1.035]"
+      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.025]"
     />
   ) : image ? (
     <ProjectImage src={image} alt={title} />
   ) : (
     <div
       className={cn(
-        "relative isolate flex h-48 flex-col justify-between overflow-hidden bg-linear-to-br p-5",
-        coverStyles[variant % coverStyles.length]
+        "flex h-full w-full flex-col justify-between bg-linear-to-br p-5 text-foreground",
+        fallbackStyles[variant % fallbackStyles.length]
       )}
     >
-      <div className="absolute -right-8 -top-16 size-48 rounded-full border border-foreground/10" />
-      <div className="absolute -right-16 -top-2 size-48 rounded-full border border-foreground/10" />
-      <span className="relative text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
+      <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">
         Selected work · {String(variant + 1).padStart(2, "0")}
       </span>
-      <span className="relative max-w-[85%] text-xl font-semibold tracking-tight text-foreground">
-        {title}
-      </span>
+      <span className="max-w-[85%] text-xl font-semibold tracking-tight">{title}</span>
     </div>
   );
 
   return (
-    <motion.article
+    <article
       className={cn(
-        "group/card relative isolate flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm transition-shadow duration-300 hover:shadow-xl focus-within:ring-2 focus-within:ring-ring/50",
+        "group/card flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:shadow-lg hover:ring-2 hover:ring-muted focus-within:ring-2 focus-within:ring-ring/60",
         className
       )}
-      style={{
-        rotateX: reduceMotion ? 0 : smoothRotateX,
-        rotateY: reduceMotion ? 0 : smoothRotateY,
-        transformPerspective: 1200,
-        transformStyle: "preserve-3d",
-      }}
-      whileHover={
-        reduceMotion
-          ? undefined
-          : {
-              y: -4,
-              scale: 1.004,
-              boxShadow: `0 24px 70px -32px ${accent}70`,
-            }
-      }
-      transition={{ type: "spring", stiffness: 260, damping: 24 }}
-      onPointerMove={updatePointer}
-      onPointerLeave={resetPointer}
     >
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100 group-focus-within/card:opacity-100"
-        style={{ background: spotlight }}
-      />
-      <div className="relative z-20 flex h-full flex-col">
-        <div className="relative shrink-0 overflow-hidden">
+      <div className="relative shrink-0 p-[6px] pt-2" style={{ background: frame.background }}>
+        <div
+          ref={previewRef}
+          className="project-preview relative aspect-video overflow-hidden rounded-t-[8px] bg-background"
+        >
           {href ? (
             <Link
               href={href}
               target={hrefIsExternal ? "_blank" : undefined}
               rel={hrefIsExternal ? "noopener noreferrer" : undefined}
+              className="absolute inset-0 block"
               aria-label={`Open ${title}`}
-              className="block"
             >
               {cover}
             </Link>
           ) : (
             cover
           )}
-          {links && links.length > 0 && (
-            <div className="absolute top-2 right-2 flex flex-wrap gap-2">
-              {links.map((link, idx) => {
-                const linkIsExternal = link.href.startsWith("http");
-                return (
-                  <Link
-                    href={link.href}
-                    key={idx}
-                    target={linkIsExternal ? "_blank" : undefined}
-                    rel={linkIsExternal ? "noopener noreferrer" : undefined}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Badge
-                      className="flex items-center gap-1.5 bg-black text-xs text-white shadow-sm transition-transform duration-200 hover:-translate-y-0.5 hover:bg-black/90"
-                      variant="default"
-                    >
-                      {link.icon}
-                      {link.type}
-                    </Badge>
-                  </Link>
-                );
-              })}
-            </div>
+          {variant < 3 && (
+            <span
+              className="project-preview-cursor-track"
+              data-active={previewIsVisible}
+              aria-hidden="true"
+              style={{ animationDelay: `${-variant * 1.1}s` }}
+            >
+              <span className="project-preview-cursor">
+                <span className="project-preview-cursor-pulse" />
+                <MousePointer2 className="relative z-10 size-6 fill-white text-zinc-950 drop-shadow-[0_2px_3px_rgba(0,0,0,0.6)]" />
+              </span>
+            </span>
           )}
         </div>
-        <div className="flex flex-1 flex-col gap-3 p-6">
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex flex-col gap-1">
-              <h3 className="font-semibold tracking-tight transition-colors duration-200 group-hover/card:text-foreground">
-                {title}
-              </h3>
-              <time className="text-xs text-muted-foreground">{dates}</time>
-            </div>
-            {href && (
-              <Link
-                href={href}
-                target={hrefIsExternal ? "_blank" : undefined}
-                rel={hrefIsExternal ? "noopener noreferrer" : undefined}
-                className="rounded-sm text-muted-foreground transition-all duration-200 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5 group-hover/card:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                aria-label={`Open ${title}`}
-              >
-                <ArrowUpRight className="h-4 w-4" aria-hidden />
-              </Link>
-            )}
-          </div>
-          <div className="prose flex-1 text-xs max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
-            <Markdown>{description}</Markdown>
-          </div>
-          {tags && tags.length > 0 && (
-            <div className="mt-auto flex flex-wrap gap-1">
-              {tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  className="h-6 w-fit border px-2 text-[11px] font-medium transition-colors duration-200 group-hover/card:border-border"
-                  variant="outline"
-                  style={{ borderColor: `${accent}35`, backgroundColor: `${accent}0c` }}
+        {links && links.length > 0 && (
+          <div className="absolute right-2 top-2 z-20 flex flex-wrap gap-2">
+            {links.map((projectLink, idx) => {
+              const linkIsExternal = projectLink.href.startsWith("http");
+              return (
+                <Link
+                  href={projectLink.href}
+                  key={idx}
+                  target={linkIsExternal ? "_blank" : undefined}
+                  rel={linkIsExternal ? "noopener noreferrer" : undefined}
+                  onClick={(event) => event.stopPropagation()}
                 >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
+                  <Badge
+                    className="flex items-center gap-1.5 bg-black text-xs text-white shadow-sm transition-transform duration-200 hover:-translate-y-0.5 hover:bg-black/90"
+                    variant="default"
+                  >
+                    {projectLink.icon}
+                    {projectLink.type}
+                  </Badge>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+      <div className="flex flex-1 flex-col gap-3 p-6">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex flex-col gap-1">
+            <h3 className="font-semibold tracking-tight">{title}</h3>
+            <time className="text-xs text-muted-foreground">{dates}</time>
+          </div>
+          {href && (
+            <Link
+              href={href}
+              target={hrefIsExternal ? "_blank" : undefined}
+              rel={hrefIsExternal ? "noopener noreferrer" : undefined}
+              className="rounded-sm text-muted-foreground transition-all duration-200 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5 group-hover/card:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              aria-label={`Open ${title}`}
+            >
+              <ArrowUpRight className="h-4 w-4" aria-hidden />
+            </Link>
           )}
         </div>
+        <div className="prose max-w-full flex-1 text-xs text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
+          <Markdown>{description}</Markdown>
+        </div>
+        {tags.length > 0 && (
+          <div className="mt-auto flex flex-wrap gap-1">
+            {tags.map((tag) => (
+              <Badge
+                key={tag}
+                className="h-6 w-fit border px-2 text-[11px] font-medium"
+                variant="outline"
+                style={{ borderColor: `${frame.tag}65`, backgroundColor: `${frame.tag}0d` }}
+              >
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        )}
       </div>
-    </motion.article>
+    </article>
   );
 }
