@@ -47,24 +47,24 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
   }
 
   return (
-    <main className={embedded ? "w-full text-foreground" : "relative left-1/2 w-[calc(100vw-2rem)] max-w-[1380px] -translate-x-1/2 text-foreground sm:w-[calc(100vw-3rem)]"}>
+    <main className={"research-theme bg-background p-4 text-foreground sm:p-6 " + (embedded ? "w-full rounded-2xl border border-[#403654] shadow-[0_24px_70px_-44px_rgba(96,63,163,0.7)]" : "project-demo-fullscreen min-h-dvh w-full")}>
       <ProjectDemoTopbar embedded={embedded} title="ResearchPaper AI" source="https://github.com/patelpreet404-alt/researchpaper-ai" />
-      <div className="mb-5 flex flex-wrap items-end justify-between gap-4 px-1">
+      <div className="research-hero mb-5 flex flex-wrap items-end justify-between gap-4 rounded-2xl border border-[#473d66] p-5 sm:p-7">
         <div className="max-w-2xl">
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">A clearer way to read research</h1>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-4xl">A clearer way to read <span className="text-[#cbb9ff]">research.</span></h1>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">Explore a sample document, ask a prepared question, and follow each answer back to its source.</p>
         </div>
-        <DemoNotice><Sparkles className="size-3.5" /> Sample answers · no live AI</DemoNotice>
+        <DemoNotice><Sparkles className="size-3.5" /> Prepared answers · no live AI</DemoNotice>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[258px_minmax(0,1fr)]">
-        <aside className="flex flex-col gap-4">
+        <aside className="order-2 flex flex-col gap-4 lg:order-1">
           <section className="rounded-xl border border-border bg-card p-4 shadow-sm">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-semibold">Your library</h2>
               <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">1 document</span>
             </div>
-            <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
+            <div className="rounded-lg border border-primary/30 bg-primary/5 p-3 transition-colors hover:border-primary/60">
               <span className="mb-2 grid size-9 place-items-center rounded-lg bg-red-500/10 text-red-600 dark:text-red-300"><FileText className="size-4" /></span>
               <p className="text-xs font-semibold leading-snug">Introduction to Retrieval-Augmented Generation</p>
               <p className="mt-2 text-[11px] text-muted-foreground">Sample research note · 3 pages</p>
@@ -84,16 +84,16 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
           </section>
         </aside>
 
-        <section className="flex min-h-[690px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm sm:min-h-[740px]">
+        <section className="order-1 flex min-h-[690px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm sm:min-h-[740px] lg:order-2">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
               <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary"><MessageSquareText className="size-4" /></div>
               <div className="min-w-0">
-                <h2 className="text-sm font-semibold">Paper conversation</h2>
+                <h2 className="text-sm font-semibold">Ask the document</h2>
                 <p className="truncate text-xs text-muted-foreground">Introduction to Retrieval-Augmented Generation</p>
               </div>
             </div>
-            <button type="button" onClick={() => { setMessages([]); setDraft(""); setLoading(false); }} className={buttonStyle + " min-h-9 px-3 text-xs"}>
+            <button type="button" onClick={() => { setMessages([]); setDraft(""); setLoading(false); }} className={buttonStyle + " research-action min-h-9 px-3 text-xs"}>
               <Plus className="size-3.5" /> New chat
             </button>
           </div>
@@ -105,7 +105,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
             </div>
             <div className="flex flex-wrap gap-2">
               {suggestions.map((item) => (
-                <button key={item.question} type="button" disabled={loading} onClick={() => ask(item.question)} className="rounded-full border border-border bg-background px-3 py-2 text-left text-xs transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50">{item.question}</button>
+                <button key={item.question} type="button" disabled={loading} onClick={() => ask(item.question)} className="rounded-full border border-border bg-background px-3 py-2 text-left text-xs transition-all hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50">{item.question}</button>
               ))}
             </div>
           </div>
@@ -126,7 +126,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
                     <div className="flex items-center gap-2 text-xs font-semibold"><span className="grid size-6 place-items-center rounded-full bg-primary/10 text-primary"><Sparkles className="size-3" /></span> Sample response</div>
                     <p className="text-sm leading-7 text-foreground/90">{message.text}</p>
                     {message.citation && (
-                      <a href={"/samples/rag-study-guide.pdf#page=" + message.citation.page} target="_blank" rel="noopener noreferrer" className="group block max-w-xl rounded-lg border border-border bg-background p-3 transition-colors hover:border-primary/40 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                      <a href={"/samples/rag-study-guide.pdf#page=" + message.citation.page} target="_blank" rel="noopener noreferrer" className="research-citation group block max-w-xl rounded-lg border border-border bg-background p-3 transition-colors hover:border-primary/40 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                         <div className="mb-2 flex items-center justify-between gap-3">
                           <span className="flex min-w-0 items-center gap-2 text-xs font-medium"><FileText className="size-3.5 shrink-0 text-primary" /><span className="truncate">{message.citation.source}</span></span>
                           <span className="shrink-0 rounded-md bg-muted px-2 py-1 text-[11px] text-muted-foreground">p. {message.citation.page}</span>
@@ -146,7 +146,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
             <form onSubmit={submit} className="flex items-end gap-2 rounded-xl border border-border bg-card p-2 shadow-sm focus-within:ring-2 focus-within:ring-ring/50">
               <label className="sr-only" htmlFor="research-question">Ask a question about the sample document</label>
               <textarea id="research-question" rows={1} value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); ask(draft); } }} placeholder="Ask about this sample document…" className="max-h-28 min-h-10 flex-1 resize-y bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground" />
-              <button type="submit" disabled={!draft.trim() || loading} className={primaryButtonStyle + " min-h-9 px-3"} aria-label="Send question"><ArrowRight className="size-4" /></button>
+              <button type="submit" disabled={!draft.trim() || loading} className={primaryButtonStyle + " research-send min-h-9 px-3"} aria-label="Send question"><ArrowRight className="size-4" /></button>
             </form>
             <p className="mt-2 text-center text-[11px] text-muted-foreground">Prepared sample content · uploads and AI responses are disabled</p>
           </div>

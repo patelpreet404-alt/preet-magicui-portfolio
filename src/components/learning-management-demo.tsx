@@ -25,6 +25,8 @@ const courses = [
     progress: 68,
     description: "Build intuition for patterns, useful features, and fair model evaluation.",
     chapters: ["A practical map of machine learning", "Preparing a reliable dataset", "Training your first model", "Evaluating beyond accuracy"],
+    lessonSummaries: ["Start with a question, gather examples, and learn a pattern that can make a useful prediction.", "Clean and split your data before training so the final evaluation stays honest.", "Choose a simple baseline, train it, and compare its predictions with real outcomes.", "Look beyond a single score to understand errors, fairness, and performance on new examples."],
+    lessonDetails: ["Keep training data for fitting, validation data for comparing choices, and a held-out test set for one final estimate. Reusing the test set during development can quietly make it part of the training process.", "Remove duplicates, inspect missing values, and split the data before fitting transformations. Even a small leak from the test set can make a model appear better than it is.", "A baseline gives every new model something honest to beat. Record the same metric and data split for each experiment so the comparison stays meaningful.", "Inspect which examples fail, not just the average score. A model can perform well overall while making costly mistakes for a smaller group."],
     noteTitle: "A model learns from examples",
     noteIntro: "Machine learning turns examples into a rule that can help with new decisions. The goal is not to memorize the training set; it is to find patterns that hold up in the world outside it.",
     takeaway: "A useful evaluation checks examples the model has not seen during training.",
@@ -42,6 +44,8 @@ const courses = [
     progress: 32,
     description: "Trace a browser request through the layers that make a web app feel instant.",
     chapters: ["From URL to first render", "Designing resilient APIs", "Caching at the edge", "Keeping interfaces accessible"],
+    lessonSummaries: ["Follow a request from the address bar through DNS, the server, and the first page render.", "Design responses and failure states that make an API predictable for its callers.", "Place reusable responses nearer to visitors while defining when they should refresh.", "Build keyboard and screen reader paths into each interface from the start."],
+    lessonDetails: ["Static assets can often be cached for a long time when their filenames include a content hash. Frequently changing account data needs shorter lifetimes or explicit revalidation.", "Use clear status codes, validate inputs, and return useful errors. A client should know whether to retry, fix the request, or ask the user to sign in.", "Set a cache lifetime based on how often the source changes. Revalidate when needed so faster delivery never leaves people with stale account information.", "Use semantic elements, visible focus, labels, and keyboard support. Test the full path without a mouse, including empty and error states."],
     noteTitle: "A request takes a useful route",
     noteIntro: "When someone opens a page, the browser resolves a domain, negotiates a connection, requests a document, and assembles the response. Good systems make each step predictable and keep repeated work close to the visitor.",
     takeaway: "A cache is most useful when its freshness rules match how often the underlying data changes.",
@@ -59,6 +63,8 @@ const courses = [
     progress: 84,
     description: "Turn a broad curiosity into a clear question and a careful study plan.",
     chapters: ["Shaping a research question", "Choosing a study design", "Sampling and measurement", "Writing a grounded conclusion"],
+    lessonSummaries: ["Turn a broad topic into a question that available evidence can answer.", "Match the method to what you want to learn and the claims you hope to make.", "Define who is studied and how each important idea will be measured.", "Separate what the evidence shows from what remains uncertain."],
+    lessonDetails: ["Define key terms before collecting evidence. A clear operational definition describes how an idea will be observed or measured, giving readers a fair chance to interpret the results.", "A survey can describe reported behavior; an experiment can test a controlled change. Pick the design that supports the claim you actually want to make.", "Write down the inclusion criteria and measurement steps in advance. This makes the sample easier to understand and the study easier to repeat.", "Lead with the result the evidence supports, then state its limits. Explain what remains open for another study rather than stretching the conclusion."],
     noteTitle: "A good question guides the method",
     noteIntro: "A research question names the group, idea, and relationship you want to understand. A focused question makes it easier to choose what evidence to collect and what conclusions that evidence can support.",
     takeaway: "A study design should fit the question, rather than force the question to fit convenient data.",
@@ -150,10 +156,10 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
   }
 
   const content = (
-    <div className="flex flex-col gap-5">
+    <div className="studyroom-shell flex flex-col gap-5">
       <PreviewHeader embedded={embedded} />
 
-      <section className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+      <section className="studyroom-enter grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
           <h1 className="max-w-2xl text-2xl font-bold tracking-tight sm:text-3xl">Make a little progress today.</h1>
           <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-[#5f565c] sm:text-base">
@@ -166,8 +172,14 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
         </p>
       </section>
 
+      <nav className="flex gap-2 overflow-x-auto pb-1 lg:hidden" aria-label="Choose a sample course">
+        {courses.map((item, index) => (
+          <button key={item.title} type="button" onClick={() => chooseCourse(index)} aria-current={courseIndex === index ? "page" : undefined} className={"shrink-0 rounded-full border px-3 py-2 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] " + (courseIndex === index ? "border-[#f35b75] bg-[#fff1f5] text-[#8a234f]" : "border-[#e7e0e4] bg-white text-[#5f565c]")}>{item.title}</button>
+        ))}
+      </nav>
+
       <div className="grid gap-5 lg:grid-cols-[245px_minmax(0,1fr)]">
-        <aside className="flex flex-col gap-5 border-b border-[#e7e0e4] pb-5 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-5" aria-label="Course navigation">
+        <aside className="order-2 flex flex-col gap-5 border-t border-[#e7e0e4] pt-5 lg:order-1 lg:border-t-0 lg:border-r lg:pt-0 lg:pr-5" aria-label="Course navigation">
           <div>
             <div className="mb-2 flex items-baseline justify-between">
               <h2 className="text-xs font-bold uppercase tracking-[0.12em]">Your courses</h2>
@@ -222,8 +234,8 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
           </div>
         </aside>
 
-        <div className="min-w-0 space-y-5">
-          <section className="relative overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white p-5 shadow-sm shadow-[#171217]/5 sm:p-7">
+        <div className="order-1 min-w-0 space-y-5 lg:order-2">
+          <section className="studyroom-feature relative overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white p-5 shadow-sm shadow-[#171217]/5 sm:p-7">
             <div className="relative max-w-3xl">
               <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#d63384]">
                 <Sparkles className="size-3.5" aria-hidden />
@@ -238,7 +250,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                 <button
                   type="button"
                   onClick={() => chooseTab("notes")}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-full bg-[#171217] px-4 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="studyroom-primary inline-flex min-h-11 items-center gap-2 rounded-full bg-[#171217] px-4 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   Continue lesson
                   <ArrowRight className="size-4" aria-hidden />
@@ -253,7 +265,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
             </div>
           </section>
 
-          <section className="overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white shadow-sm shadow-[#171217]/5">
+          <section className="studyroom-material overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white shadow-sm shadow-[#171217]/5">
             <div className="flex gap-1 overflow-x-auto border-b border-[#e7e0e4] p-2 sm:px-4" role="tablist" aria-label="Study materials">
               {tabs.map((item) => (
                 <button
@@ -269,7 +281,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
               ))}
             </div>
 
-            <div className="p-4 sm:p-6">
+            <div className="studyroom-tab-panel p-4 sm:p-6" key={course.title + tab}>
               {tab === "overview" && (
                 <div>
                   <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
@@ -318,13 +330,14 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                       <h3 className="mt-1 text-lg font-bold">{activeChapter === 0 ? course.noteTitle : course.chapters[activeChapter]}</h3>
                     </div>
                   </div>
-                  <p className="text-sm leading-7 text-[#493d45]">{course.noteIntro}</p>
+                  <p className="text-sm leading-7 text-[#493d45]">{activeChapter === 0 ? course.noteIntro : course.lessonSummaries[activeChapter]}</p>
                   <div className="my-5 rounded-xl border border-[#e7e0e4] bg-[#fff8fb] p-4">
                     <p className="text-xs font-bold uppercase tracking-wide">Keep in mind</p>
                     <p className="mt-1.5 text-sm leading-relaxed text-[#493d45]">{course.takeaway}</p>
                   </div>
                   <h4 className="font-bold">Put it into practice</h4>
-                  <p className="mt-2 text-sm leading-7 text-[#493d45]">{course.noteDetails}</p>
+                  <p className="mt-2 text-sm leading-7 text-[#493d45]">{course.lessonDetails[activeChapter]}</p>
+                  <button type="button" onClick={() => setActiveChapter((activeChapter + 1) % course.chapters.length)} className="mt-6 inline-flex min-h-10 items-center gap-2 rounded-full border border-[#171217] px-4 text-xs font-semibold transition-colors hover:bg-[#171217] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]">Next lesson <ArrowRight className="size-3.5" aria-hidden /></button>
                 </article>
               )}
 
@@ -344,10 +357,10 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
                     type="button"
                     aria-pressed={flipped}
                     onClick={() => setFlipped(!flipped)}
-                    className="flex min-h-64 w-full flex-col items-center justify-center rounded-2xl border border-[#e7e0e4] bg-white p-8 text-center transition-colors hover:border-[#d63384] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]"
+                    className="studyroom-flashcard flex min-h-64 w-full flex-col items-center justify-center rounded-2xl border border-[#e7e0e4] bg-white p-8 text-center transition-colors hover:border-[#d63384] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d63384]"
                   >
                     <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#6c3f56]">{flipped ? "Answer" : "Question"}</span>
-                    <span className="mt-4 max-w-md text-xl font-semibold leading-relaxed">{flipped ? course.cardAnswer : course.cardQuestion}</span>
+                    <span key={flipped ? "answer" : "question"} className="studyroom-card-face mt-4 max-w-md text-xl font-semibold leading-relaxed">{flipped ? course.cardAnswer : course.cardQuestion}</span>
                     <span className="mt-6 text-xs text-[#5f565c]">Select the card to {flipped ? "see the question" : "reveal the answer"}</span>
                   </button>
                 </div>
@@ -434,7 +447,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
   }
 
   return (
-    <main className="relative left-1/2 min-h-dvh w-[calc(100vw-2rem)] max-w-[1320px] -translate-x-1/2 bg-white px-4 py-5 text-[#171217] sm:w-[calc(100vw-3rem)] sm:px-6 sm:py-8">
+    <main className="project-demo-fullscreen studyroom-page min-h-dvh w-full bg-white px-4 py-5 text-[#171217] sm:px-6 sm:py-8">
       <div className="mx-auto w-full max-w-[1320px]">{content}</div>
     </main>
   );
