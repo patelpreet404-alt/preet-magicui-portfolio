@@ -59,7 +59,7 @@ export const DATA = {
       },
       Resume: {
         name: "Resume",
-        url: "https://drive.google.com/file/d/1wJ8Kj22-lA1ZZn6f3LUmQoYsJYKjWzJR/view?usp=drivesdk",
+        url: "/preet-patel-resume.pdf",
         icon: FileTextIcon,
         navbar: true,
       },
