@@ -43,7 +43,9 @@
 }
 
 body:has(#project-previews:hover) [data-floating-nav],
-body:has(#project-previews:focus-within) [data-floating-nav] {
+body:has(#project-previews:focus-within) [data-floating-nav],
+body:has(#projects:hover) [data-floating-nav],
+body:has(#projects:focus-within) [data-floating-nav] {
   opacity: 0;
   pointer-events: none;
 }
