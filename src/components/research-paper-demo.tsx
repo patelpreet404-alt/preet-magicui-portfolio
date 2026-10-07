@@ -3,6 +3,7 @@
 import { ArrowRight, ArrowUpRight, BookOpen, FileText, LoaderCircle, MessageSquareText, Plus, Sparkles, Upload } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { DemoNotice, ProjectDemoTopbar, buttonStyle, primaryButtonStyle } from "./project-demo-shared";
+import { DemoSceneTour } from "./demo-scene-tour";
 
 const suggestions = [
   { question: "What is retrieval-augmented generation?", answer: "Retrieval-augmented generation (RAG) combines a retrieval system with a language model. It fetches relevant text from an external source, such as a PDF, and includes that text in the prompt so the response is grounded in the document.", page: 1, source: "Introduction to Retrieval-Augmented Generation", excerpt: "RAG combines a retrieval system with a language model so responses can be grounded in external text." },
@@ -83,9 +84,9 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
   }
 
   return (
-    <main className={"research-theme bg-background p-4 text-foreground sm:p-6 " + (embedded ? "w-full rounded-2xl border border-[#403654] shadow-[0_24px_70px_-44px_rgba(96,63,163,0.7)]" : "project-demo-fullscreen min-h-dvh w-full")}>
+    <main className={"research-theme bg-background p-4 text-foreground sm:p-6 " + (embedded ? "w-full rounded-2xl border border-[#403654] shadow-[0_24px_70px_-44px_rgba(96,63,163,0.7)]" : "project-demo-fullscreen min-h-dvh w-full pb-28 sm:pb-28")}>
       <ProjectDemoTopbar embedded={embedded} title="ResearchPaper AI" source="https://github.com/patelpreet404-alt/researchpaper-ai" />
-      <div className="research-hero mb-5 flex flex-wrap items-end justify-between gap-4 rounded-2xl border border-[#473d66] p-5 sm:p-7">
+      <div data-demo-scene="Research workspace" className="research-hero mb-5 flex flex-wrap items-end justify-between gap-4 rounded-2xl border border-[#473d66] p-5 sm:p-7">
         <div className="max-w-2xl">
           <h1 className="text-2xl font-semibold tracking-tight sm:text-4xl">A clearer way to read <span className="text-[#cbb9ff]">research.</span></h1>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">Explore a sample document, ask a prepared question, and follow each answer back to its source.</p>
@@ -95,7 +96,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
 
       <div className="grid gap-4 lg:grid-cols-[258px_minmax(0,1fr)]">
         <aside className="order-2 flex flex-col gap-4 lg:order-1">
-          <section className="rounded-xl border border-border bg-card p-4 shadow-sm">
+          <section data-demo-scene="Document library" className="rounded-xl border border-border bg-card p-4 shadow-sm">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-semibold">Your library</h2>
               <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">1 document</span>
@@ -111,7 +112,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
               <span>Uploads are unavailable in this demo</span>
             </button>
           </section>
-          <section className="rounded-xl border border-border bg-card p-4 shadow-sm">
+          <section data-demo-scene="Sample paper" className="rounded-xl border border-border bg-card p-4 shadow-sm">
             <h2 className="text-sm font-semibold">Sample document</h2>
             <p className="mt-2 text-xs leading-relaxed text-muted-foreground">This workspace keeps its example paper and prepared answers in the browser. It does not accept files or contact an AI service.</p>
             <a href="/samples/rag-study-guide.pdf" target="_blank" rel="noopener noreferrer" className={buttonStyle + " mt-3 w-full text-xs"}>
@@ -120,7 +121,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
           </section>
         </aside>
 
-        <section className="order-1 flex min-h-[690px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm sm:min-h-[740px] lg:order-2">
+        <section data-demo-scene="Question and answer" className="order-1 flex min-h-[690px] flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm sm:min-h-[740px] lg:order-2">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-4 py-3 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
               <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary"><MessageSquareText className="size-4" /></div>
@@ -137,7 +138,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
             </div>
           </div>
 
-          <div className="border-b border-border bg-muted/20 px-4 py-4 sm:px-6">
+          <div data-demo-scene="Suggested questions" className="border-b border-border bg-muted/20 px-4 py-4 sm:px-6">
             <div className="mb-2 flex items-center justify-between gap-3">
               <h3 className="text-[11px] font-semibold tracking-wide text-muted-foreground">SUGGESTED QUESTIONS</h3>
               <span className="text-[11px] text-muted-foreground">Select one to explore</span>
@@ -149,7 +150,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
             </div>
           </div>
 
-          <div className="flex-1 space-y-5 overflow-y-auto px-4 py-5 sm:px-6" aria-live="polite">
+          <div data-demo-scene="Answer and citation" className="flex-1 space-y-5 overflow-y-auto px-4 py-5 sm:px-6" aria-live="polite">
             {messages.length === 0 && !loading ? (
               <div className="flex min-h-[330px] flex-col items-center justify-center text-center">
                 <div className="grid size-12 place-items-center rounded-2xl bg-muted text-muted-foreground"><MessageSquareText className="size-5" /></div>
@@ -191,6 +192,7 @@ export function ResearchPaperDemo({ embedded = false }: { embedded?: boolean }) 
           </div>
         </section>
       </div>
+      {!embedded && <DemoSceneTour />}
     </main>
   );
 }

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { DemoSceneTour } from "./demo-scene-tour";
 
 const courses = [
   {
@@ -195,7 +196,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
         </div>
       )}
 
-      <section className="studyroom-enter grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+      <section data-demo-scene="Study dashboard" className="studyroom-enter grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
         <div>
           <h1 className="max-w-2xl text-2xl font-bold tracking-tight sm:text-3xl">Make a little progress today.</h1>
           <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-[#5f565c] sm:text-base">
@@ -271,7 +272,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
         </aside>
 
         <div className="order-1 min-w-0 space-y-5 lg:order-2">
-          <section className="studyroom-feature relative overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white p-5 shadow-sm shadow-[#171217]/5 sm:p-7">
+          <section data-demo-scene="Course progress" className="studyroom-feature relative overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white p-5 shadow-sm shadow-[#171217]/5 sm:p-7">
             <div className="relative max-w-3xl">
               <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-[#d63384]">
                 <Sparkles className="size-3.5" aria-hidden />
@@ -301,7 +302,7 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
             </div>
           </section>
 
-          <section className="studyroom-material overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white shadow-sm shadow-[#171217]/5">
+          <section data-demo-scene="Lesson and practice" className="studyroom-material overflow-hidden rounded-2xl border border-[#e7e0e4] bg-white shadow-sm shadow-[#171217]/5">
             <div className="flex gap-1 overflow-x-auto border-b border-[#e7e0e4] p-2 sm:px-4" role="tablist" aria-label="Study materials">
               {tabs.map((item) => (
                 <button
@@ -484,8 +485,9 @@ export function LearningManagementDemo({ embedded = false }: { embedded?: boolea
   }
 
   return (
-    <main className="project-demo-fullscreen studyroom-page min-h-dvh w-full bg-white px-4 py-5 text-[#171217] sm:px-6 sm:py-8">
+    <main className="project-demo-fullscreen studyroom-page min-h-dvh w-full bg-white px-4 py-5 pb-28 text-[#171217] sm:px-6 sm:py-8 sm:pb-28">
       <div className="mx-auto w-full max-w-[1320px]">{content}</div>
+      <DemoSceneTour />
     </main>
   );
 }
