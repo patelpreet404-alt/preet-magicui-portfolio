@@ -183,51 +183,6 @@ export const DATA = {
   ],
   projects: [
     {
-      title: "Olist E-Commerce Analytics",
-      href: "https://patelpreet404-alt.github.io/olist-ecommerce-analytics/",
-      dates: "Live interactive dashboard",
-      description:
-        "An end-to-end marketplace analytics studio exploring a 105,000-order funnel, customer cohorts, category GMV, and delivery SLAs across nine normalized tables.",
-      technologies: ["PostgreSQL", "SQL", "Python", "Pandas", "Cohort Analysis"],
-      links: [
-        {
-          type: "Demo",
-          href: "https://patelpreet404-alt.github.io/olist-ecommerce-analytics/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/patelpreet404-alt/olist-ecommerce-analytics",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "",
-    },
-    {
-      title: "Ledgerline Credit Risk Scorecard",
-      href: "https://ledgerline-credit-risk-demo.vercel.app/",
-      dates: "Interactive synthetic-data demo",
-      description:
-        "A credit-risk decision workspace for portfolio exposure, expected loss, scorecard health, stress scenarios, and application review. Uses illustrative demo data.",
-      technologies: ["Python", "Scikit-learn", "SQL", "Power BI", "Logistic Regression"],
-      links: [
-        {
-          type: "Demo",
-          href: "https://ledgerline-credit-risk-demo.vercel.app/",
-          icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/patelpreet404-alt/credit-risk-scorecard",
-          icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "",
-    },
-
-    {
       title: "AI Learning Management System",
       slug: "ai-learning-management",
       placement: "featured",
