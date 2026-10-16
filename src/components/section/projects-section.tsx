@@ -1,8 +1,6 @@
-import BlurFade from "@/components/magicui/blur-fade";
 import { ProjectCard } from "@/components/project-card";
-import { DATA } from "@/data/resume";
-
-const BLUR_FADE_DELAY = 0.04;
+import { ProjectMarquee } from "@/components/section/project-marquee";
+import { FEATURED_PROJECTS } from "@/data/resume";
 
 export default function ProjectsSection() {
   return (
@@ -17,29 +15,45 @@ export default function ProjectsSection() {
             <div className="h-px flex-1 bg-linear-to-l from-transparent from-5% via-border via-95% to-transparent" />
           </div>
           <div className="flex flex-col items-center justify-center gap-y-3">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Check out my latest work</h2>
+            <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">Check out my latest work</h2>
             <p className="text-balance text-center text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed">
               AI tools, developer infrastructure, and systems work that I&apos;ve built or am actively researching.
             </p>
           </div>
         </div>
-        <div className="mx-auto grid w-full max-w-[800px] auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2">
-          {DATA.projects.map((project, id) => (
-            <BlurFade key={project.title} delay={BLUR_FADE_DELAY * 12 + id * 0.05} className="h-full">
-              <ProjectCard
-                href={project.href}
-                title={project.title}
-                description={project.description}
-                dates={project.dates}
-                tags={project.technologies}
-                image={project.image}
-                video={project.video}
-                links={project.links}
-                variant={id}
-              />
-            </BlurFade>
-          ))}
-        </div>
+        <ProjectMarquee>
+          <div className="project-marquee__track">
+            {[0, 1].map((copy) => (
+              <div
+                key={copy}
+                className="project-marquee__group"
+                data-copy={copy}
+              >
+                {FEATURED_PROJECTS.map((project, id) => (
+                  <div className="project-marquee__item" key={project.title + copy}>
+                    <ProjectCard
+                      id={project.slug}
+                      slug={project.slug}
+                      status={project.status}
+                      href={project.href}
+                      title={project.title}
+                      subtitle={"subtitle" in project ? project.subtitle : undefined}
+                      description={project.description}
+                      details={project.details}
+                      dates={project.dates}
+                      tags={project.technologies}
+                      image={project.image}
+                      video={project.video}
+                      links={project.links}
+                      workflow={"workflow" in project ? project.workflow : undefined}
+                      variant={id}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </ProjectMarquee>
       </div>
     </section>
   );

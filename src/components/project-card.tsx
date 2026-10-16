@@ -3,11 +3,12 @@
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { ArrowUpRight, MousePointer2 } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { DemoPointerMotion } from "./demo-pointer-motion";
 import Markdown from "react-markdown";
+import { useProjectDetails, projectSlug } from "./project-details";
+import { SaveProjectButton } from "./saved-projects";
 
 function ProjectImage({ src, alt }: { src: string; alt: string }) {
   const [imageError, setImageError] = useState(false);
@@ -20,16 +21,21 @@ function ProjectImage({ src, alt }: { src: string; alt: string }) {
     <img
       src={src}
       alt={alt}
-      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.025]"
+      className="h-full w-full object-cover transition-transform duration-350 ease-out group-hover/card:scale-[1.035]"
       onError={() => setImageError(true)}
     />
   );
 }
 
 interface Props {
+  id?: string;
+  slug?: string;
+  status?: string;
   title: string;
+  subtitle?: string;
   href?: string;
   description: string;
+  details?: string;
   dates: string;
   tags: readonly string[];
   link?: string;
@@ -40,6 +46,7 @@ interface Props {
     type: string;
     href: string;
   }[];
+  workflow?: readonly string[];
   className?: string;
   variant?: number;
 }
@@ -62,21 +69,27 @@ const fallbackStyles = [
 ];
 
 export function ProjectCard({
+  id,
+  slug,
+  status,
   title,
+  subtitle,
   href,
   description,
+  details,
   dates,
   tags,
   link,
   image,
   video,
   links,
+  workflow,
   className,
   variant = 0,
 }: Props) {
   const previewRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [previewIsVisible, setPreviewIsVisible] = useState(false);
+  const { openProject } = useProjectDetails();
   const hrefIsExternal = Boolean(href?.startsWith("http"));
   const frame = previewFrames[variant % previewFrames.length];
 
@@ -91,7 +104,6 @@ export function ProjectCard({
     let intersects = false;
     const updateVisibility = () => {
       const shouldPlay = intersects && !document.hidden;
-      setPreviewIsVisible(shouldPlay);
       const videoElement = videoRef.current;
       if (!videoElement) return;
       if (shouldPlay) {
@@ -129,7 +141,7 @@ export function ProjectCard({
       playsInline
       preload="metadata"
       aria-hidden="true"
-      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-[1.025]"
+      className="h-full w-full object-cover transition-transform duration-350 ease-out group-hover/card:scale-[1.035]"
     />
   ) : image ? (
     <ProjectImage src={image} alt={title} />
@@ -150,17 +162,15 @@ export function ProjectCard({
   return (
     <article
       className={cn(
-        "group/card flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:shadow-lg hover:ring-2 hover:ring-muted focus-within:ring-2 focus-within:ring-ring/60",
+        "group/card flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-[border-color,box-shadow] duration-200 ease-out hover:border-foreground/30 hover:shadow-[0_16px_40px_-28px_rgba(180,210,255,0.35)] focus-within:border-foreground/30 focus-within:ring-2 focus-within:ring-ring/60",
         className
       )}
     >
       <div className="relative shrink-0 p-[6px] pt-2" style={{ background: frame.background }}>
         <div
           ref={previewRef}
-          className="project-preview demo-motion-root relative aspect-video overflow-hidden rounded-t-[8px] bg-background"
-          data-demo-depth
+          className="project-preview relative aspect-video overflow-hidden rounded-t-[8px] bg-background"
         >
-          <DemoPointerMotion />
           {href ? (
             <Link
               href={href}
@@ -173,19 +183,6 @@ export function ProjectCard({
             </Link>
           ) : (
             cover
-          )}
-          {variant < 3 && !video && (
-            <span
-              className="project-preview-cursor-track"
-              data-active={previewIsVisible}
-              aria-hidden="true"
-              style={{ animationDelay: `${-variant * 1.1}s` }}
-            >
-              <span className="project-preview-cursor">
-                <span className="project-preview-cursor-pulse" />
-                <MousePointer2 className="relative z-10 size-6 fill-white text-zinc-950 drop-shadow-[0_2px_3px_rgba(0,0,0,0.6)]" />
-              </span>
-            </span>
           )}
         </div>
         {links && links.length > 0 && (
@@ -201,7 +198,7 @@ export function ProjectCard({
                   onClick={(event) => event.stopPropagation()}
                 >
                   <Badge
-                    className="flex items-center gap-1.5 bg-black text-xs text-white shadow-sm transition-transform duration-200 hover:-translate-y-0.5 hover:bg-black/90"
+                    className="flex items-center gap-1.5 bg-black text-xs text-white shadow-sm transition-colors duration-200 hover:bg-black/90"
                     variant="default"
                   >
                     {projectLink.icon}
@@ -216,8 +213,9 @@ export function ProjectCard({
       <div className="flex flex-1 flex-col gap-3 p-6">
         <div className="flex items-start justify-between gap-2">
           <div className="flex flex-col gap-1">
-            <h3 className="font-semibold tracking-tight">{title}</h3>
-            <time className="text-xs text-muted-foreground">{dates}</time>
+            <h3 className="text-base font-semibold leading-snug tracking-tight md:text-lg">{title}</h3>
+            {subtitle && <p className="text-xs leading-snug text-muted-foreground">{subtitle}</p>}
+            <span className="mt-1 inline-flex w-fit rounded-full border border-border bg-muted/50 px-2.5 py-1 text-[11px] font-medium text-foreground/85">{status ?? dates}</span>
           </div>
           {href && (
             <Link
@@ -231,7 +229,7 @@ export function ProjectCard({
             </Link>
           )}
         </div>
-        <div className="prose max-w-full flex-1 text-xs text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
+        <div className="prose max-w-full flex-1 text-xs text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert md:text-sm">
           <Markdown>{description}</Markdown>
         </div>
         {tags.length > 0 && (
@@ -248,6 +246,17 @@ export function ProjectCard({
             ))}
           </div>
         )}
+        <div className="project-card__actions">
+          <button
+            type="button"
+            className="mt-1 inline-flex min-h-11 w-fit items-center gap-1.5 text-xs font-medium text-foreground underline-offset-4 transition-colors hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:text-sm"
+            onClick={(event) => openProject(slug ?? id ?? projectSlug(title), event.currentTarget)}
+            aria-haspopup="dialog"
+          >
+            View project details <ArrowUpRight className="size-3.5" aria-hidden />
+          </button>
+          <SaveProjectButton id={slug ?? id ?? projectSlug(title)} title={title} />
+        </div>
       </div>
     </article>
   );

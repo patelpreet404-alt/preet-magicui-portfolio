@@ -30,3 +30,7 @@ This project can be deployed as a Next.js site on Vercel. The default site URL i
 ## License
 
 The template is MIT licensed. See [LICENSE](LICENSE) for the original copyright notice.
+
+## Latest preview
+
+[View the portfolio and My Journey section](https://preet-magicui-portfolio-otqdmyvze-patelpreet404-alts-projects.vercel.app/#journey).

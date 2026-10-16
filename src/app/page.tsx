@@ -1,63 +1,69 @@
 import BlurFade from "@/components/magicui/blur-fade";
-import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DATA } from "@/data/resume";
 import Link from "next/link";
-import Markdown from "react-markdown";
 import ContactSection from "@/components/section/contact-section";
 import HackathonsSection from "@/components/section/hackathons-section";
 import ProjectsSection from "@/components/section/projects-section";
+import EngineeringMapSection from "@/components/section/engineering-map-section";
+import ProjectDesignExplorerSection from "@/components/section/project-design-explorer-section";
 import WorkSection from "@/components/section/work-section";
 import TerminalPortfolioEmbed from "@/components/section/terminal-portfolio-embed";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight, FileText } from "lucide-react";
 import { InstitutionLogo } from "@/components/institution-logo";
-
+import HeroIdentity from "@/components/hero-identity";
+import MoreProjectsSection from "@/components/section/more-projects-section";
+import JourneySection from "@/components/section/journey-section";
+import OnlinePresenceSection from "@/components/section/online-presence-section";
+import TechStackSection from "@/components/section/tech-stack-section";
 const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   return (
     <main className="min-h-dvh flex flex-col gap-14 relative">
-      <section id="hero">
-        <div className="mx-auto w-full max-w-2xl space-y-8">
-          <div className="gap-2 gap-y-6 flex flex-col md:flex-row justify-between">
-            <div className="gap-2 flex flex-col order-2 md:order-1">
-              <BlurFadeText
-                delay={BLUR_FADE_DELAY}
-                className="text-3xl font-semibold tracking-tighter sm:text-4xl lg:text-5xl"
-                yOffset={8}
-                text={`Hi, I'm ${DATA.name.split(" ")[0]}`}
-              />
-              <BlurFadeText
-                className="text-muted-foreground max-w-[600px] md:text-lg lg:text-xl"
-                delay={BLUR_FADE_DELAY}
-                text={DATA.description}
-              />
+      <section id="hero" aria-labelledby="intro-heading" className="hero-section">
+        <div className="mx-auto w-full max-w-3xl">
+          <div className="flex flex-col-reverse items-start justify-between gap-7 sm:flex-row sm:items-center sm:gap-10">
+            <div className="min-w-0">
+              <BlurFade delay={BLUR_FADE_DELAY}>
+                <h1 id="intro-heading" className="hero-name text-[clamp(2.9rem,8vw,5.2rem)]">Hi, I&apos;m {DATA.name.split(" ")[0]}.</h1>
+              </BlurFade>
+              <div className="mt-3"><HeroIdentity /></div>
             </div>
-            <BlurFade delay={BLUR_FADE_DELAY} className="order-1 md:order-2">
-              <Avatar className="size-24 md:size-32 border rounded-full shadow-lg ring-4 ring-muted">
+            <BlurFade delay={BLUR_FADE_DELAY} className="shrink-0 self-end sm:self-auto">
+              <Avatar className="size-20 border border-white/20 ring-4 ring-white/5 sm:size-28">
                 <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
-                <AvatarFallback className="bg-muted text-2xl font-semibold tracking-tight">{DATA.initials}</AvatarFallback>
+                <AvatarFallback className="bg-muted text-2xl font-semibold">{DATA.initials}</AvatarFallback>
               </Avatar>
             </BlurFade>
           </div>
-        </div>
-      </section>
-      <section id="about">
-        <div className="flex min-h-0 flex-col gap-y-4">
-          <BlurFade delay={BLUR_FADE_DELAY * 3}>
-            <h2 className="text-xl font-bold">About</h2>
+          <BlurFade delay={BLUR_FADE_DELAY * 2}>
+            <p className="mt-7 max-w-[62ch] text-pretty text-base leading-7 text-foreground/90 sm:mt-8 sm:text-lg sm:leading-8">
+              I build practical AI tools, backend systems, and software that helps people get useful work done.
+            </p>
           </BlurFade>
-          <BlurFade delay={BLUR_FADE_DELAY * 4}>
-            <div className="prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
-              <Markdown>{DATA.summary}</Markdown>
-            </div>
-          </BlurFade>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <a href="#projects" className="portfolio-button portfolio-button--primary">Explore projects <ArrowDown size={16} aria-hidden="true" /></a>
+            <a href="#contact" className="portfolio-button portfolio-button--secondary">Get in touch <ArrowUpRight size={16} aria-hidden="true" /></a>
+            <a href={DATA.contact.social.Resume.url} target="_blank" rel="noopener noreferrer" className="portfolio-button portfolio-button--text"><FileText size={16} aria-hidden="true" /> Resume</a>
+          </div>
+          <div className="credibility-row mt-8" aria-label="Education and experience">
+            <span>Delhi Technological University</span>
+            <span>Rang Technologies internship</span>
+            <span>Attendance and analytics platform for 50+ employees</span>
+          </div>
+          <div id="about" className="mt-9 max-w-[68ch] border-t border-white/10 pt-5">
+            <h2 className="sr-only">About Preet</h2>
+            <p className="text-sm leading-7 text-muted-foreground sm:text-base">
+              I work across the stack, from data flow and backend logic through the interface people use to complete a task.
+            </p>
+          </div>
         </div>
       </section>
       <section id="focus">
         <div className="flex min-h-0 flex-col gap-y-5">
           <div>
-            <h2 className="text-xl font-bold">What I build</h2>
+            <h2 className="text-xl font-semibold tracking-tight">What I build</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
               I like projects that connect solid engineering with a clear use for the person on the other side.
             </p>
@@ -78,7 +84,7 @@ export default function Page() {
       <section id="work">
         <div className="flex min-h-0 flex-col gap-y-6">
           <BlurFade delay={BLUR_FADE_DELAY * 7}>
-            <h2 className="text-xl font-bold">Experience</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Experience</h2>
           </BlurFade>
           <BlurFade delay={BLUR_FADE_DELAY * 8}>
             <WorkSection />
@@ -88,7 +94,7 @@ export default function Page() {
       <section id="education">
         <div className="flex min-h-0 flex-col gap-y-6">
           <div>
-            <h2 className="text-xl font-bold">Education</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Education</h2>
             <p className="mt-2 text-sm text-muted-foreground">Computer Science and Engineering, Delhi Technological University · 2023–2027</p>
           </div>
           <div className="flex flex-col gap-8">
@@ -127,33 +133,19 @@ export default function Page() {
           </p>
         </div>
       </section>
-      <section id="skills">
-        <div className="flex min-h-0 flex-col gap-y-5">
-          <div>
-            <h2 className="text-xl font-bold">Technical toolkit</h2>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">The languages, frameworks, and tools I’ve used across these projects.</p>
-          </div>
-          <div className="divide-y divide-border border-y border-border">
-            {DATA.skillGroups.map((group) => (
-              <div key={group.title} className="grid gap-3 py-4 sm:grid-cols-[190px_minmax(0,1fr)] sm:gap-6">
-                <h3 className="text-sm font-semibold">{group.title}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {group.skills.map((skill) => (
-                    <span key={skill} className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-foreground">{skill}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <JourneySection />
+      <OnlinePresenceSection />
+      <TechStackSection />
       <BlurFade delay={BLUR_FADE_DELAY * 11}>
         <ProjectsSection />
       </BlurFade>
+      <MoreProjectsSection />
+      <EngineeringMapSection />
+      <ProjectDesignExplorerSection />
       <section id="research-learning">
         <div className="flex min-h-0 flex-col gap-y-5">
           <div>
-            <h2 className="text-xl font-bold">Research & learning</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Research & learning</h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">Topics I’m exploring alongside coursework and project work.</p>
           </div>
           <div className="grid gap-8 border-y border-border py-5 md:grid-cols-[1.4fr_1fr] md:gap-12">

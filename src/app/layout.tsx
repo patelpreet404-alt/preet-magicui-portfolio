@@ -1,23 +1,34 @@
 import Navbar from "@/components/navbar";
+import SiteBackground from "@/components/site-background";
+import { MotionSettingsProvider } from "@/components/motion-settings";
+import ProjectDetailsShell from "@/components/project-details-shell";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Bodoni_Moda, DM_Mono, Manrope } from "next/font/google";
 import "./globals.css";
-import { FlickeringGrid } from "@/components/magicui/flickering-grid";
+import "./portfolio-polish.css";
+import "./design-explorer.css";
 
-const geist = Geist({
+const manrope = Manrope({
   subsets: ["latin"],
   variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
+const dmMono = DM_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500"],
   variable: "--font-mono",
+});
+
+const bodoni = Bodoni_Moda({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -66,28 +77,23 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased relative",
-          geist.variable,
-          geistMono.variable
+          manrope.variable,
+          dmMono.variable,
+          bodoni.variable
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="light">
+        <ThemeProvider attribute="class" defaultTheme="dark" storageKey="portfolio-space-theme">
+          <MotionSettingsProvider>
           <TooltipProvider delayDuration={0}>
-            <div className="site-grid absolute inset-0 top-0 left-0 right-0 h-[100px] overflow-hidden z-0">
-              <FlickeringGrid
-                className="h-full w-full"
-                squareSize={2}
-                gridGap={2}
-                style={{
-                  maskImage: "linear-gradient(to bottom, black, transparent)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black, transparent)",
-                }}
-              />
-            </div>
-            <div className="site-content relative z-10 max-w-2xl mx-auto py-12 pb-24 sm:py-24 px-6">
-              {children}
-            </div>
-            <Navbar />
+            <ProjectDetailsShell>
+              <SiteBackground />
+              <div className="site-content relative z-10 mx-auto w-full max-w-2xl px-6 py-12 pb-36 sm:py-24 sm:pb-36">
+                {children}
+              </div>
+              <Navbar />
+            </ProjectDetailsShell>
           </TooltipProvider>
+          </MotionSettingsProvider>
         </ThemeProvider>
       </body>
     </html>
