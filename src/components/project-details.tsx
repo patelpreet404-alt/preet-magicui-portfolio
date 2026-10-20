@@ -116,8 +116,10 @@ export function ProjectDetailsProvider({ projects, children }: { projects: reado
       body.style.overflow = oldBody;
       document.dispatchEvent(new CustomEvent("portfolio:project-details", { detail: { open: false } }));
       const trigger = triggerRef.current;
-      if (trigger?.isConnected) trigger.focus({ preventScroll: true });
-      window.scrollTo({ top: scrollYRef.current, behavior: "instant" });
+      requestAnimationFrame(() => {
+        if (trigger?.isConnected) trigger.focus({ preventScroll: true });
+        window.scrollTo({ top: scrollYRef.current, behavior: "instant" });
+      });
     };
   }, [project]);
 
