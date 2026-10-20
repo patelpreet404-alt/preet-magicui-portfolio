@@ -18,8 +18,8 @@ export default function WorkSection() {
           value={work.company}
           className="w-full border-y border-border"
         >
-          <AccordionTrigger className="group p-4 text-left no-underline hover:no-underline sm:p-5 [&>svg]:hidden">
-            <div className="flex w-full items-center justify-between gap-4">
+          <AccordionTrigger className="group min-w-0 p-4 text-left no-underline hover:no-underline sm:p-5 [&>svg]:hidden">
+            <div className="work-entry__layout flex w-full items-center justify-between gap-4">
               <div className="flex min-w-0 items-center gap-4">
                 <InstitutionLogo name={work.company} src={work.logoUrl} />
                 <div className="min-w-0">
@@ -31,7 +31,7 @@ export default function WorkSection() {
                   </p>
                 </div>
               </div>
-              <div className="flex shrink-0 flex-col items-end gap-2 text-right">
+              <div className="work-entry__meta flex shrink-0 flex-col items-end gap-2 text-right">
                 <span className="text-xs tabular-nums text-muted-foreground">{work.start} – {work.end ?? "Present"}</span>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-foreground transition-colors group-hover:bg-muted group-focus-visible:ring-2 group-focus-visible:ring-ring">
                   View internship details

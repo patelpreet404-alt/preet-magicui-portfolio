@@ -67,7 +67,7 @@ export const DATA = {
     "Computer Science and Engineering student at DTU building practical AI tools, backend systems, and developer-focused software.",
   summary:
     "I'm studying Computer Science and Engineering at Delhi Technological University. I work across the stack, from APIs and data flows to clear tools people can use. My projects include an AI learning platform, research-paper Q&A with citations, and a C++17 compiler. At Rang Technologies, I built an attendance and analytics platform for 50+ employees.",
-  avatarUrl: "/preet-patel-avatar.jpg",
+  avatarUrl: "/preet-patel-avatar.webp",
   focusAreas: [
     {
       title: "Backend systems",
@@ -372,7 +372,7 @@ On the repository’s demo program, the optimizer reduces the output from 57 ins
 The work is still in progress, so there is no public demo or source repository to link yet.`,
       technologies: ["Python", "Cuckoo Sandbox", "Random Forest", "SHA-256", "MySQL"],
       links: [],
-      image: "/projects/crypto-ransomware-preview.png",
+      image: "/projects/crypto-ransomware-preview.webp",
       video: "",
     },
     {
@@ -433,7 +433,7 @@ This is a development-stage project using synthetic examples. It does not claim 
           icon: <Icons.globe className="size-3" />,
         },
       ],
-      image: "/projects/subbieguard-deployed.png",
+      image: "/projects/subbieguard-deployed.webp",
       video: "",
     },
     {
@@ -488,7 +488,7 @@ The linked deployment opens with the Cook Along landing page shown on this card,
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "/projects/foodfolk-preview.jpg",
+      image: "/projects/foodfolk-preview.webp",
       video: "",
     },
     {

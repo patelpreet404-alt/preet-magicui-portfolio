@@ -95,7 +95,7 @@ export async function GET(): Promise<Response> {
     github: { contributions, publicRepos }
   };
   const complete = leetcode !== null && neetcode !== null && contributions !== null && publicRepos !== null;
-  return Response.json(stats, {
+  return Response.json({ ...stats, fetchedAt: new Date().toISOString() }, {
     headers: { 'Cache-Control': `public, s-maxage=${complete ? 900 : 60}, stale-while-revalidate=300` }
   });
 }

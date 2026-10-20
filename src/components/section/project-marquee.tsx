@@ -7,6 +7,8 @@ export function ProjectMarquee({ children }: { children: ReactNode }) {
   const regionRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
+  const [inView, setInView] = useState(false);
+  const [pageVisible, setPageVisible] = useState(true);
   const [userPaused, setUserPaused] = useState(false);
   const [pointerInside, setPointerInside] = useState(false);
   const [focusInside, setFocusInside] = useState(false);
@@ -16,11 +18,25 @@ export function ProjectMarquee({ children }: { children: ReactNode }) {
   const [touchPlaying, setTouchPlaying] = useState(false);
   const [touchPlaybackUsed, setTouchPlaybackUsed] = useState(false);
   const inputModeRef = useRef<"keyboard" | "pointer">("pointer");
-  const paused = detailOpen || reducedMotion || (touchBrowsing
+  const paused = !inView || !pageVisible || detailOpen || reducedMotion || (touchBrowsing
     ? !touchPlaying || focusInside
     : userPaused || pointerInside || focusInside);
   const pausedRef = useRef(paused);
   useEffect(() => { pausedRef.current = paused; }, [paused]);
+
+  useEffect(() => {
+    const region = regionRef.current;
+    if (!region) return;
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting));
+    const updateVisibility = () => setPageVisible(!document.hidden);
+    observer.observe(region);
+    updateVisibility();
+    document.addEventListener("visibilitychange", updateVisibility);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", updateVisibility);
+    };
+  }, []);
 
   useEffect(() => {
     const markKeyboardInput = () => { inputModeRef.current = "keyboard"; };
@@ -73,9 +89,13 @@ export function ProjectMarquee({ children }: { children: ReactNode }) {
     } else {
       viewport.scrollLeft = 0;
     }
+    if (!inView || !pageVisible || paused) return;
+    let groupWidth = group.offsetWidth;
+    const resizeObserver = new ResizeObserver(() => { groupWidth = group.offsetWidth; });
+    resizeObserver.observe(group);
     const tick = (time: number) => {
-      if (previousTime && !pausedRef.current && group.offsetWidth) {
-        offsetRef.current = (offsetRef.current + Math.min(time - previousTime, 50) * 0.026) % group.offsetWidth;
+      if (previousTime && !pausedRef.current && groupWidth) {
+        offsetRef.current = (offsetRef.current + Math.min(time - previousTime, 50) * 0.026) % groupWidth;
       }
       previousTime = time;
       if (touchBrowsing) {
@@ -86,8 +106,11 @@ export function ProjectMarquee({ children }: { children: ReactNode }) {
       frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [touchBrowsing, reducedMotion, touchPlaying]);
+    return () => {
+      cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+    };
+  }, [touchBrowsing, reducedMotion, touchPlaying, inView, pageVisible, paused]);
 
   const browse = (direction: number) => {
     const viewport = viewportRef.current;

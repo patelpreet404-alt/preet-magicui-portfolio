@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Database, Layers3, Minus, Plus, RotateCcw, Workflow } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { ArrowDownRight, ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, Database, Layers3, Minus, Plus, RotateCcw, Workflow } from "lucide-react";
 import { DATA } from "@/data/resume";
 import { PROJECT_DESIGNS } from "@/data/project-design-explorer";
 import { PROJECT_SCHEMAS } from "@/data/project-schemas";
@@ -20,17 +20,27 @@ export default function ProjectDesignExplorerSection() {
   const [view, setView] = useState<ViewId>("overview");
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [zoom, setZoom] = useState(90);
+  const projectRowRef = useRef<HTMLDivElement>(null);
   const project = PROJECT_DESIGNS.find((item) => item.id === projectId) ?? PROJECT_DESIGNS[0];
   const projectInfo = useMemo(() => DATA.projects.find((item) => item.title === project.title), [project.title]);
   const selectedNode = project.overview.find((node) => node.id === selectedNodeId);
   const schema = project.database.schemaKey ? PROJECT_SCHEMAS[project.database.schemaKey] : undefined;
   const schemaCount = schema?.tables.length ?? 0;
-  const relationCount = schema?.relations.length ?? 0;
 
   const selectProject = (id: string) => {
     setProjectId(id);
     setSelectedNodeId(null);
     setZoom(90);
+    const row = projectRowRef.current;
+    const button = Array.from(row?.querySelectorAll<HTMLButtonElement>("[data-project-id]") ?? []).find((item) => item.dataset.projectId === id);
+    if (row && button) row.scrollTo({ left: row.scrollLeft + button.getBoundingClientRect().left - row.getBoundingClientRect().left - 12, behavior: "smooth" });
+  };
+
+  const moveProject = (delta: number) => {
+    const current = PROJECT_DESIGNS.findIndex((item) => item.id === projectId);
+    const next = Math.max(0, Math.min(PROJECT_DESIGNS.length - 1, current + delta));
+    selectProject(PROJECT_DESIGNS[next].id);
+    projectRowRef.current?.querySelectorAll<HTMLButtonElement>("[data-project-id]")[next]?.focus({ preventScroll: true });
   };
 
   const adjustZoom = (delta: number) => setZoom((current) => Math.min(100, Math.max(80, current + delta)));
@@ -63,7 +73,10 @@ export default function ProjectDesignExplorerSection() {
       </div>
 
       <div className="design-explorer__shell">
-        <div className="design-explorer__project-row" aria-label="Choose a project">
+        <div ref={projectRowRef} className="design-explorer__project-row" aria-label="Choose a project" onKeyDown={(event) => {
+          if (event.key === "ArrowRight") { event.preventDefault(); moveProject(1); }
+          if (event.key === "ArrowLeft") { event.preventDefault(); moveProject(-1); }
+        }}>
           {PROJECT_DESIGNS.map((item, index) => {
             const itemInfo = DATA.projects.find((entry) => entry.title === item.title);
             const active = item.id === projectId;
@@ -72,6 +85,7 @@ export default function ProjectDesignExplorerSection() {
                 key={item.id}
                 type="button"
                 className="design-explorer__project"
+                data-project-id={item.id}
                 data-active={active}
                 aria-pressed={active}
                 onClick={() => selectProject(item.id)}
@@ -82,6 +96,11 @@ export default function ProjectDesignExplorerSection() {
               </button>
             );
           })}
+        </div>
+
+        <div className="design-explorer__project-cue">
+          <span>Swipe to browse projects · {PROJECT_DESIGNS.findIndex((item) => item.id === projectId) + 1} / {PROJECT_DESIGNS.length}</span>
+          <div><button type="button" aria-label="Previous design project" disabled={projectId === PROJECT_DESIGNS[0].id} onClick={() => moveProject(-1)}><ChevronLeft aria-hidden="true" /></button><button type="button" aria-label="Next design project" disabled={projectId === PROJECT_DESIGNS[PROJECT_DESIGNS.length - 1].id} onClick={() => moveProject(1)}><ChevronRight aria-hidden="true" /></button></div>
         </div>
 
         <div className="design-explorer__toolbar">
@@ -125,12 +144,12 @@ export default function ProjectDesignExplorerSection() {
             <div>
               <p className="design-explorer__eyebrow">{project.title}</p>
               <h3>{view === "overview" ? "System overview" : view === "services" ? "Service breakdown" : schema?.modelKind === "source-data" ? "Sample data structure" : "Database schema"}</h3>
-              <p>{view === "database" ? project.database.note : project.summary}</p>
+              {view === "database" && schema ? <details className="design-explorer__source-note"><summary>About this data model</summary><p>{project.database.note}</p></details> : <p>{view === "database" ? project.database.note : project.summary}</p>}
               {project.statusNote && <p className="design-explorer__status-note">Build status · {project.statusNote}</p>}
             </div>
-            {view === "database" && (
+            {view === "database" && !schema && (
               <div className="design-explorer__schema-count">
-                {schema?.modelKind === "source-data" ? project.database.label : schemaCount ? <><strong>{schemaCount}</strong> tables <span>·</span> <strong>{relationCount}</strong> declared relations</> : project.database.label}
+                {project.database.label}
               </div>
             )}
           </div>

@@ -6,6 +6,15 @@ import { ONLINE_PROFILES, type OnlinePresenceStats } from '@/data/online-presenc
 import styles from './online-presence-section.module.css';
 
 type OnlineProfile = (typeof ONLINE_PROFILES)[number];
+type FetchedProfile = Exclude<OnlineProfile['id'], 'linkedin'>;
+type ProfileFreshness = Partial<Record<FetchedProfile, { updatedAt: string; stale: boolean }>>;
+type StatsSnapshot = { stats: OnlinePresenceStats | null; freshness: ProfileFreshness };
+
+function UpdatedLabel({ freshness }: { freshness: ProfileFreshness[FetchedProfile] }) {
+  if (!freshness) return null;
+  const date = new Date(freshness.updatedAt);
+  return <span className={styles.updated}>{freshness.stale ? 'Last known · ' : 'Updated '}<time dateTime={freshness.updatedAt} title={date.toLocaleString()}>{date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}</time>{freshness.stale ? ' · may be outdated' : ''}</span>;
+}
 
 function ProfileMark({ id }: { id: OnlineProfile['id'] }) {
   if (id === 'github') return <Github size={21} strokeWidth={1.8} aria-hidden="true" />;
@@ -27,7 +36,7 @@ function SolvedBreakdown({ easy, medium, hard, solved }: { easy: number; medium:
   );
 }
 
-function ProfileCard({ profile, stats, loading }: { profile: OnlineProfile; stats: OnlinePresenceStats | null; loading: boolean }) {
+function ProfileCard({ profile, stats, loading, freshness }: { profile: OnlineProfile; stats: OnlinePresenceStats | null; loading: boolean; freshness: ProfileFreshness }) {
   const leetcode = stats?.leetcode;
   const neetcode = stats?.neetcode;
   const contributions = stats?.github.contributions;
@@ -54,6 +63,7 @@ function ProfileCard({ profile, stats, loading }: { profile: OnlineProfile; stat
           <strong>{profile.name}</strong>
           <span className={styles.handle}>{profile.handle}</span>
           <span className={styles.description}>{description}</span>
+          {profile.id === 'linkedin' ? <span className={styles.updated}>Connections self-reported</span> : <UpdatedLabel freshness={freshness[profile.id]} />}
           {profile.featured && (
             <span className={styles.featureMetrics}>
               {leetcode ? (
@@ -84,7 +94,7 @@ function ProfileCard({ profile, stats, loading }: { profile: OnlineProfile; stat
 }
 
 export default function OnlinePresenceSection() {
-  const [stats, setStats] = useState<OnlinePresenceStats | null>(null);
+  const [{ stats, freshness }, setSnapshot] = useState<StatsSnapshot>({ stats: null, freshness: {} });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -93,10 +103,29 @@ export default function OnlinePresenceSection() {
       try {
         const response = await fetch('/api/online-presence', { cache: 'no-store' });
         if (!response.ok) throw new Error('Profile statistics could not be loaded');
-        const nextStats = await response.json() as OnlinePresenceStats;
-        if (active) setStats(nextStats);
+        const nextStats = await response.json() as OnlinePresenceStats & { fetchedAt?: string };
+        const updatedAt = nextStats.fetchedAt && Number.isFinite(Date.parse(nextStats.fetchedAt)) ? nextStats.fetchedAt : new Date().toISOString();
+        if (active) setSnapshot((previous) => {
+          const freshness = { ...previous.freshness };
+          const available = { leetcode: nextStats.leetcode !== null, neetcode: nextStats.neetcode !== null, github: nextStats.github.contributions !== null && nextStats.github.publicRepos !== null };
+          for (const id of Object.keys(available) as FetchedProfile[]) {
+            if (available[id]) freshness[id] = { updatedAt, stale: Date.now() - Date.parse(updatedAt) > 20 * 60 * 1000 };
+            else if (freshness[id]) freshness[id] = { ...freshness[id], stale: true };
+          }
+          return {
+            stats: {
+              leetcode: nextStats.leetcode ?? previous.stats?.leetcode ?? null,
+              neetcode: nextStats.neetcode ?? previous.stats?.neetcode ?? null,
+              github: {
+                contributions: nextStats.github.contributions ?? previous.stats?.github.contributions ?? null,
+                publicRepos: nextStats.github.publicRepos ?? previous.stats?.github.publicRepos ?? null
+              }
+            },
+            freshness
+          };
+        });
       } catch {
-        if (active) setStats(null);
+        if (active) setSnapshot((previous) => ({ ...previous, freshness: Object.fromEntries(Object.entries(previous.freshness).map(([id, value]) => [id, { ...value, stale: true }])) }));
       } finally {
         if (active) setLoading(false);
       }
@@ -116,9 +145,9 @@ export default function OnlinePresenceSection() {
           <p>Explore my code, coding practice, and professional background.</p>
         </header>
         <ul className={styles.cards}>
-          {ONLINE_PROFILES.map((profile) => <ProfileCard key={profile.id} profile={profile} stats={stats} loading={loading} />)}
+          {ONLINE_PROFILES.map((profile) => <ProfileCard key={profile.id} profile={profile} stats={stats} loading={loading} freshness={freshness} />)}
         </ul>
-        <p className={styles.sourceNote}>Coding and GitHub counts come from public profiles and refresh about every 15 minutes. LinkedIn connections are self-reported.</p>
+        <p className={styles.sourceNote}>Public-profile counts refresh about every 15 minutes. GitHub contributions cover the last year. If a refresh fails, the last known figures stay visible and are marked.</p>
       </div>
     </section>
   );

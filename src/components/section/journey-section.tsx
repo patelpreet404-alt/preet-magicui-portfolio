@@ -183,9 +183,22 @@ export default function JourneySection() {
     let frame = 0;
     const update = () => {
       frame = 0;
+      const items = timelineRef.current?.querySelectorAll<HTMLElement>('[data-journey-milestone]');
+      if (!items?.length) return;
       const maxScroll = viewport.scrollWidth - viewport.clientWidth;
-      const position = maxScroll > 0 ? viewport.scrollLeft / maxScroll : 0;
-      setActiveIndex(Math.round(position * (CHAPTERS.length - 1)));
+      if (maxScroll > 0 && viewport.scrollLeft >= maxScroll - 2) {
+        setActiveIndex(CHAPTERS.length - 1);
+        return;
+      }
+      const viewportStart = viewport.getBoundingClientRect().left + 8;
+      let closest = 0;
+      let distance = Number.POSITIVE_INFINITY;
+      items.forEach((item, index) => {
+        const rect = item.getBoundingClientRect();
+        const nextDistance = Math.abs(viewportStart - rect.left);
+        if (nextDistance < distance) { closest = index; distance = nextDistance; }
+      });
+      setActiveIndex(closest);
     };
     const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
     schedule();
@@ -204,9 +217,10 @@ export default function JourneySection() {
   const moveToChapter = (index: number) => {
     const viewport = viewportRef.current;
     if (!viewport) return;
-    const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+    const item = timelineRef.current?.querySelectorAll<HTMLElement>('[data-journey-milestone]')[Math.max(0, Math.min(index, CHAPTERS.length - 1))];
+    if (!item) return;
     viewport.scrollTo({
-      left: maxScroll * Math.max(0, Math.min(index, CHAPTERS.length - 1)) / (CHAPTERS.length - 1),
+      left: viewport.scrollLeft + item.getBoundingClientRect().left - viewport.getBoundingClientRect().left - 8,
       behavior: reducedMotion ? 'instant' : 'smooth'
     });
   };
@@ -222,15 +236,13 @@ export default function JourneySection() {
       <header className={styles.intro}>
         <p className={styles.eyebrow}>The story so far</p>
         <h2 id="journey-heading">My Journey<span>.</span></h2>
-        <p className={styles.lead}>From curious beginnings to building intelligent systems — a timeline of learning, creating, and growing.</p>
-        <p className={styles.introText}>My journey began in Saudi Arabia, took me to Delhi Technological University, and evolved into a passion for software engineering, artificial intelligence, and solving real-world problems.</p>
-        <p className={styles.dateNote}>Project chapters marked “During B.Tech” are grouped by theme; their exact dates and order are not documented.</p>
+        <p className={styles.lead}>From Saudi Arabia to Delhi Technological University, I found my path through software, AI, and the problems worth solving.</p>
       </header>
 
       <div className={styles.timelineControls}>
         <div>
           <span className={styles.position}>{String(activeIndex + 1).padStart(2, '0')} / {String(CHAPTERS.length).padStart(2, '0')}</span>
-          <p>Ten chapters, one story. Swipe or use the arrows to explore.</p>
+          <p>Swipe or use the arrows to explore.</p>
         </div>
         <div className={styles.arrowControls}>
           <button type="button" aria-label="Previous journey chapter" disabled={activeIndex === 0} onClick={() => moveToChapter(activeIndex - 1)}><ChevronLeft size={20} aria-hidden="true" /></button>
@@ -259,6 +271,11 @@ export default function JourneySection() {
           ><span /></button>
         ))}
       </div>
+
+      <details className={styles.dateDisclosure}>
+        <summary>About the chapter dates</summary>
+        <p>Project chapters marked “During B.Tech” are grouped by theme; their exact dates and order are not documented.</p>
+      </details>
 
       <div className={styles.beyond}>
         <div className={styles.beyondHeading}>

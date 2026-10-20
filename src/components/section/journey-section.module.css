@@ -5,7 +5,7 @@
   color: var(--foreground);
 }
 
-.intro { max-width: 710px; margin: 0 auto 3.5rem; text-align: center; }
+.intro { max-width: 710px; margin: 0 auto 2.2rem; text-align: center; }
 .eyebrow { margin: 0 0 .75rem; color: #96cfff; font-size: .68rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
 .intro h2 { margin: 0; font-family: var(--font-display), Georgia, serif; font-size: clamp(3.2rem, 6.8vw, 5.5rem); font-style: italic; font-weight: 500; letter-spacing: -.035em; line-height: 1.07; }
 .intro h2 span { color: #a5d4f5; }
@@ -21,15 +21,15 @@
 .arrowControls button:not(:disabled):hover { border-color: #9ecff2; background: #18314a; transform: translateY(-2px); }
 .arrowControls button:disabled { cursor: default; opacity: .38; }
 .arrowControls button:focus-visible, .timelineViewport:focus-visible, .chapterPagination button:focus-visible { outline: 2px solid #bde4ff; outline-offset: 3px; }
-.timelineViewport { overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain; scroll-behavior: smooth; scrollbar-color: rgb(171 202 232 / 25%) transparent; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+.timelineViewport { overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain; scroll-behavior: smooth; scroll-snap-type: x proximity; touch-action: pan-x pan-y; scrollbar-color: rgb(171 202 232 / 25%) transparent; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
 .timeline { --chapter-width: clamp(270px, 30vw, 340px); display: flex; width: max-content; min-width: 100%; align-items: flex-start; gap: 1rem; margin: 0; padding: .5rem .6rem 1.5rem; list-style: none; }
-.milestone { flex: 0 0 var(--chapter-width); min-width: 0; }
-.card { min-width: 0; min-height: 25.5rem; overflow: hidden; border: 1px solid rgb(190 214 240 / 21%); border-radius: 1rem; background: rgb(8 16 29 / 90%); box-shadow: 0 16px 38px rgb(0 0 0 / 15%); transition: border-color .35s ease, transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, opacity .45s ease; }
+.milestone { flex: 0 0 var(--chapter-width); min-width: 0; scroll-snap-align: start; }
+.card { min-width: 0; min-height: 25.5rem; overflow: hidden; border: 1px solid rgb(190 214 240 / 21%); border-radius: 1rem; background: rgb(8 16 29 / 90%); box-shadow: 0 16px 38px rgb(0 0 0 / 15%); transition: border-color .2s ease, transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .2s ease, opacity .25s ease; }
 .right .card { margin-top: 1.1rem; }
 .current .card, .card:hover, .card:focus-within { border-color: rgb(158 204 241 / 57%); box-shadow: 0 22px 45px rgb(0 0 0 / 23%); }
 .current .card { transform: translateY(-5px); }
 .future .card { border-style: dashed; background: rgb(11 20 32 / 80%); }
-.observing .milestone:not(.revealed) .card { opacity: .82; transform: translateY(10px); }
+.observing .milestone:not(.revealed) .card { opacity: .95; transform: translateY(4px); }
 .cardCover { position: relative; height: 6.9rem; overflow: hidden; border-bottom: 1px solid rgb(190 214 240 / 13%); background: radial-gradient(ellipse at 78% 10%, rgb(100 156 208 / 15%), transparent 65%), linear-gradient(115deg, rgb(24 47 73 / 82%), rgb(10 21 37 / 60%)); }
 .cardCover::before { position: absolute; top: -5.5rem; right: -2.4rem; width: 17rem; height: 11.5rem; border: 1px solid rgb(181 217 245 / 20%); border-radius: 50%; content: ''; transform: rotate(-23deg); transition: transform .6s ease; }
 .current .cardCover::before, .card:hover .cardCover::before { transform: rotate(-17deg) translate(-4px, 4px); }
@@ -73,7 +73,11 @@
 .technologies li { border: 1px solid rgb(190 214 240 / 17%); border-radius: 999px; background: rgb(255 255 255 / 3%); padding: .26rem .53rem; color: #adbed1; font-size: .7rem; line-height: 1.35; }
 
 
-.beyond { margin: 4.5rem auto 0; border-top: 1px solid rgb(190 214 240 / 20%); padding-top: 1.5rem; }
+.dateDisclosure { max-width: 66ch; margin: .25rem auto 0; color: #a6bad0; font-size: .72rem; line-height: 1.6; }
+.dateDisclosure summary { width: fit-content; min-height: 36px; display: flex; align-items: center; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.dateDisclosure summary:focus-visible { outline: 2px solid #bde4ff; outline-offset: 3px; }
+.dateDisclosure p { margin: .15rem 0 0; }
+.beyond { margin: 3rem auto 0; border-top: 1px solid rgb(190 214 240 / 20%); padding-top: 1.5rem; }
 .beyondHeading { display: flex; align-items: center; gap: .9rem; }
 .beyondLine { width: 1.5rem; height: 1px; background: #8dc8f2; }
 .beyondHeading h3 { margin: 0; color: #dfeefe; font-family: var(--font-display), Georgia, serif; font-size: 1.35rem; font-weight: 500; }
@@ -81,7 +85,7 @@
 .beyondItem { min-width: 0; border: 1px solid rgb(190 214 240 / 16%); border-radius: .65rem; background: rgb(8 16 29 / 68%); padding: .85rem 1rem; }
 .beyondItem strong { color: #c9e4f9; font-size: .67rem; letter-spacing: .08em; text-transform: uppercase; }
 .beyondItem p { margin: .35rem 0 0; color: #b5c5d7; font-size: .72rem; line-height: 1.6; }
-.closing { display: grid; justify-items: center; margin: clamp(4rem, 9vw, 6rem) auto 0; text-align: center; }
+.closing { display: grid; justify-items: center; margin: clamp(2.75rem, 6vw, 4rem) auto 0; text-align: center; }
 .closingRule { width: 1px; height: 2.5rem; background: linear-gradient(transparent, #9dcff4); }
 .closing h3 { margin: 1.15rem 0 0; font-family: var(--font-display), Georgia, serif; font-size: clamp(2rem, 4vw, 2.8rem); font-style: italic; font-weight: 500; letter-spacing: -.02em; }
 .closing p { max-width: 48ch; margin: .7rem 0 0; color: #b7c5d5; font-size: .84rem; line-height: 1.75; }
@@ -98,7 +102,7 @@
 
 @media (max-width: 760px) {
   .section { width: min(650px, calc(100vw - 2rem)); margin-inline: calc(50% - min(650px, calc(100vw - 2rem)) / 2); }
-  .intro { margin-bottom: 2rem; text-align: left; }
+  .intro { margin-bottom: 1rem; text-align: left; }
   .intro .lead, .introText, .dateNote { margin-left: 0; }
   .timeline { --chapter-width: min(78vw, 310px); }
   .beyondGrid { gap: .65rem; }
@@ -106,15 +110,23 @@
 
 @media (max-width: 560px) {
   .intro h2 { font-size: clamp(3rem, 12vw, 4rem); }
-  .introText { font-size: .82rem; }
+  .lead { margin-top: .7rem; font-size: .98rem; line-height: 1.48; }
+  .eyebrow { margin-bottom: .4rem; }
+  .timelineControls { margin-bottom: .55rem; }
+  .dateDisclosure { margin-left: 0; }
   .timelineControls p { max-width: 23ch; font-size: .7rem; }
   .cardCover { height: 6.2rem; }
   .cardBody { padding: 1.1rem 1rem 1rem; }
   .card h3 { font-size: 1.4rem; }
   .date { font-size: .59rem; letter-spacing: .05em; }
   .chapterPagination button { width: 28px; }
-  .beyondGrid { grid-template-columns: 1fr; }
-  .beyondItem { padding: .75rem .85rem; }
+  .beyondGrid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr)); }
+  .beyondItem:last-child { grid-column: 1 / -1; }
+  .beyondItem { padding: .65rem .75rem; }
+  .beyondItem p { line-height: 1.45; }
+  .closing { margin-top: 2rem; }
+  .closingRule { height: 1.5rem; }
+  .continuation { margin-top: 1rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

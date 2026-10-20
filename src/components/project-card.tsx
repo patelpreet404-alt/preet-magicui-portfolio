@@ -1,10 +1,11 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { useMotionSettings } from "@/components/motion-settings";
 import { useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import { useProjectDetails, projectSlug } from "./project-details";
@@ -18,7 +19,10 @@ function ProjectImage({ src, alt }: { src: string; alt: string }) {
   }
 
   return (
-    <img
+    <Image
+      fill
+      sizes="(max-width: 640px) 88vw, (max-width: 1100px) 46vw, 440px"
+      loading="lazy"
       src={src}
       alt={alt}
       className="h-full w-full object-cover transition-transform duration-350 ease-out group-hover/card:scale-[1.035]"
@@ -90,6 +94,7 @@ export function ProjectCard({
   const previewRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { openProject } = useProjectDetails();
+  const { reducedMotion } = useMotionSettings();
   const hrefIsExternal = Boolean(href?.startsWith("http"));
   const frame = previewFrames[variant % previewFrames.length];
 
@@ -103,10 +108,14 @@ export function ProjectCard({
 
     let intersects = false;
     const updateVisibility = () => {
-      const shouldPlay = intersects && !document.hidden;
+      const shouldPlay = intersects && !document.hidden && !reducedMotion;
       const videoElement = videoRef.current;
       if (!videoElement) return;
       if (shouldPlay) {
+        if (!videoElement.getAttribute("src") && video) {
+          videoElement.src = video;
+          videoElement.load();
+        }
         void videoElement.play().catch(() => undefined);
       } else {
         videoElement.pause();
@@ -128,18 +137,16 @@ export function ProjectCard({
       observer.disconnect();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [video, reducedMotion]);
 
   const cover = video ? (
     <video
       ref={videoRef}
-      src={video}
       poster={image}
-      autoPlay
       loop
       muted
       playsInline
-      preload="metadata"
+      preload="none"
       aria-hidden="true"
       className="h-full w-full object-cover transition-transform duration-350 ease-out group-hover/card:scale-[1.035]"
     />

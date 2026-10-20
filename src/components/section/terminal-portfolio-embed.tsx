@@ -1,13 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const TERMINAL_URL = "https://preet-patel-portfolio.vercel.app/";
 
 export default function TerminalPortfolioEmbed() {
-  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [attempt, setAttempt] = useState(0);
   const [terminalFocused, setTerminalFocused] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const terminalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = terminalRef.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setShouldLoad(true);
+        setStatus("loading");
+        observer.disconnect();
+      }
+    }, { rootMargin: "100px 0px" });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const floatingNav = document.querySelector<HTMLElement>("[data-floating-nav]");
@@ -37,12 +53,13 @@ export default function TerminalPortfolioEmbed() {
           </p>
         </div>
         <p className="inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground" role="status" aria-live="polite">
-          <span className={`size-2 rounded-full ${status === "ready" ? "bg-emerald-500" : status === "error" ? "bg-red-500" : "animate-pulse bg-amber-500"}`} aria-hidden="true" />
-          {status === "ready" ? "Terminal ready" : status === "error" ? "Terminal unavailable" : "Loading terminal"}
+          <span className={`size-2 rounded-full ${status === "ready" ? "bg-emerald-500" : status === "error" ? "bg-red-500" : status === "loading" ? "animate-pulse bg-amber-500" : "bg-white/40"}`} aria-hidden="true" />
+          {status === "ready" ? "Terminal ready" : status === "error" ? "Terminal unavailable" : status === "loading" ? "Loading terminal" : "Terminal loads when reached"}
         </p>
       </div>
 
       <div
+        ref={terminalRef}
         className="bg-[#202020] p-2 sm:p-3"
         onPointerEnter={() => setTerminalFocused(true)}
         onPointerLeave={() => setTerminalFocused(false)}
@@ -62,7 +79,7 @@ export default function TerminalPortfolioEmbed() {
             </button>
           </div>
         )}
-        <iframe
+        {shouldLoad ? <iframe
           key={attempt}
           src={TERMINAL_URL}
           title="Preet Patel interactive terminal portfolio"
@@ -75,7 +92,7 @@ export default function TerminalPortfolioEmbed() {
           onLoad={() => setStatus("ready")}
           onError={() => setStatus("error")}
           className="h-[620px] w-full rounded-xl border border-white/10 bg-[#242424] sm:h-[560px]"
-        />
+        /> : <div className="h-[620px] w-full rounded-xl border border-white/10 bg-[#242424] sm:h-[560px]" aria-hidden="true" />}
       </div>
       <p className="border-t border-border px-5 py-3 text-xs text-muted-foreground sm:px-6">
         Click inside the terminal to type. It stays on this page; use <kbd className="rounded border border-border bg-muted px-1 py-0.5 font-mono text-[10px] text-foreground">help</kbd> to see available commands.

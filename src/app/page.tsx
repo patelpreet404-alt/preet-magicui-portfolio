@@ -20,7 +20,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   return (
-    <main className="min-h-dvh flex flex-col gap-14 relative">
+    <main className="min-h-dvh flex flex-col gap-10 sm:gap-12 relative">
       <section id="hero" aria-labelledby="intro-heading" className="hero-section">
         <div className="mx-auto w-full max-w-3xl">
           <div className="flex flex-col-reverse items-start justify-between gap-7 sm:flex-row sm:items-center sm:gap-10">
@@ -95,7 +95,6 @@ export default function Page() {
         <div className="flex min-h-0 flex-col gap-y-6">
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Education</h2>
-            <p className="mt-2 text-sm text-muted-foreground">Computer Science and Engineering, Delhi Technological University · 2023–2027</p>
           </div>
           <div className="flex flex-col gap-8">
             {DATA.education.map((education, index) => (
@@ -146,7 +145,6 @@ export default function Page() {
         <div className="flex min-h-0 flex-col gap-y-5">
           <div>
             <h2 className="text-xl font-semibold tracking-tight">Research & learning</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">Topics I’m exploring alongside coursework and project work.</p>
           </div>
           <div className="grid gap-8 border-y border-border py-5 md:grid-cols-[1.4fr_1fr] md:gap-12">
             <article>
