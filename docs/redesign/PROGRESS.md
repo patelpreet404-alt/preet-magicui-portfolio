@@ -23,7 +23,7 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 - [x] Phase 3 — Case studies and /about
 - [x] Phase 4 — Motion and polish
 - [x] Phase 5 — Performance, accessibility, SEO (video re-encode blocked)
-- [ ] Phase 6 — Final QA
+- [x] Phase 6 — Final QA
 
 ## Phase 0 — Baseline
 
@@ -204,12 +204,28 @@ Lab LCP on case studies (3.1 s) is above the 2.5 s p75 field target even though 
 
 **Performance investigation (kept for the record).** Measured, not guessed, with 3 Lighthouse runs per variant: inlining CSS (`experimental.inlineCss`) and `font-display: optional` made no difference or were worse and were reverted; the image preload and the Safari frame's blend modes were minor (blend modes removed anyway). The real cost was the 131 KB variable Newsreader file fetched on first render of prose pages. Fixes: Newsreader is now static 400 (22 KB); below-the-fold case-study sections use `content-visibility: auto`; the About intro is set in the sans face (the brief reserves Newsreader for case-study prose and citation notes); interactive-preview links don't prefetch.
 
-## Phase 6 — Final QA (not started)
+## Phase 6 — Final QA (done)
 
-- [ ] Before/after screenshots
-- [ ] Final "Content needed from Preet" list
-- [ ] `docs/redesign/CHANGELOG.md`
-- [ ] Open a PR (do not merge)
+- [x] Before/after screenshots (`docs/redesign/screenshots/{before,final}/`, git-ignored) and a curated set committed in `docs/redesign/preview/`
+- [x] Final "Content needed from Preet" list (below)
+- [x] `docs/redesign/CHANGELOG.md`, README rewritten for the new content model
+- [x] PR opened, not merged
+
+| Measure | Before | After |
+|---|---|---|
+| Home sections (`main > section`) | 13 | **6** |
+| Home height, 1440×900 | 10,927 px (12.1 screens) | **7,768 px (8.6 screens)** |
+| First project, 1440×900 | 5.92 screens | **1.18 screens** |
+| First project, 768×1024 | 5.10 screens | **0.87 screens** |
+| First project, 390×844 | 7.77 screens | **1.25 screens** |
+| Console errors | 0 | 0 |
+| Horizontal overflow | none | none |
+| axe (home, about, case study × light/dark) | not measured | **0 violations** |
+| Lighthouse mobile (A11y / BP / SEO) | not measured | **100 / 100 / 100** |
+| Lighthouse mobile Performance | not measured | **94–98** |
+| Contrast, both themes | light mode unusable | all pairs pass (`node scripts/contrast.mjs`) |
+
+**Done-when checklist.** First Selected-work project within ~1.2 screens (1.18) ✓ and ~2 on a phone (1.25) ✓ · exactly six sections ✓ · nothing loops or auto-scrolls; the three demo videos play only while ≥60% in view / hovered / focused and have a visible pause button (the brief asks for exactly this) ✓ · both themes pass contrast ✓ · keyboard-only run-through works on the home page, `/about` and case studies (5 page/width combinations tested) ✓ · build and lint pass, no console errors ✓ · Lighthouse mobile ≥ 90 / ≥ 95 ✓ (lab LCP 2.5–3.1 s; see Phase 5) · every number on the site traces to a citation or the résumé ✓, every placeholder is listed below.
 
 ## Decisions
 
