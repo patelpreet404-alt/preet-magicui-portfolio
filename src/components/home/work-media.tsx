@@ -12,6 +12,12 @@ import type { ProjectMedia } from "@/content";
  * is hovered, focused, or at least 60% in view; otherwise (and always under reduced motion) the
  * poster shows. A visible Play/Pause button lets anyone control it.
  */
+/** Autoplaying a ~6 MB video is wrong on a data-saver or slow connection; the Play button still works. */
+function constrainedConnection() {
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  return Boolean(connection?.saveData) || ["slow-2g", "2g", "3g"].includes(connection?.effectiveType ?? "");
+}
+
 export function WorkMedia({ slug, name, media }: { slug: string; name: string; media: ProjectMedia }) {
   const { reducedMotion } = useMotionSettings();
   const frameRef = useRef<HTMLDivElement>(null);
@@ -21,9 +27,10 @@ export function WorkMedia({ slug, name, media }: { slug: string; name: string; m
   const [inView, setInView] = useState(false);
   const [manual, setManual] = useState<"play" | "pause" | null>(null);
   const [playing, setPlaying] = useState(false);
+  const [constrained] = useState(() => typeof navigator !== "undefined" && constrainedConnection());
 
   const hasVideo = Boolean(media.video);
-  const auto = !reducedMotion && (hovered || focused || inView);
+  const auto = !reducedMotion && !constrained && (hovered || focused || inView);
   const shouldPlay = manual === "pause" ? false : manual === "play" ? true : auto;
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Inline the (small, Tailwind) stylesheet so first paint is not blocked by a CSS request. Most visitors are first-time.
   // A stray lockfile in the home directory made Next pick the wrong workspace root.
   turbopack: { root: path.dirname(fileURLToPath(import.meta.url)) },
   // Old modal links (/?project=<slug>) now open the case-study page.

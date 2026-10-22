@@ -3,13 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { PageTransition } from "@/components/page-transition";
-import { CaseSection, Prose } from "@/components/work/case-section";
+import { CaseSection } from "@/components/work/case-section";
 import { profile, projects, timelineLong } from "@/content";
 
 export const metadata: Metadata = {
   title: "About",
   description: "The longer story: school in Al Jubail, computer science at DTU, projects, an internship at Rang Technologies, and current research.",
   alternates: { canonical: "/about" },
+  openGraph: { title: "About", description: "The longer story: school in Al Jubail, computer science at DTU, projects, an internship at Rang Technologies, and current research.", url: "/about", type: "profile" },
+  twitter: { card: "summary_large_image", title: "About" },
 };
 
 const link =
@@ -26,9 +28,11 @@ export default function AboutPage() {
           <h1 className="type-display">The longer story</h1>
           <div className="mt-8 space-y-4">
             {profile.bio.map((paragraph) => (
-              <Prose key={paragraph}>{paragraph}</Prose>
+              <p key={paragraph} className="type-lead measure-body text-ink">
+                {paragraph}
+              </p>
             ))}
-            <p className="type-prose measure-prose text-graphite">
+            <p className="type-lead measure-body text-graphite">
               <span className="font-semibold text-ink">Now: </span>
               {profile.now}
             </p>

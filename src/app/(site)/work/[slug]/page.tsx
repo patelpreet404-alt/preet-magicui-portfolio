@@ -9,6 +9,7 @@ import { CiteNotes, CiteRegion } from "@/components/cite/cite-region";
 import { PageTransition } from "@/components/page-transition";
 import { LINK_KINDS } from "@/components/link-icons";
 import { Safari } from "@/components/ui/safari";
+import { CaseMedia } from "@/components/work/case-media";
 import { ArchitectureStepper } from "@/components/work/architecture-stepper";
 import { CaseSection, Prose, ProseList } from "@/components/work/case-section";
 import { SystemDesign, hasSystemDesign } from "@/components/work/system-design";
@@ -56,30 +57,6 @@ const firstSentence = (text: string) => text.split(/(?<=\.)\s/)[0];
 
 function HeroMedia({ project }: { project: Project }) {
   const demo = project.links.find((link) => link.kind === "demo");
-  const { media } = project;
-  const inner = media.video ? (
-    <video
-      controls
-      muted
-      loop
-      playsInline
-      preload="none"
-      poster={media.poster}
-      aria-label={`${project.name} demo video`}
-      className="absolute inset-0 size-full bg-muted object-cover object-top"
-    >
-      <source src={media.video} type="video/mp4" />
-    </video>
-  ) : (
-    <Image
-      src={media.poster}
-      alt={media.alt}
-      fill
-      priority
-      sizes="(min-width: 1320px) 1320px, 100vw"
-      className="object-cover object-top"
-    />
-  );
 
   // Projects with a public page get the browser frame; research with only a preview image gets a plain frame.
   if (demo) {
@@ -87,7 +64,7 @@ function HeroMedia({ project }: { project: Project }) {
       <ViewTransition name={`work-media-${project.slug}`} share="morph" default="none">
         <div data-case-media={project.slug}>
           <Safari url={hostOf(demo.href)}>
-            <div className="relative size-full">{inner}</div>
+            <CaseMedia name={project.name} media={project.media} />
           </Safari>
         </div>
       </ViewTransition>
@@ -96,7 +73,7 @@ function HeroMedia({ project }: { project: Project }) {
   return (
     <ViewTransition name={`work-media-${project.slug}`} share="morph" default="none">
       <div data-case-media={project.slug} className="relative aspect-[16/10] overflow-hidden rounded-media border border-rule bg-muted">
-        {inner}
+        <CaseMedia name={project.name} media={project.media} />
       </div>
     </ViewTransition>
   );
@@ -112,6 +89,8 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   const { caseStudy } = project;
   const page = `work:${project.slug}`;
   const actionLinks = project.links.filter((link) => link.kind !== "case-study");
+  // The hero already shows media.poster; only show screenshots that add something.
+  const extraScreenshots = (project.screenshots ?? []).filter((shot) => shot.src !== project.media.poster);
 
   return (
     <PageTransition>
@@ -166,7 +145,8 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
                       <span className="sr-only"> (opens in a new tab)</span>
                     </a>
                   ) : (
-                    <Link href={link.href} className={className}>
+                    // The interactive previews are separate, heavier pages; don't prefetch them on load.
+                    <Link href={link.href} prefetch={false} className={className}>
                       {label}
                       <ArrowRight className="size-4" aria-hidden="true" />
                     </Link>
@@ -192,6 +172,20 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
             <Prose>{caseStudy.contribution}</Prose>
             <Prose>{firstSentence(project.summary)}</Prose>
           </div>
+          {extraScreenshots.length > 0 && (
+            <ul className="mt-8 grid gap-8 md:grid-cols-2">
+              {extraScreenshots.map((shot) => (
+                <li key={shot.src}>
+                  <figure>
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-media border border-rule bg-muted">
+                      <Image src={shot.src} alt={shot.alt} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover object-top" />
+                    </div>
+                    <figcaption className="type-meta mt-2 font-normal text-graphite">{shot.caption}</figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          )}
         </CaseSection>
 
         <CaseSection id="how" title="How it works">

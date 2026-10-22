@@ -22,7 +22,7 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 - [x] Phase 2 — Home page
 - [x] Phase 3 — Case studies and /about
 - [x] Phase 4 — Motion and polish
-- [ ] Phase 5 — Performance, accessibility, SEO
+- [x] Phase 5 — Performance, accessibility, SEO (video re-encode blocked)
 - [ ] Phase 6 — Final QA
 
 ## Phase 0 — Baseline
@@ -170,7 +170,7 @@ Also audited programmatically on 5 pages at 390 / 768 / 1440: no target under 24
 
 Metrics now: home 7,768 px at 1440 (was 10,927) · first project at **1.18** screens (1440×900), 0.87 (768×1024), 1.25 (390×844).
 
-## Phase 5 — Performance, accessibility, SEO (in progress)
+## Phase 5 — Performance, accessibility, SEO (done, one item blocked)
 
 ### Plan (files I will touch)
 
@@ -182,15 +182,27 @@ Metrics now: home 7,768 px at 1440 (was 10,927) · first project at **1.18** scr
 
 ### Tasks
 
-- [ ] Archive, API route, styleguide and unused files/deps deleted
-- [ ] Unused template images deleted after grepping references
-- [ ] Large images re-exported; every image through `next/image` with `sizes`
-- [ ] Demo videos re-encoded (blocked: no `ffmpeg`)
-- [ ] Fonts: `next/font`, latin only, only the weights used
-- [ ] Skip link, landmarks, one `h1` per page, focus ring, Esc behaviour, reduced-motion audit
-- [ ] axe: 0 serious/critical on `/`, `/about`, a case study
-- [ ] SEO files, icons, JSON-LD, canonical/OG/Twitter
-- [ ] Lighthouse mobile: Performance ≥ 90; Accessibility, Best Practices, SEO ≥ 95
+- [x] Archive, `/api/online-presence`, styleguide, old data files, unused shadcn primitives and dependencies deleted (`react-markdown`, `rehype-pretty-code`, `tailwindcss-animate`, three Radix packages, `@fontsource/schibsted-grotesk`; `hls.js` went in Phase 1). `motion` stays: the blog still uses `BlurFade`
+- [x] 11 unused template images, `public/tech-icons/`, `public/fonts/`, three org logos and three unused project screenshots deleted after grepping references
+- [x] `crypto-ransomware-preview.png` 1.2 MB → 92 KB JPEG; avatar 396 KB → 172 KB (880 px). Every image is `next/image` with `sizes` (the only non-`next/image` pixels are the demo `<video>` elements)
+- [ ] **Demo videos re-encoded: blocked, no `ffmpeg` on this machine.** The three MP4s are still ~6 MB each. Mitigations shipped: they never load until a row is ≥60% in view / hovered / played, and not at all on data-saver or 2G/3G connections; the case-study hero loads the video only when asked
+- [x] Fonts: `next/font` only, latin subset; Schibsted Grotesk is one 47 KB variable file (preloaded), DM Mono 400/500 (not preloaded), Newsreader static 400 (22 KB, not preloaded)
+- [x] Skip link, landmarks (`header`, `nav` ×2 labelled, `main`, `footer`), one `h1` per page, focus ring 2px `--link` / 3px offset, Esc closes notes and the menu, reduced-motion audit (no transforms, autoplay, View Transitions, Lenis or hero sweep under reduced motion; verified in tests)
+- [x] axe: 0 violations (not just 0 serious/critical) on `/`, `/about`, `/work/researchpaper-ai`, light and dark
+- [x] SEO: title "Preet Patel — Software Engineer (AI & Backend)", description from data, canonical on home/about/case studies/demos, OG + Twitter per page, redesigned `opengraph-image` (root + per project) and `twitter-image`, `sitemap.xml` (14 URLs, no blog), `robots.txt`, `manifest.webmanifest`, `icon.svg` + `apple-icon` ("PP" monogram; default favicon deleted), JSON-LD `Person` on the home page, empty `verification` removed
+- [x] Lighthouse mobile (production build, simulated throttling):
+
+| Page | Perf | A11y | Best practices | SEO | LCP | TBT | CLS |
+|---|---|---|---|---|---|---|---|
+| `/` | 98 | 100 | 100 | 100 | 2.5 s | 0 ms | 0 |
+| `/about` | 96 | 100 | 100 | 100 | 2.8 s | 0 ms | 0 |
+| `/work/researchpaper-ai` | 94 | 100 | 100 | 100 | 3.1 s | 0 ms | 0 |
+| `/work/optilang` | 94 | 100 | 100 | 100 | 3.1 s | 0 ms | 0 |
+| `/work/foodfolk` | 98 | 100 | 100 | 100 | 2.5 s | 0 ms | 0 |
+
+Lab LCP on case studies (3.1 s) is above the 2.5 s p75 field target even though the score passes; it is simulated slow-4G on a 4× CPU slowdown and the LCP element is the lead paragraph. Field data (CrUX / Vercel Speed Insights) is the real check after deploy.
+
+**Performance investigation (kept for the record).** Measured, not guessed, with 3 Lighthouse runs per variant: inlining CSS (`experimental.inlineCss`) and `font-display: optional` made no difference or were worse and were reverted; the image preload and the Safari frame's blend modes were minor (blend modes removed anyway). The real cost was the 131 KB variable Newsreader file fetched on first render of prose pages. Fixes: Newsreader is now static 400 (22 KB); below-the-fold case-study sections use `content-visibility: auto`; the About intro is set in the sans face (the brief reserves Newsreader for case-study prose and citation notes); interactive-preview links don't prefetch.
 
 ## Phase 6 — Final QA (not started)
 
@@ -227,6 +239,9 @@ Metrics now: home 7,768 px at 1440 (was 10,927) · first project at **1.18** scr
 | D22 | The hero sequence is CSS-only with an inline pre-paint script, not a React effect | The text is the LCP and must never be hidden; an effect would flash the finished highlight before resetting it |
 | D23 | Lenis is mounted only in the `(site)` layout | The demo pages have their own scroll regions and must not be hijacked |
 | D24 | The hover preview and Lenis are disabled under reduced motion; the keyboard-focus preview slot is not | The slot is static (no movement) and is the only way keyboard users see the preview |
+| D25 | Newsreader is static 400, not the variable file with the `opsz` axis the brief named | Measured 131 KB → 22 KB and ~0.6 s earlier case-study first paint; at 19 px body size the optical-size axis is barely visible |
+| D26 | About page intro uses the sans face | Keeps the heavy prose font off that page; the brief only assigns Newsreader to case-study prose and citation notes |
+| D27 | `Safari` frame lost its SVG `mix-blend-mode` groups | They forced extra compositing; the icon fills are flat grey so the look is unchanged |
 
 ## Content needed from Preet
 
@@ -247,7 +262,7 @@ Metrics now: home 7,768 px at 1440 (was 10,927) · first project at **1.18** scr
 7. **A new portrait** (clear, well lit, no sunglasses, ≥ 1200 px on the long side, 4:5). The current avatar is a 396 KB square photo with sunglasses.
 8. **A short bio in your own words** (3–4 sentences). Placeholder is assembled from existing copy.
 9. **Custom domain** (e.g. `preetpatel.dev`) before an Awwwards submission; currently `vercel.app`.
-10. **`ffmpeg`:** not installed here, so the three ~6 MB demo MP4s can't be re-encoded in Phase 5. Either `brew install ffmpeg` or hand over smaller files.
+10. **`ffmpeg`** (Phase 5 blocker): not installed here, so the three ~6 MB demo MP4s can't be re-encoded in Phase 5. Either `brew install ffmpeg` or hand over smaller files.
 11. **LinkedIn "100+ connections"** and LeetCode/NeetCode counts are being removed rather than shown. Confirm that's fine.
 12. **OptiLang demo page wording:** `/projects/optilang` itself says "8 pipeline stages" and "LICM + LLVM IR" (matching the résumé), while the project data and case study say five optimization passes and that the LLVM examples are a separate exercise. Demo pages were not edited; pick one wording.
 13. **Three names for one product:** "Studyloom" (site, live URL), "Studyroom" and "AI Learning Management System" (demo page header and résumé).

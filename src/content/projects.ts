@@ -608,7 +608,7 @@ export const projects: readonly Project[] = [
       }
     ],
     media: {
-      poster: "/projects/crypto-ransomware-preview.png",
+      poster: "/projects/crypto-ransomware-preview.jpg",
       alt: "Preview image for the crypto-ransomware research project."
     },
     caseStudy: {

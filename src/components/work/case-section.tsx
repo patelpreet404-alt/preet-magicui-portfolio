@@ -1,7 +1,7 @@
 /** A labelled case-study section: h2 on the left at ≥1024px, content on the right, separated by a rule. */
 export function CaseSection({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="grid-site gap-y-6 border-t border-rule pt-10">
+    <section id={id} aria-labelledby={`${id}-title`} className="defer-render grid-site gap-y-6 border-t border-rule pt-10">
       <h2 id={`${id}-title`} className="type-h3 col-span-12 lg:col-span-4">
         {title}
       </h2>

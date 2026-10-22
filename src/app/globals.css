@@ -191,6 +191,12 @@
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease-out);
 }
+/* Skip layout and paint of below-the-fold sections until they near the viewport. Besides cheaper first
+   render, fonts used only inside them (Newsreader) are not requested until then. */
+@utility defer-render {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 480px;
+}
 @utility press {
   &:active {
     transform: translateY(1px);

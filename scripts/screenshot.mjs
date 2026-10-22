@@ -46,7 +46,6 @@ const THEME_STORAGE_KEY = "portfolio-space-theme";
 
 const ROUTES = [
   { name: "home", path: "/" },
-  { name: "styleguide", path: "/styleguide" },
   { name: "about", path: "/about" },
   { name: "work-researchpaper-ai", path: "/work/researchpaper-ai" },
   { name: "demo-optilang", path: "/projects/optilang" },

@@ -17,10 +17,11 @@ const grotesk = Schibsted_Grotesk({
   display: "swap",
 });
 
-// Case-study prose and citation notes. Not on the critical path of the home page.
+// Case-study prose and citation notes. Static 400 rather than the variable opsz file: 22 KB instead of 131 KB,
+// which took ~0.6 s off case-study first paint in Lighthouse. Not on the critical path of the home page.
 const newsreader = Newsreader({
   subsets: ["latin"],
-  axes: ["opsz"],
+  weight: "400",
   variable: "--font-newsreader",
   display: "swap",
   preload: false,
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
   },
   description: profile.description,
   openGraph: {
-    title: profile.name,
+    title: `${profile.name} — ${profile.jobTitle}`,
     description: profile.description,
     url: profile.url,
     siteName: profile.name,
@@ -62,7 +63,8 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: profile.name,
+    title: `${profile.name} — ${profile.jobTitle}`,
+    description: profile.description,
     card: "summary_large_image",
   },
 };
