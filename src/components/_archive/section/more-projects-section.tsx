@@ -4,8 +4,8 @@ import { ADDITIONAL_PROJECTS, type PortfolioProject } from "@/data/resume";
 import { ArrowUpRight, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
-import { SaveProjectButton } from "@/components/saved-projects";
-import { useProjectDetails } from "@/components/project-details";
+import { SaveProjectButton } from "@/components/_archive/saved-projects";
+import { useProjectDetails } from "@/components/_archive/project-details";
 
 export default function MoreProjectsSection({ projects = ADDITIONAL_PROJECTS }: { projects?: readonly PortfolioProject[] }) {
   const [category, setCategory] = useState("All");

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import { DATA } from "@/data/resume";
 import { ChevronDown, MapPin } from "lucide-react";
-import { InstitutionLogo } from "@/components/institution-logo";
+import { InstitutionLogo } from "@/components/_archive/institution-logo";
 
 export default function WorkSection() {
   return (

@@ -2,7 +2,7 @@
 
 import { FEATURED_PROJECTS, PROJECT_DOMAINS, type DomainId } from "@/data/resume";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useProjectDetails } from "@/components/project-details";
+import { useProjectDetails } from "@/components/_archive/project-details";
 
 const DOMAINS = PROJECT_DOMAINS;
 const PATH_LABELS: Partial<Record<DomainId, string>> = {

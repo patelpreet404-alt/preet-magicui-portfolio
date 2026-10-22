@@ -1,6 +1,6 @@
 import { DATA } from "@/data/resume";
-import { Timeline, TimelineItem, TimelineConnectItem } from "@/components/timeline";
-import { InstitutionLogo } from "@/components/institution-logo";
+import { Timeline, TimelineItem, TimelineConnectItem } from "@/components/_archive/timeline";
+import { InstitutionLogo } from "@/components/_archive/institution-logo";
 
 export default function HackathonsSection() {
   return (

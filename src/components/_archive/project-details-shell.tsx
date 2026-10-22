@@ -1,7 +1,7 @@
 "use client";
 
-import { ProjectDetailsProvider } from "@/components/project-details";
-import { SavedProjectsProvider } from "@/components/saved-projects";
+import { ProjectDetailsProvider } from "@/components/_archive/project-details";
+import { SavedProjectsProvider } from "@/components/_archive/saved-projects";
 import { PROJECTS } from "@/data/resume";
 
 export default function ProjectDetailsShell({ children }: { children: React.ReactNode }) {

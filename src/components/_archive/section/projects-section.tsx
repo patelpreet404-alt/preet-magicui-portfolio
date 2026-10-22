@@ -1,5 +1,5 @@
-import { ProjectCard } from "@/components/project-card";
-import { ProjectMarquee } from "@/components/section/project-marquee";
+import { ProjectCard } from "@/components/_archive/project-card";
+import { ProjectMarquee } from "@/components/_archive/section/project-marquee";
 import { FEATURED_PROJECTS } from "@/data/resume";
 
 export default function ProjectsSection() {
