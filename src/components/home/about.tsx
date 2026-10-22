@@ -41,7 +41,7 @@ export function About() {
         <Block title="Timeline">
           <ol className="max-w-3xl">
             {timelineShort.map((row) => (
-              <li key={row.text} className="grid grid-cols-[7.5rem_1fr] gap-x-4 border-b border-rule py-3 first:pt-0 last:border-b-0">
+              <li key={row.text} className="grid gap-x-4 gap-y-0.5 border-b border-rule py-3 first:pt-0 last:border-b-0 sm:grid-cols-[7.5rem_1fr]">
                 <span className="type-meta tabular-nums text-graphite">{row.when}</span>
                 <span className="type-body text-ink">{row.text}</span>
               </li>

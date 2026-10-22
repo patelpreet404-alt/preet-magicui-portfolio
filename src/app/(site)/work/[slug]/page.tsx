@@ -128,7 +128,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
       </div>
 
       <header className="container-site pt-8 md:pt-14">
-        <h1 className="type-display">{project.name}</h1>
+        <h1 className="type-display text-[clamp(2.25rem,1.1rem+4.6vw,6rem)]">{project.name}</h1>
         {project.subtitle && <p className="type-lead mt-3 text-graphite">{project.subtitle}</p>}
         <p className="type-lead mt-6 max-w-[34em] text-ink">{project.oneLiner}</p>
 

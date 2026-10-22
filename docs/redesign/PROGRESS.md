@@ -21,7 +21,7 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 - [x] Phase 1 — Foundations
 - [x] Phase 2 — Home page
 - [x] Phase 3 — Case studies and /about
-- [ ] Phase 4 — Motion and polish
+- [x] Phase 4 — Motion and polish
 - [ ] Phase 5 — Performance, accessibility, SEO
 - [ ] Phase 6 — Final QA
 
@@ -141,15 +141,34 @@ Home page height: 7,768 px at 1440 (was 10,927), 9,874 px at 390 (was 13,221). B
 
 **Not done yet (needs the Next 16.x / React 19.3 upgrade, Phase 4):** `<Link transitionTypes>` on All work / Next project and the `<ViewTransition>` morph.
 
-## Phase 4 — Motion and polish (not started)
+## Phase 4 — Motion and polish (done)
 
-- [ ] Hero load sequence (once per session, skipped under reduced motion, < 1.4 s)
-- [ ] `<ViewTransition>` morph work row → case-study hero; directional nav (upgrade Next 16.x / React 19.3.x if required)
-- [ ] Optional Lenis (off for reduced motion and touch)
-- [ ] More-work hover preview (fine pointer only)
-- [ ] Micro-interactions
-- [ ] Self-critique: screenshot every page at 390/768/1440 in both themes, list the 10 weakest details, fix, re-shoot
-- [ ] Screenshots `phase-4`
+- [x] Upgraded to Next 16.4.2 and React 19.3.1 (allowed minor upgrades); read the bundled docs in `node_modules/next/dist/docs` for `<ViewTransition>` and `Link transitionTypes` before using them
+- [x] Hero load sequence: highlight sweep (700ms, 120ms stagger) + marker fade, total 1.11 s, CSS-driven so the text is never hidden; once per session (early inline script reads `sessionStorage`); skipped under OS reduced motion and the manual toggle (the saved choice is applied before first paint)
+- [x] `<ViewTransition>` morph: work-row media → case-study hero (`work-media-<slug>`, `share="morph"`); directional `nav-forward` / `nav-back` slides on page roots; header anchored; `pointer-events: none` on the overlay; zero-duration under reduced motion. Verified: navigation in both directions starts a view transition
+- [x] Lenis smooth scroll: site pages only, fine pointers only, off for reduced motion and touch, loaded on idle; in-page anchors scroll through it below the header; fixed two integration bugs found by tests (`autoRaf`, native `scroll-behavior: smooth` fighting it)
+- [x] More-work hover preview: fine pointer only, transform-only, rAF-throttled, off under reduced motion; keyboard focus shows a fixed bottom-right slot
+- [x] Micro-interactions: press feedback on buttons, media-frame hover/focus border, link-arrow nudge, marker hover
+- [x] Self-critique (below), fixes applied, screenshots re-shot as `phase-4`
+
+**Ten weakest details found, and what happened**
+
+| # | Detail | Result |
+|---|---|---|
+| 1 | About timeline on phones: 7.5rem date column squeezed entries to ~140 px | Fixed: date stacks above text below 640 px |
+| 2 | Case-study title orphaned a word on phones ("ResearchPaper / AI") | Fixed: smaller fluid clamp for case-study h1 |
+| 3 | Header availability placeholder was long and dominated the header | Fixed: `[TODO: availability]` |
+| 4 | Work-row media gave no hover signal | Fixed: border darkens on hover / focus-within |
+| 5 | More-work Demo / Source links shifted between rows | Fixed: fixed two-slot grid |
+| 6 | Pause/Play preview button covers part of the poster | Left: 44 px target is required and it is the only pause control |
+| 7 | Inline citation note had no visual tie to its marker | Fixed: 2 px `--link` rule (margin notes too) |
+| 8 | Keyboard focus might land under the sticky header | Verified on 5 page/width combos: never obscured, always scrolled into view, ring always present |
+| 9 | Small graphite text in More work is quiet | Left: passes contrast (6.1:1 light, 7.2:1 dark) |
+| 10 | No focus feedback on a focused media frame | Fixed with #4 |
+
+Also audited programmatically on 5 pages at 390 / 768 / 1440: no target under 24 px (inline markers are exempt and are 24 px anyway), no text under 12 px, no horizontal overflow, no console errors. axe: 0 violations on `/`, `/about`, `/work/researchpaper-ai`, light and dark.
+
+Metrics now: home 7,768 px at 1440 (was 10,927) · first project at **1.18** screens (1440×900), 0.87 (768×1024), 1.25 (390×844).
 
 ## Phase 5 — Performance, accessibility, SEO (not started)
 
@@ -195,6 +214,9 @@ Home page height: 7,768 px at 1440 (was 10,927), 9,874 px at 390 (was 13,221). B
 | D19 | The Safari frame (Magic UI) was edited: its autoplaying `<video>` and raw `<img>` props were replaced by a `children` slot, and its SVG is `pointer-events-none` | WCAG 2.2.2 (autoplay needs a pause control), `next/image`, and clickable video controls |
 | D20 | OG images use Schibsted Grotesk woff files copied to `src/lib/fonts/` (SIL OFL, licence kept alongside) and read with `readFile(join(process.cwd(), …))` | `fetch(file URL)` isn't supported in the Node runtime; this is the pattern Next's file tracing follows |
 | D21 | Case-study numbering uses `work:<slug>` reading orders built from each project's `results` | Same reason as the home page |
+| D22 | The hero sequence is CSS-only with an inline pre-paint script, not a React effect | The text is the LCP and must never be hidden; an effect would flash the finished highlight before resetting it |
+| D23 | Lenis is mounted only in the `(site)` layout | The demo pages have their own scroll regions and must not be hijacked |
+| D24 | The hover preview and Lenis are disabled under reduced motion; the keyboard-focus preview slot is not | The slot is static (no movement) and is the only way keyboard users see the preview |
 
 ## Content needed from Preet
 

@@ -161,7 +161,7 @@ export function CiteNotes({ variant, className = "" }: { variant: "inline" | "ma
             key={note.id}
             id={`cite-note-${note.id}-inline`}
             aria-label={`Citation ${note.n}`}
-            className="note-in mt-4 border-l border-rule pl-4"
+            className="note-in mt-4 border-l-2 border-link pl-4"
           >
             <NoteContent n={note.n} citation={note.citation} onClose={() => close(note.id, true)} />
           </aside>
@@ -181,7 +181,7 @@ export function CiteNotes({ variant, className = "" }: { variant: "inline" | "ma
           }}
           id={`cite-note-${note.id}-margin`}
           aria-label={`Citation ${note.n}`}
-          className="note-in absolute inset-x-0 border-l border-rule pl-4"
+          className="note-in absolute inset-x-0 border-l-2 border-link pl-4"
           style={{ top: layout.tops[note.id] ?? 0, visibility: note.id in layout.tops ? "visible" : "hidden" }}
         >
           <NoteContent n={note.n} citation={note.citation} onClose={() => close(note.id, true)} />

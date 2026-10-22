@@ -26,7 +26,7 @@ export const profile = {
   terminalUrl: "https://preet-patel-portfolio.vercel.app/",
 
   availability: {
-    short: todo('short availability, e.g. "Open to roles"'),
+    short: todo("availability"),
     long: todo('e.g. "Open to software engineering and applied-AI roles for 2027 — Delhi, remote or relocation"'),
   },
 

@@ -128,9 +128,9 @@ export function MoreWork() {
                 <span className="sr-only">Stack: </span>
                 {project.stack.slice(0, 3).join(", ")}
               </p>
-              <ul className="col-span-12 flex flex-wrap gap-x-5 lg:col-span-2 lg:justify-end">
+              <ul className="col-span-12 flex flex-wrap gap-x-5 lg:col-span-2 lg:grid lg:grid-cols-[1fr_1fr] lg:justify-items-end">
                 {external.map((link) => (
-                  <li key={link.kind}>
+                  <li key={link.kind} className={link.kind === "source" ? "lg:col-start-2" : "lg:col-start-1"}>
                     <a href={link.href} target="_blank" rel="noopener noreferrer" className={rowLink}>
                       {link.kind === "demo" ? "Demo" : "Source"}
                       <ArrowUpRight className="size-3.5" aria-hidden="true" />

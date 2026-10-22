@@ -46,7 +46,7 @@ export function WorkMedia({ slug, name, media }: { slug: string; name: string; m
     <div
       ref={frameRef}
       data-work-media={slug}
-      className="relative aspect-[16/10] overflow-hidden rounded-media border border-rule bg-muted"
+      className="t-base relative aspect-[16/10] overflow-hidden rounded-media border border-rule bg-muted transition-colors hover:border-graphite focus-within:border-ink"
       onPointerEnter={() => setHovered(true)}
       onPointerLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)}
