@@ -40,3 +40,6 @@ next-env.d.ts
 .content-collections
 .playwright-cli/
 .env*
+
+# redesign screenshots are generated locally (scripts/screenshot.mjs)
+/docs/redesign/screenshots/

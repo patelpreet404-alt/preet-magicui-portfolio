@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "screenshots": "node scripts/screenshot.mjs"
   },
   "dependencies": {
     "@content-collections/mdx": "^0.2.2",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@content-collections/core": "^0.13.1",
     "@content-collections/next": "^0.2.10",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
