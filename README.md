@@ -1,6 +1,6 @@
 # Preet Patel — Portfolio
 
-A personal portfolio built with Next.js 16, React 19, Tailwind CSS, and Magic UI. It is based on the [Magic UI portfolio template](https://github.com/magicuidesign/portfolio) and uses information from Preet's résumé and existing portfolio.
+A personal portfolio built with Next.js 16, React 19, TypeScript, Tailwind CSS v4 and Magic UI, based on the [Magic UI portfolio template](https://github.com/magicuidesign/portfolio). Design direction: **"Cited"** — a few key claims carry numbered citations that open their evidence. See [docs/redesign](docs/redesign) for the plan, decisions and changelog.
 
 ## Run locally
 
@@ -15,22 +15,32 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Edit content
 
-- Profile, contact links, experience, education, skills, and projects: `src/data/resume.tsx`
-- Home page sections: `src/app/page.tsx`
-- Blog posts, when ready to publish: `content/*.mdx`
+All content lives in typed modules in `src/content/` (no JSX):
 
-The original sample blog posts have been removed. The blog stays available at `/blog` and shows an empty state until original posts are added.
+| File | What it holds |
+|---|---|
+| `profile.ts` | name, links, bio, education, toolbox, availability |
+| `projects.ts` | every project: one-liner, stack, media, case study, links |
+| `experience.ts` | Rang Technologies |
+| `timeline.ts` | the six-row timeline on the home page and the long one on `/about` |
+| `citations.ts` | the evidence behind each citation `[n]`; reading order per page is in `citation-order.ts` |
 
-The ResearchPaper AI card links to a live sample and shows a screenshot. The other project cards use designed covers until screenshots or demos are available. Add an image path or video URL to a project in `src/data/resume.tsx` when ready.
+Anything not yet supplied renders as a visible `[TODO: …]`; the full list is in [docs/redesign/PROGRESS.md](docs/redesign/PROGRESS.md).
+
+Routes: `/` (six sections), `/about`, `/work/[slug]` (one static case study per project), and the three interactive demos under `/projects/*`. The blog at `/blog` is `noindex` and unlinked until it has posts (`content/*.mdx`).
+
+## Check quality
+
+```bash
+pnpm lint && pnpm build && pnpm start
+node scripts/screenshot.mjs --label local --axe   # full-page screenshots, metrics and axe
+node scripts/contrast.mjs                          # WCAG contrast for both themes
+```
 
 ## Deploy
 
-This project can be deployed as a Next.js site on Vercel. The default site URL is `https://preet-magicui-portfolio.vercel.app`; set `NEXT_PUBLIC_SITE_URL` if you use a different domain so social sharing metadata points to the right site. Project source links work without any environment variables.
+Deploys as a Next.js site on Vercel. The default site URL is `https://preet-magicui-portfolio.vercel.app`; set `NEXT_PUBLIC_SITE_URL` if you use a different domain so canonical URLs, the sitemap and social metadata point to the right site.
 
 ## License
 
 The template is MIT licensed. See [LICENSE](LICENSE) for the original copyright notice.
-
-## Latest preview
-
-[View the portfolio and My Journey section](https://preet-magicui-portfolio-otqdmyvze-patelpreet404-alts-projects.vercel.app/#journey).

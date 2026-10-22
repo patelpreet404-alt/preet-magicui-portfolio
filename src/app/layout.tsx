@@ -1,48 +1,53 @@
-import Navbar from "@/components/navbar";
-import SiteBackground from "@/components/site-background";
 import { MotionSettingsProvider } from "@/components/motion-settings";
-import ProjectDetailsShell from "@/components/project-details-shell";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { DATA } from "@/data/resume";
+import { profile } from "@/content";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Bodoni_Moda, DM_Mono, Manrope } from "next/font/google";
+import { DM_Mono, Newsreader, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
-import "./portfolio-polish.css";
-import "./design-explorer.css";
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["400", "500", "600", "700"],
-});
+/** Change to "dark" or "system" if Preet prefers; light is the default theme. */
+const DEFAULT_THEME = "light";
 
-const dmMono = DM_Mono({
+// Display + UI. One variable file covers every weight used.
+const grotesk = Schibsted_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
-});
-
-const bodoni = Bodoni_Moda({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  variable: "--font-display",
+  variable: "--font-grotesk",
   display: "swap",
 });
 
+// Case-study prose and citation notes. Static 400 rather than the variable opsz file: 22 KB instead of 131 KB,
+// which took ~0.6 s off case-study first paint in Lighthouse. Not on the critical path of the home page.
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-newsreader",
+  display: "swap",
+  preload: false,
+});
+
+// Real code only.
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-dm-mono",
+  display: "swap",
+  preload: false,
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL(DATA.url),
+  metadataBase: new URL(profile.url),
   title: {
-    default: DATA.name,
-    template: `%s | ${DATA.name}`,
+    default: `${profile.name} — ${profile.jobTitle}`,
+    template: `%s | ${profile.name}`,
   },
-  description: DATA.description,
+  description: profile.description,
   openGraph: {
-    title: `${DATA.name}`,
-    description: DATA.description,
-    url: DATA.url,
-    siteName: `${DATA.name}`,
+    title: `${profile.name} — ${profile.jobTitle}`,
+    description: profile.description,
+    url: profile.url,
+    siteName: profile.name,
     locale: "en_US",
     type: "website",
   },
@@ -58,14 +63,15 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: `${DATA.name}`,
+    title: `${profile.name} — ${profile.jobTitle}`,
+    description: profile.description,
     card: "summary_large_image",
   },
-  verification: {
-    google: "",
-    yandex: "",
-  },
 };
+
+// Runs before first paint: apply the saved reduce-motion choice and note whether this session has
+// already played the hero sequence, so CSS can skip it without a flash. Both stores are optional.
+const EARLY_SCRIPT = `try{var d=document.documentElement;var m=localStorage.getItem("portfolio-reduce-motion");if(m==="true"||m==="false")d.dataset.reducedMotion=m;if(sessionStorage.getItem("hero-sequence-played"))d.dataset.heroPlayed="true"}catch(e){}`;
 
 export default function RootLayout({
   children,
@@ -74,25 +80,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased relative",
-          manrope.variable,
-          dmMono.variable,
-          bodoni.variable
-        )}
-      >
-        <ThemeProvider attribute="class" defaultTheme="dark" storageKey="portfolio-space-theme">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: EARLY_SCRIPT }} />
+      </head>
+      <body className={cn("min-h-screen font-sans antialiased", grotesk.variable, newsreader.variable, dmMono.variable)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme={DEFAULT_THEME}
+          enableSystem={false}
+          storageKey="portfolio-space-theme"
+        >
           <MotionSettingsProvider>
-          <TooltipProvider delayDuration={0}>
-            <ProjectDetailsShell>
-              <SiteBackground />
-              <div className="site-content relative z-10 mx-auto w-full max-w-2xl px-6 py-12 pb-36 sm:py-24 sm:pb-36">
-                {children}
-              </div>
-              <Navbar />
-            </ProjectDetailsShell>
-          </TooltipProvider>
+            <TooltipProvider delayDuration={0}>{children}</TooltipProvider>
           </MotionSettingsProvider>
         </ThemeProvider>
       </body>
