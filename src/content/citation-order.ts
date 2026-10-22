@@ -1,5 +1,5 @@
 import { experience } from "./experience";
-import { featuredProjects } from "./projects";
+import { featuredProjects, projects } from "./projects";
 
 /**
  * Citation numbers follow reading order per page. Server components under client boundaries do not
@@ -13,6 +13,9 @@ export const citationOrder: Record<string, readonly string[]> = {
     ...featuredProjects.flatMap((project) => (project.proof ? [project.proof] : [])),
     ...experience.map((job) => job.outcome.citationId),
   ],
+  ...Object.fromEntries(
+    projects.map((project) => [`work:${project.slug}`, (project.results ?? []).flatMap((result) => (result.citationId ? [result.citationId] : []))]),
+  ),
 };
 
 export function citationNumber(page: string, id: string): number {

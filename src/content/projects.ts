@@ -68,6 +68,8 @@ export interface Project {
   workflow: readonly string[];
   architecture?: { summary: string; stages: readonly ArchitectureStage[] };
   screenshots?: readonly { src: string; alt: string; caption: string }[];
+  /** Measured outcomes, each optionally backed by a citation. Projects without measured data omit this. */
+  results?: readonly { text: string; citationId?: string }[];
   /** Key into PROJECT_DESIGNS in src/data/project-design-explorer.ts (overview, services, data model). */
   designExplorerId?: string;
   /** Caveats about the public demo; shown as "About this demo" on the case-study page only. */
@@ -363,6 +365,12 @@ export const projects: readonly Project[] = [
         }
       ]
     },
+    results: [
+      {
+        text: "On the repository's demo program, the optimizer cuts the output from 57 instructions to 37 (35%) in about 0.34 ms on average.",
+        citationId: "hero-optilang",
+      },
+    ],
     aboutDemo: "The browser deployment is an interactive compiler preview, and its examples illustrate the pipeline. The repository measurement is specific to its demo program: 57 to 37 instructions (35%) in about 0.34 ms on average."
   },
   {
