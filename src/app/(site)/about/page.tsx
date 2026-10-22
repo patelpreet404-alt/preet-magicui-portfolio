@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { PageTransition } from "@/components/page-transition";
 import { CaseSection, Prose } from "@/components/work/case-section";
 import { profile, projects, timelineLong } from "@/content";
 
@@ -18,6 +19,7 @@ const projectSlug = (name: string) => projects.find((project) => project.name ==
 
 export default function AboutPage() {
   return (
+    <PageTransition>
     <div className="container-site pb-[var(--section-gap)] pt-10 md:pt-16">
       <header className="grid-site gap-y-8">
         <div className="col-span-12 lg:col-span-8">
@@ -145,5 +147,6 @@ export default function AboutPage() {
         </CaseSection>
       </div>
     </div>
+    </PageTransition>
   );
 }

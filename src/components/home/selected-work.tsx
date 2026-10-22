@@ -30,7 +30,7 @@ export function SelectedWork() {
                 <article className="grid-site items-start gap-y-6">
                   <div className="order-2 col-span-12 lg:order-1 lg:col-span-4">
                     <h3 className="type-h3">
-                      <Link href={`/work/${project.slug}`} className="hover:underline hover:decoration-rule hover:underline-offset-4">
+                      <Link href={`/work/${project.slug}`} transitionTypes={["nav-forward"]} className="hover:underline hover:decoration-rule hover:underline-offset-4">
                         {project.name}
                       </Link>
                     </h3>
@@ -66,7 +66,7 @@ export function SelectedWork() {
                                 <span className="sr-only"> for {project.name} (opens in a new tab)</span>
                               </a>
                             ) : (
-                              <Link href={link.href} className={linkClass}>
+                              <Link href={link.href} transitionTypes={["nav-forward"]} className={linkClass}>
                                 {label}
                                 <ArrowRight className="size-3.5 t-fast transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                                 <span className="sr-only">: {project.name}</span>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { ViewTransition, useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 import { useMotionSettings } from "@/components/motion-settings";
 import type { ProjectMedia } from "@/content";
@@ -42,6 +42,7 @@ export function WorkMedia({ slug, name, media }: { slug: string; name: string; m
   }, [shouldPlay]);
 
   return (
+    <ViewTransition name={`work-media-${slug}`} share="morph" default="none">
     <div
       ref={frameRef}
       data-work-media={slug}
@@ -51,7 +52,7 @@ export function WorkMedia({ slug, name, media }: { slug: string; name: string; m
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
     >
-      <Link href={`/work/${slug}`} tabIndex={-1} aria-hidden="true" className="absolute inset-0 block">
+      <Link href={`/work/${slug}`} transitionTypes={["nav-forward"]} tabIndex={-1} aria-hidden="true" className="absolute inset-0 block">
         <Image
           src={media.poster}
           alt={media.alt}
@@ -89,5 +90,6 @@ export function WorkMedia({ slug, name, media }: { slug: string; name: string; m
         </button>
       )}
     </div>
+    </ViewTransition>
   );
 }

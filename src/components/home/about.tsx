@@ -47,7 +47,7 @@ export function About() {
               </li>
             ))}
           </ol>
-          <Link href="/about" className={`${linkClass} mt-4 group`}>
+          <Link href="/about" transitionTypes={["nav-forward"]} className={`${linkClass} mt-4 group`}>
             The longer story
             <ArrowRight className="size-3.5 t-fast transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </Link>

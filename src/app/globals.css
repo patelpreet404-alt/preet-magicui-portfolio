@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
+@import "lenis/dist/lenis.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -190,6 +191,11 @@
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease-out);
 }
+@utility press {
+  &:active {
+    transform: translateY(1px);
+  }
+}
 @utility t-slow {
   transition-duration: var(--dur-slow);
   transition-timing-function: var(--ease-out);
@@ -234,6 +240,12 @@
   html:not([data-reduced-motion="true"]) {
     scroll-behavior: smooth;
   }
+}
+
+/* While Lenis drives scrolling it must be the only smoother. */
+html.lenis,
+html.lenis body {
+  scroll-behavior: auto !important;
 }
 
 /* Reduced motion: the OS setting, unless the visitor explicitly turned it off, or the manual toggle
@@ -291,6 +303,39 @@ html[data-reduced-motion="true"] *::after {
 .cite-marker:hover,
 .cite-marker[aria-expanded="true"] {
   background-color: color-mix(in oklab, var(--link) 14%, transparent);
+}
+/* Hero load sequence: the text is already painted; each cited phrase gets its highlight swept in
+   (700ms, 120ms stagger) and its marker fades in. Total under 1.4s. Plays once per session, never
+   under reduced motion (OS or the manual toggle). Without CSS animation support everything simply shows. */
+@keyframes cite-sweep {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+@keyframes cite-marker-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-hero-played]):not([data-reduced-motion="true"]) [data-hero-seq] .cite-mark {
+    animation: cite-sweep var(--dur-hero) var(--ease-out) both;
+  }
+  html:not([data-hero-played]):not([data-reduced-motion="true"]) [data-hero-seq] .cite-marker {
+    animation: cite-marker-in var(--dur-base) var(--ease-out) both;
+  }
+  html:not([data-hero-played]):not([data-reduced-motion="true"]) [data-hero-seq] .cite-mark:nth-of-type(1) { animation-delay: 150ms; }
+  html:not([data-hero-played]):not([data-reduced-motion="true"]) [data-hero-seq] .cite-mark:nth-of-type(2) { animation-delay: 270ms; }
+  html:not([data-hero-played]):not([data-reduced-motion="true"]) [data-hero-seq] .cite-mark:nth-of-type(3) { animation-delay: 390ms; }
+  html:not([data-hero-played]):not([data-reduced-motion="true"]) [data-hero-seq] .cite-marker:nth-of-type(1) { animation-delay: 650ms; }
+  html:not([data-hero-played]):not([data-reduced-motion="true"]) [data-hero-seq] .cite-marker:nth-of-type(2) { animation-delay: 770ms; }
+  html:not([data-hero-played]):not([data-reduced-motion="true"]) [data-hero-seq] .cite-marker:nth-of-type(3) { animation-delay: 890ms; }
 }
 @keyframes note-in {
   from {
@@ -440,4 +485,82 @@ html[data-magicui-theme-vt="active"]::view-transition-new(root) {
 }
 html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   animation-duration: var(--magicui-theme-toggle-vt-duration, 400ms);
+}
+
+/* ==========================================================================
+   View transitions (React <ViewTransition> + Next navigation). One kind of page transition:
+   the project media morphs into the case-study hero, and content slides a short way in the
+   direction of travel (nav-forward / nav-back). The header is anchored. Nothing runs under
+   reduced motion.
+   ========================================================================== */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+::view-transition-group(.morph) {
+  animation-duration: var(--dur-slow);
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-old(.nav-forward) {
+  --slide-offset: -40px;
+  animation:
+    var(--dur-fast) ease-in both vt-fade reverse,
+    var(--dur-slow) var(--ease-in-out) both vt-slide reverse;
+}
+::view-transition-new(.nav-forward) {
+  --slide-offset: 40px;
+  animation:
+    var(--dur-base) ease-out var(--dur-fast) both vt-fade,
+    var(--dur-slow) var(--ease-in-out) both vt-slide;
+}
+::view-transition-old(.nav-back) {
+  --slide-offset: 40px;
+  animation:
+    var(--dur-fast) ease-in both vt-fade reverse,
+    var(--dur-slow) var(--ease-in-out) both vt-slide reverse;
+}
+::view-transition-new(.nav-back) {
+  --slide-offset: -40px;
+  animation:
+    var(--dur-base) ease-out var(--dur-fast) both vt-fade,
+    var(--dur-slow) var(--ease-in-out) both vt-slide;
+}
+@keyframes vt-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes vt-slide {
+  from {
+    translate: var(--slide-offset);
+  }
+  to {
+    translate: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-reduced-motion="false"]) ::view-transition-old(*),
+  html:not([data-reduced-motion="false"]) ::view-transition-new(*),
+  html:not([data-reduced-motion="false"]) ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+html[data-reduced-motion="true"] ::view-transition-old(*),
+html[data-reduced-motion="true"] ::view-transition-new(*),
+html[data-reduced-motion="true"] ::view-transition-group(*) {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
 }

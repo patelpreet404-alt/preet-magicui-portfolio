@@ -55,6 +55,7 @@ export function SiteHeader() {
   return (
     <header
       data-hidden={hidden}
+      style={{ viewTransitionName: "site-header" }}
       className="t-base sticky top-0 z-40 border-b border-rule bg-paper transition-transform data-[hidden=true]:not-focus-within:-translate-y-full"
     >
       <div className="container-site flex h-[var(--header-h)] items-center justify-between gap-6">

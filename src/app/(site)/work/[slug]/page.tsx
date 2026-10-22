@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { ViewTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Cite } from "@/components/cite/cite";
 import { CiteNotes, CiteRegion } from "@/components/cite/cite-region";
+import { PageTransition } from "@/components/page-transition";
 import { LINK_KINDS } from "@/components/link-icons";
 import { Safari } from "@/components/ui/safari";
 import { ArchitectureStepper } from "@/components/work/architecture-stepper";
@@ -33,9 +35,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const primary =
-  "type-meta t-base inline-flex min-h-11 items-center gap-2 rounded-control bg-ink px-5 text-paper transition-opacity hover:opacity-85";
+  "type-meta press t-base inline-flex min-h-11 items-center gap-2 rounded-control bg-ink px-5 text-paper transition-opacity hover:opacity-85";
 const secondary =
-  "type-meta t-base inline-flex min-h-11 items-center gap-2 rounded-control border border-rule px-5 text-ink transition-colors hover:border-ink";
+  "type-meta press t-base inline-flex min-h-11 items-center gap-2 rounded-control border border-rule px-5 text-ink transition-colors hover:border-ink";
 const topLink =
   "type-meta t-fast inline-flex min-h-11 items-center gap-2 text-graphite transition-colors hover:text-ink";
 
@@ -82,17 +84,21 @@ function HeroMedia({ project }: { project: Project }) {
   // Projects with a public page get the browser frame; research with only a preview image gets a plain frame.
   if (demo) {
     return (
-      <div data-case-media={project.slug}>
-        <Safari url={hostOf(demo.href)}>
-          <div className="relative size-full">{inner}</div>
-        </Safari>
-      </div>
+      <ViewTransition name={`work-media-${project.slug}`} share="morph" default="none">
+        <div data-case-media={project.slug}>
+          <Safari url={hostOf(demo.href)}>
+            <div className="relative size-full">{inner}</div>
+          </Safari>
+        </div>
+      </ViewTransition>
     );
   }
   return (
-    <div data-case-media={project.slug} className="relative aspect-[16/10] overflow-hidden rounded-media border border-rule bg-muted">
-      {inner}
-    </div>
+    <ViewTransition name={`work-media-${project.slug}`} share="morph" default="none">
+      <div data-case-media={project.slug} className="relative aspect-[16/10] overflow-hidden rounded-media border border-rule bg-muted">
+        {inner}
+      </div>
+    </ViewTransition>
   );
 }
 
@@ -108,13 +114,14 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
   const actionLinks = project.links.filter((link) => link.kind !== "case-study");
 
   return (
+    <PageTransition>
     <article>
       <div className="container-site flex items-center justify-between py-3">
-        <Link href="/#work" className={topLink}>
+        <Link href="/#work" transitionTypes={["nav-back"]} className={topLink}>
           <ArrowRight className="size-4 rotate-180" aria-hidden="true" />
           All work
         </Link>
-        <Link href={`/work/${next.slug}`} className={topLink}>
+        <Link href={`/work/${next.slug}`} transitionTypes={["nav-forward"]} className={topLink}>
           Next: {next.name}
           <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
@@ -271,7 +278,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
           </div>
           <div className="col-span-12 lg:col-span-6">
             <p className="type-meta text-graphite">Next project</p>
-            <Link href={`/work/${next.slug}`} className="group mt-2 block">
+            <Link href={`/work/${next.slug}`} transitionTypes={["nav-forward"]} className="group mt-2 block">
               <span className="type-h3 inline-flex items-center gap-3">
                 {next.name}
                 <ArrowRight className="size-6 t-base transition-transform group-hover:translate-x-1" aria-hidden="true" />
@@ -284,5 +291,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<{ slug
 
       <div className="h-[var(--section-gap)]" aria-hidden="true" />
     </article>
+    </PageTransition>
   );
 }
