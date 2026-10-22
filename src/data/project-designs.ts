@@ -1,5 +1,3 @@
-import type { PortfolioProject } from "./resume";
-
 export interface DesignNode {
   id: string;
   title: string;
@@ -206,33 +204,3 @@ export const PROJECT_DESIGNS: Readonly<Record<string, ProjectDesign>> = {
     notes: ["M0–M3 verified using synthetic development data.", "M4 prepared but not through hosted acceptance.", "M5–M6 future work."]
   }
 };
-
-export function getProjectDesign(project: { slug?: string; architecture?: PortfolioProject["architecture"] }): ProjectDesign | undefined {
-  if (project.slug === "fieldnote-commerce-intelligence" || project.slug === "ledgerline-credit-risk-scorecard" || project.slug === "signal-telecom-churn-analytics") return PROJECT_DESIGNS[project.slug];
-  if (!project.architecture) return project.slug ? PROJECT_DESIGNS[project.slug] : undefined;
-
-  const nodes = project.architecture.stages.map((stage): DesignNode => ({
-    id: stage.id,
-    title: stage.title,
-    kind: "Workflow stage",
-    description: stage.action,
-    input: stage.input,
-    output: stage.output,
-    decision: stage.contribution,
-    source: stage.source
-  }));
-  const edges = nodes.slice(1).map((node, index): DesignEdge => ({ from: nodes[index].id, to: node.id, label: nodes[index].output || "Next stage" }));
-  return {
-    overview: { summary: project.architecture.summary, nodes, edges },
-    services: {
-      summary: project.slug === "optilang"
-        ? "Compiler modules share explicit intermediate representations. The separate Clang / LLVM exercises are outside this pipeline."
-        : "Focused source components handle PDF ingestion, indexing, retrieval, response generation, and citation history. These are application modules, not separate microservices.",
-      nodes: nodes.map((node) => ({ ...node, title: node.source?.label || node.title, kind: project.slug === "optilang" ? "Compiler module" : "Application component" })),
-      edges
-    },
-    notes: project.slug === "optilang"
-      ? ["The custom compiler ends at optimized three-address code.", "The browser preview illustrates the compiler pipeline; LLVM examples are a separate Clang exercise."]
-      : ["The source workflow requires the configured backend and API access.", "The public preview uses a prepared document and answers; uploads and live AI responses are unavailable there."]
-  };
-}
