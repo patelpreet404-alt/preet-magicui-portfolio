@@ -6,6 +6,8 @@ import { paginate, normalizePage } from "@/lib/pagination";
 import { ChevronRight } from "lucide-react";
 
 export const metadata: Metadata = {
+  // Kept out of navigation and the sitemap, and out of search results until there are posts.
+  robots: { index: false, follow: true },
   title: "Blog",
   description: "Thoughts on software development, life, and more.",
   openGraph: {
