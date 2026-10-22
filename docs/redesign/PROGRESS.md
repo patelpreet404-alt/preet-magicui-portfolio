@@ -18,7 +18,7 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 ## Status
 
 - [x] **Phase 0 — Baseline**
-- [ ] Phase 1 — Foundations
+- [ ] Phase 1 — Foundations (in progress)
 - [ ] Phase 2 — Home page
 - [ ] Phase 3 — Case studies and /about
 - [ ] Phase 4 — Motion and polish
@@ -51,20 +51,40 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 
 Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only `PORTFOLIO_REDESIGN_PLAN.md` and `SONNET_MASTER_PROMPT.md`). It was turned into the repo root with `git init` + `git fetch origin` + `git checkout -b redesign/v2 origin/main`. The two markdown files are listed in `.git/info/exclude` so they stay untracked.
 
-## Phase 1 — Foundations (not started)
+## Phase 1 — Foundations (in progress)
 
-Plan to be written here when the phase begins.
+### Plan (files I will touch)
 
-- [ ] Tokens (light + dark) in `globals.css`, mapped into Tailwind v4 `@theme`; shadcn token names kept as aliases so the demo pages keep working
-- [ ] Fonts: Schibsted Grotesk, Newsreader (opsz), DM Mono for code only; remove Bodoni Moda, Manrope, hard-coded Georgia
+**Structure.** Route groups so the demo pages stay chrome-free and keep their own CSS:
+`src/app/layout.tsx` (html, fonts, providers only) · `src/app/(site)/layout.tsx` (skip link, header, `<main id="main">`, footer, legacy modal shell) · `src/app/(site)/page.tsx` + `blog/` (moved with `git mv`) · `src/app/projects/layout.tsx` (imports `demos.css`, wraps demos in `.site-content`) · `src/app/projects/demos.css` (lines moved verbatim out of `globals.css`) · `src/app/styleguide/page.tsx` (temporary `noindex` design-system proof page, deleted in Phase 5).
+
+**Tokens, type, grid, motion.** `src/app/globals.css` (rewritten: tokens, shadcn aliases, `@theme`, type utilities, container/grid helpers, motion tokens, reduced-motion rules, focus ring, `scroll-padding-top`) · `src/app/legacy.css` (what remains of `portfolio-polish.css`, `design-explorer.css` and the old marquee / engineering-map rules; no `:root` rules; deleted in Phase 5 with `_archive/`) · delete `portfolio-polish.css`, `design-explorer.css` (merged into `legacy.css`).
+
+**Fonts.** `src/app/layout.tsx`: Schibsted Grotesk (variable), Newsreader (variable, `opsz`, normal style only), DM Mono 400/500, latin subset. Bodoni Moda and Manrope removed.
+
+**Chrome.** `src/components/site/{site-header,menu-sheet,site-footer,skip-link,delhi-clock,motion-toggle,theme-toggle}.tsx`; Magic UI Animated Theme Toggler via the shadcn CLI into `src/components/magicui/`; `src/components/motion-settings.tsx` kept (hook reused). Delete `navbar.tsx`, `site-background.tsx`, `hls.js` dependency.
+
+**Content.** `src/content/{profile,projects,experience,timeline,citations}.ts` (typed, JSX-free). `src/data/*` stays for the legacy sections until Phase 2–3 so the build never breaks.
+
+**Config.** `next.config.mjs` (`turbopack.root`), `eslint.config.mjs` (ignore `.content-collections/**`), `scripts/screenshot.mjs` (add `/styleguide`).
+
+**Verification.** lint + build; screenshots `phase-1` (home, styleguide, demos); demo pages compared against `before`; contrast ratios for every token pair computed and logged below.
+
+### Tasks
+
+- [ ] Route groups + `projects/layout.tsx`
+- [ ] Tokens (light + dark) in `globals.css`, mapped into Tailwind v4 `@theme`; shadcn token names kept as aliases
+- [ ] Fonts: Schibsted Grotesk, Newsreader (opsz), DM Mono for code only; Bodoni Moda, Manrope, hard-coded Georgia removed
 - [ ] Type scale, 12-column grid / container, section spacing, `scroll-padding-top`
-- [ ] Motion tokens + reduced-motion utilities tied to `MotionSettingsProvider` (`html[data-reduced-motion]`)
-- [ ] Remove `site-background.tsx` (HLS/Mux space video) and delete the forced-dark `:root` overrides in `portfolio-polish.css`; fold anything still needed into `globals.css`
-- [ ] Move demo CSS (`.optilang-theme`, `.research-theme`, `.studyroom-*`, `.project-demo-fullscreen`, …) into `demos.css`, imported only by `/projects/*`
-- [ ] Header (hide on scroll down / show on scroll up / always on focus; <640px name + Menu sheet, focus-trapped, Esc closes) and footer shells, skip link
-- [ ] Theme toggle (Magic UI Animated Theme Toggler), motion toggle moved to footer
-- [ ] Data refactor into typed, JSX-free `src/content/{profile,projects,experience,timeline,citations}.ts`
-- [ ] `turbopack.root` set to silence the lockfile warning
+- [ ] Motion tokens + reduced-motion rules tied to `html[data-reduced-motion]`
+- [ ] Remove `site-background.tsx`, HLS/Mux stream, `hls.js`
+- [ ] Delete the forced-dark `:root` overrides (`portfolio-polish.css`); remaining legacy rules in `legacy.css`
+- [ ] Demo CSS moved to `demos.css`, imported only by `/projects/*`; demos compared with `before`
+- [ ] Header (hide on scroll down / show on scroll up / always on focus; <640px name + Menu sheet, focus-trapped, Esc closes), footer, skip link
+- [ ] Theme toggle (Magic UI Animated Theme Toggler) and motion toggle in the footer
+- [ ] Data refactor into typed, JSX-free `src/content/*`
+- [ ] `turbopack.root` + ESLint ignore (baseline warnings gone)
+- [ ] Contrast ratios verified for both themes
 - [ ] Screenshots `phase-1`
 
 ## Phase 2 — Home page (not started)
