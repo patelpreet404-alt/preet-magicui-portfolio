@@ -37,7 +37,7 @@ export interface TimelineEntry {
  * The longer story for /about. Migrated from src/data/journey.ts. Dropped as unverifiable or
  * contradicting the project pages: "5 learning types · 4 study material formats", "50K+ credit
  * records · 100K+ e-commerce orders", "DGS — Career Development Platform", "FoodSocial" (now Foodfolk),
- * "LLVM IR" and "Tableau" (not on the résumé or any project page).
+ * "LLVM IR" and "Tableau" (not on the résumé or any project page), and the "92.6%" secondary-education score (not on the résumé).
  */
 export const timelineLong: readonly TimelineEntry[] = [
   {
@@ -48,7 +48,6 @@ export const timelineLong: readonly TimelineEntry[] = [
     organization: "International Indian School Al Jubail",
     location: "Al Jubail, Saudi Arabia",
     description: "Built a foundation in mathematics, science and analytical thinking while discovering an interest in technology.",
-    highlights: ["92.6% — Secondary education"],
   },
   {
     id: "computer-science",

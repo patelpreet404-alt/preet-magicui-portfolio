@@ -283,4 +283,4 @@ Lab LCP on case studies (3.1 s) is above the 2.5 s p75 field target even though 
 12. **OptiLang demo page wording:** `/projects/optilang` itself says "8 pipeline stages" and "LICM + LLVM IR" (matching the résumé), while the project data and case study say five optimization passes and that the LLVM examples are a separate exercise. Demo pages were not edited; pick one wording.
 13. **Three names for one product:** "Studyloom" (site, live URL), "Studyroom" and "AI Learning Management System" (demo page header and résumé).
 14. **Foodfolk's preview image** is a "cook along." landing page. Confirm Foodfolk is the right name and that this is the image you want as its Selected work media.
-15. Dropped from the timeline as unverifiable: "Tableau" (not on the résumé or any project page).
+15. Dropped as unverifiable: "Tableau" (not on the résumé or any project page) and the "92.6% — Secondary education" score (only in the old journey data; the résumé lists 85.6% for senior secondary). Add either back to the résumé if you want them shown.
