@@ -89,15 +89,26 @@ Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only
 
 **Contrast (WCAG):** light: ink 16.7:1, graphite 6.1:1, link 6.9:1, ink on highlight 13.6:1. Dark: ink 15.5:1, graphite 7.2:1, link 8.6:1, ink on highlight underlay 6.0:1. Rule: the `[n]` citation marker sits after the highlighted phrase, never on the underlay (link on the dark underlay would be only 3.3:1).
 
-## Phase 2 — Home page (not started)
+## Phase 2 — Home page (in progress)
 
-- [ ] Hero with three citations (`<Cite>` component + `src/content/citations.ts`)
-- [ ] Selected work (4 rows, hover/in-view video, `next/image` fallbacks)
+### Plan (files I will touch)
+
+- **Citations:** `src/components/cite/{cite.tsx (server: numbers by reading order via React.cache), cite-region.tsx (client: open state, margin/inline placement, Esc), note-content.tsx}`; CSS for `.cite-mark`, `.cite-marker`, note slide-in in `globals.css`.
+- **Sections:** `src/components/home/{hero,selected-work,work-media,experience,more-work,about,contact,contact-actions}.tsx`, `src/components/link-icons.tsx`; `src/app/(site)/page.tsx` renders exactly Hero, Selected work, Experience, More work, About, Contact.
+- **Archive:** `git mv` the old sections, project card, marquee, journey, online presence, tech stack, engineering map, design-explorer section, terminal embed, hero identity, saved/compare, modal flow into `src/components/_archive/`; `ProjectDetailsShell` and `legacy.css` leave the layout.
+- **Content tweaks:** shorter `[TODO: role]` placeholder in `projects.ts`.
+- **Verification:** screenshots `phase-2` + report (section count, first-project position), citation behaviour test (numbering order, margin vs inline, Esc + focus return, no overlap), axe quick pass.
+
+### Tasks
+
+- [ ] Citation system (`<Cite>`, margin notes ≥1100px, inline disclosure below, Esc, focus return)
+- [ ] Hero with three citations, portrait right ≥1024px, availability line, actions
+- [ ] Selected work (4 rows; hover/in-view video with pause control; `next/image` fallbacks)
 - [ ] Experience (Rang Technologies, fully visible, one citation)
-- [ ] More work (filters, semantic list, status, links)
-- [ ] About (condensed)
-- [ ] Contact + footer (copy-email, IST clock, theme/motion toggles, terminal link)
-- [ ] Old sections removed from `page.tsx` and moved to `src/components/_archive/`
+- [ ] More work (filters with `aria-pressed`, semantic list, status, stack ≤3, links)
+- [ ] About (condensed) incl. mobile portrait
+- [ ] Contact (copy-email) + existing footer
+- [ ] Old sections moved to `src/components/_archive/`; `page.tsx` has six sections
 - [ ] First project within ~1.2 screens (1440×900) / ~2 screens (390 px)
 - [ ] Screenshots `phase-2`
 
