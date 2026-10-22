@@ -19,7 +19,7 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 
 - [x] **Phase 0 — Baseline**
 - [x] Phase 1 — Foundations
-- [ ] Phase 2 — Home page
+- [x] Phase 2 — Home page
 - [ ] Phase 3 — Case studies and /about
 - [ ] Phase 4 — Motion and polish
 - [ ] Phase 5 — Performance, accessibility, SEO
@@ -89,7 +89,7 @@ Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only
 
 **Contrast (WCAG):** light: ink 16.7:1, graphite 6.1:1, link 6.9:1, ink on highlight 13.6:1. Dark: ink 15.5:1, graphite 7.2:1, link 8.6:1, ink on highlight underlay 6.0:1. Rule: the `[n]` citation marker sits after the highlighted phrase, never on the underlay (link on the dark underlay would be only 3.3:1).
 
-## Phase 2 — Home page (in progress)
+## Phase 2 — Home page (done)
 
 ### Plan (files I will touch)
 
@@ -101,16 +101,19 @@ Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only
 
 ### Tasks
 
-- [ ] Citation system (`<Cite>`, margin notes ≥1100px, inline disclosure below, Esc, focus return)
-- [ ] Hero with three citations, portrait right ≥1024px, availability line, actions
-- [ ] Selected work (4 rows; hover/in-view video with pause control; `next/image` fallbacks)
-- [ ] Experience (Rang Technologies, fully visible, one citation)
-- [ ] More work (filters with `aria-pressed`, semantic list, status, stack ≤3, links)
-- [ ] About (condensed) incl. mobile portrait
-- [ ] Contact (copy-email) + existing footer
-- [ ] Old sections moved to `src/components/_archive/`; `page.tsx` has six sections
-- [ ] First project within ~1.2 screens (1440×900) / ~2 screens (390 px)
-- [ ] Screenshots `phase-2`
+- [x] Citation system (`<Cite>`, margin notes ≥1100px stacked without overlap, inline disclosure below, Esc closes the latest note and returns focus, `aria-expanded`/`aria-controls`). Numbering uses an explicit per-page reading order (`src/content/citation-order.ts`) because server components under client boundaries don't render in document order
+- [x] Hero with three citations, portrait right ≥1024px (moves to About below), availability line, actions
+- [x] Selected work (4 rows; video plays muted+loop only on hover/focus/≥60% in view, visible Play/Pause button, poster under reduced motion; `next/image` posters)
+- [x] Experience (Rang Technologies, fully visible, one citation, margin note)
+- [x] More work (filters with `aria-pressed`, semantic list, status, stack ≤3, links; Data filter 5 → 3 verified)
+- [x] About (condensed) incl. mobile portrait, timeline (6 rows), education, toolbox, beyond code, elsewhere
+- [x] Contact (copy-email with live region; no more 2–3 word column) + Phase 1 footer
+- [x] Old sections moved to `src/components/_archive/`; `page.tsx` renders six sections; `legacy.css` deleted; modal shell removed from the layout
+- [x] First project at **1.19 screens** (1440×900), **0.87** (768×1024), **1.25** (390×844) — targets were ~1.2 and ~2
+- [x] axe on `/` in light and dark: 0 violations
+- [x] Screenshots `phase-2`
+
+Home page height: 7,768 px at 1440 (was 10,927), 9,874 px at 390 (was 13,221). Browser console shows only 404s for `/work/*` and `/about` link prefetches, which Phase 3 creates.
 
 ## Phase 3 — Case studies and /about (not started)
 
@@ -171,6 +174,9 @@ Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only
 | D12 | The `[n]` citation marker never sits on the highlight underlay | Dark-theme link-on-underlay contrast is 3.3:1 |
 | D13 | `details` markdown on the old project data was dropped from `src/content/projects.ts`; its facts are already in `caseStudy` | `react-markdown` can then be removed in Phase 5 |
 | D14 | `/styleguide` is a temporary `noindex` proof page | Verifies tokens and type in both themes; deleted in Phase 5 |
+| D15 | The portrait in the hero is capped at 22rem wide | So an open citation note sits fully inside a 1440×900 fold under it |
+| D16 | Work videos autoplay when ≥60% in view (as specified) and a visible Pause/Play button is always shown | WCAG 2.2.2: anything that moves for more than 5 s needs a pause control. The three MP4s are ~6 MB each until re-encoded (no `ffmpeg` here) |
+| D17 | Selected work shows at most 4 stack items per row; More work shows 3 | Keeps the rows scannable; full stacks are on the case-study pages |
 
 ## Content needed from Preet
 

@@ -77,11 +77,11 @@ async function scrollThrough(page) {
     const step = Math.max(window.innerHeight * 0.8, 300);
     const root = document.scrollingElement ?? document.documentElement;
     for (let y = 0; y < root.scrollHeight; y += step) {
-      window.scrollTo(0, y);
+      window.scrollTo({ top: y, behavior: "instant" });
       await new Promise((resolve) => setTimeout(resolve, 90));
     }
-    window.scrollTo(0, 0);
-    await new Promise((resolve) => setTimeout(resolve, 250));
+    window.scrollTo({ top: 0, behavior: "instant" });
+    await new Promise((resolve) => setTimeout(resolve, 400));
   });
 }
 
