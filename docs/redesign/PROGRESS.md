@@ -170,17 +170,27 @@ Also audited programmatically on 5 pages at 390 / 768 / 1440: no target under 24
 
 Metrics now: home 7,768 px at 1440 (was 10,927) · first project at **1.18** screens (1440×900), 0.87 (768×1024), 1.25 (390×844).
 
-## Phase 5 — Performance, accessibility, SEO (not started)
+## Phase 5 — Performance, accessibility, SEO (in progress)
 
-- [ ] Remove `hls.js`, the Mux stream, the iframe; delete `_archive/`, `/api/online-presence`, unused deps (`react-markdown` only if unused) and unused template images
-- [ ] Every image through `next/image` with `sizes`; re-export `crypto-ransomware-preview.png` and the avatar
-- [ ] Re-encode demo MP4s (blocked: no `ffmpeg` — see "Content needed")
-- [ ] Fonts via `next/font`, latin only, only used weights
-- [ ] Skip link, landmarks, one `h1` per page, focus ring 2px `--link` / 3px offset, Esc behaviour, reduced-motion audit
-- [ ] axe (`@axe-core/playwright`) on `/`, `/about`, one case study: zero serious/critical
-- [ ] SEO: title/description/canonical/OG/Twitter, `opengraph-image`, `sitemap.ts`, `robots.ts`, `manifest.ts`, `icon.svg` + `apple-icon`, JSON-LD `Person`, remove empty `verification`
-- [ ] Lighthouse mobile: Perf ≥ 90; A11y, Best Practices, SEO ≥ 95
-- [ ] Screenshots `phase-5`
+### Plan (files I will touch)
+
+- **Deletions:** `src/components/_archive/`, `src/app/api/online-presence/`, `src/data/online-presence.ts`, `src/app/(site)/styleguide/`, the blog's old OG images and `public/fonts/`, unused template images and `public/tech-icons/`, shadcn primitives and dependencies nothing imports (checked with grep first).
+- **Images:** re-export `crypto-ransomware-preview.png` and `preet-patel-avatar.jpg` (macOS `sips`); render each project's extra screenshots on its case study through `next/image`; skip autoplay on save-data / slow connections.
+- **Videos:** `ffmpeg` is not installed, so the re-encode is logged as a TODO (spec).
+- **SEO:** `src/app/{sitemap,robots,manifest}.ts`, `icon.svg`, `apple-icon.tsx`, delete `favicon.ico`, JSON-LD `Person`, canonical + OG/Twitter on every page.
+- **Verification:** lint, build, all behaviour suites, axe, Lighthouse mobile against the production build.
+
+### Tasks
+
+- [ ] Archive, API route, styleguide and unused files/deps deleted
+- [ ] Unused template images deleted after grepping references
+- [ ] Large images re-exported; every image through `next/image` with `sizes`
+- [ ] Demo videos re-encoded (blocked: no `ffmpeg`)
+- [ ] Fonts: `next/font`, latin only, only the weights used
+- [ ] Skip link, landmarks, one `h1` per page, focus ring, Esc behaviour, reduced-motion audit
+- [ ] axe: 0 serious/critical on `/`, `/about`, a case study
+- [ ] SEO files, icons, JSON-LD, canonical/OG/Twitter
+- [ ] Lighthouse mobile: Performance ≥ 90; Accessibility, Best Practices, SEO ≥ 95
 
 ## Phase 6 — Final QA (not started)
 
