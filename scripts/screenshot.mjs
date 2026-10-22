@@ -96,7 +96,7 @@ async function measure(page, viewport) {
     return {
       documentHeight: root.scrollHeight,
       screens: Number((root.scrollHeight / viewportHeight).toFixed(2)),
-      sections: document.querySelectorAll("main > section").length,
+      sections: document.querySelectorAll("main > section, main > div > section").length,
       workSectionTop: top("#work") ?? top("#projects"),
       firstProjectTop: firstProject,
       firstProjectScreens: firstProject == null ? null : Number((firstProject / viewportHeight).toFixed(2)),

@@ -1,8 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { useMotionSettings } from "@/components/motion-settings";
 import {
   DOMAIN_LABELS,
   STATUS_LABELS,
@@ -18,8 +20,56 @@ const DOMAIN_ORDER: ProjectDomain[] = ["ai-ml", "full-stack", "systems", "data",
 const rowLink =
   "type-meta group inline-flex min-h-11 items-center gap-1 text-ink underline decoration-rule underline-offset-4 t-fast transition-colors hover:decoration-ink";
 
+const FINE_POINTER = "(hover: hover) and (pointer: fine)";
+const subscribeFinePointer = (onChange: () => void) => {
+  const media = window.matchMedia(FINE_POINTER);
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+};
+
+function Preview({ project, className }: { project: (typeof moreProjects)[number]; className: string }) {
+  return (
+    <div aria-hidden="true" className={`pointer-events-none z-30 w-[280px] overflow-hidden rounded-media border border-rule bg-muted ${className}`}>
+      <div className="relative aspect-[16/10]">
+        <Image src={project.media.poster} alt="" fill sizes="280px" className="object-cover object-top" />
+      </div>
+    </div>
+  );
+}
+
 export function MoreWork() {
   const [filter, setFilter] = useState<Filter>("all");
+  const { reducedMotion } = useMotionSettings();
+  const finePointer = useSyncExternalStore(subscribeFinePointer, () => window.matchMedia(FINE_POINTER).matches, () => false);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [focused, setFocused] = useState<string | null>(null);
+  const followRef = useRef<HTMLDivElement>(null);
+  const pointer = useRef({ x: 0, y: 0, frame: 0 });
+
+  // Hover preview: follows the cursor with a transform only, throttled to one update per frame.
+  const place = () => {
+    const el = followRef.current;
+    if (!el) return;
+    const { x, y } = pointer.current;
+    el.style.transform = `translate3d(${Math.min(x + 24, window.innerWidth - 304)}px, ${Math.min(y + 20, window.innerHeight - 200)}px, 0)`;
+  };
+  const follow = (event: React.PointerEvent) => {
+    const state = pointer.current;
+    state.x = event.clientX;
+    state.y = event.clientY;
+    if (state.frame) return;
+    state.frame = window.requestAnimationFrame(() => {
+      state.frame = 0;
+      place();
+    });
+  };
+  const hoverPreview = finePointer && !reducedMotion;
+  const hoveredProject = hoverPreview ? moreProjects.find((project) => project.slug === hovered) : undefined;
+  // When the preview first mounts, put it under the cursor straight away.
+  useLayoutEffect(() => {
+    if (hoveredProject) place();
+  }, [hoveredProject]);
+  const focusedProject = moreProjects.find((project) => project.slug === focused);
   const present = DOMAIN_ORDER.filter((domain) => moreProjects.some((project) => project.domains.includes(domain)));
   const visible = filter === "all" ? moreProjects : moreProjects.filter((project) => project.domains.includes(filter));
 
@@ -39,7 +89,7 @@ export function MoreWork() {
             type="button"
             aria-pressed={filter === id}
             onClick={() => setFilter(id)}
-            className="type-meta t-fast inline-flex min-h-11 items-center rounded-control border border-rule px-4 text-ink transition-colors hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper"
+            className="type-meta press t-fast inline-flex min-h-11 items-center rounded-control border border-rule px-4 text-ink transition-colors hover:border-ink aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper"
           >
             {label}
           </button>
@@ -53,9 +103,21 @@ export function MoreWork() {
         {visible.map((project) => {
           const external = project.links.filter((link) => link.kind === "demo" || link.kind === "source");
           return (
-            <li key={project.slug} data-more-work={project.slug} className="grid-site items-baseline gap-y-2 border-b border-rule py-5">
+            <li
+              key={project.slug}
+              data-more-work={project.slug}
+              className="grid-site items-baseline gap-y-2 border-b border-rule py-5"
+              onPointerEnter={(event) => {
+                setHovered(project.slug);
+                follow(event);
+              }}
+              onPointerMove={follow}
+              onPointerLeave={() => setHovered(null)}
+              onFocus={(event) => setFocused(event.target.matches(":focus-visible") ? project.slug : null)}
+              onBlur={() => setFocused(null)}
+            >
               <div className="col-span-12 lg:col-span-3">
-                <Link href={`/work/${project.slug}`} className="type-body font-semibold text-ink underline decoration-transparent underline-offset-4 t-fast transition-colors hover:decoration-rule">
+                <Link href={`/work/${project.slug}`} transitionTypes={["nav-forward"]} className="type-body font-semibold text-ink underline decoration-transparent underline-offset-4 t-fast transition-colors hover:decoration-rule">
                   {project.name}
                 </Link>
                 {project.subtitle && <p className="type-meta text-graphite">{project.subtitle}</p>}
@@ -81,6 +143,13 @@ export function MoreWork() {
           );
         })}
       </ul>
+
+      {hoveredProject && (
+        <div ref={followRef} className="fixed left-0 top-0 z-30 will-change-transform">
+          <Preview project={hoveredProject} className="t-fast transition-opacity" />
+        </div>
+      )}
+      {focusedProject && <Preview project={focusedProject} className="fixed bottom-6 right-6" />}
     </section>
   );
 }

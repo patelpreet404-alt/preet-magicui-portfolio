@@ -31,7 +31,7 @@ export function ContactActions({ email }: { email: string }) {
         <button
           type="button"
           onClick={copyEmail}
-          className="type-meta t-fast inline-flex min-h-11 items-center gap-2 rounded-control border border-rule px-4 text-ink transition-colors hover:border-ink"
+          className="type-meta press t-fast inline-flex min-h-11 items-center gap-2 rounded-control border border-rule px-4 text-ink transition-colors hover:border-ink"
         >
           {copyState === "copied" ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
           {copyState === "copied" ? "Copied" : "Copy email"}

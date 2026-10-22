@@ -67,6 +67,10 @@ export const metadata: Metadata = {
   },
 };
 
+// Runs before first paint: apply the saved reduce-motion choice and note whether this session has
+// already played the hero sequence, so CSS can skip it without a flash. Both stores are optional.
+const EARLY_SCRIPT = `try{var d=document.documentElement;var m=localStorage.getItem("portfolio-reduce-motion");if(m==="true"||m==="false")d.dataset.reducedMotion=m;if(sessionStorage.getItem("hero-sequence-played"))d.dataset.heroPlayed="true"}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -74,6 +78,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: EARLY_SCRIPT }} />
+      </head>
       <body className={cn("min-h-screen font-sans antialiased", grotesk.variable, newsreader.variable, dmMono.variable)}>
         <ThemeProvider
           attribute="class"

@@ -32,7 +32,7 @@ export function SchemaTables({ schema, associations }: { schema: ProjectSchema; 
           <div key={table.id} className="min-w-0">
             <h4 className="break-all font-mono text-sm font-medium text-ink">{table.name}</h4>
             <p className="type-meta mt-1 font-normal text-graphite">{table.description}</p>
-            <div className="mt-3 overflow-x-auto" tabIndex={0} role="region" aria-label={`${table.name} ${sourceData ? "fields" : "columns"}`}>
+            <div data-lenis-prevent className="mt-3 overflow-x-auto" tabIndex={0} role="region" aria-label={`${table.name} ${sourceData ? "fields" : "columns"}`}>
               <table className="w-full min-w-[18rem] border-t border-rule text-left">
                 <thead className="sr-only">
                   <tr>

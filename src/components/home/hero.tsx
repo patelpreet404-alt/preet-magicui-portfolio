@@ -2,23 +2,25 @@ import Image from "next/image";
 import { Cite } from "@/components/cite/cite";
 import { CiteNotes, CiteRegion } from "@/components/cite/cite-region";
 import { profile } from "@/content";
+import { HeroSequenceMarker } from "./hero-sequence-marker";
 
 const primaryButton =
-  "type-meta t-base inline-flex min-h-11 items-center rounded-control bg-ink px-5 text-paper transition-opacity hover:opacity-85";
+  "type-meta press t-base inline-flex min-h-11 items-center rounded-control bg-ink px-5 text-paper transition-opacity hover:opacity-85";
 const secondaryButton =
-  "type-meta t-base inline-flex min-h-11 items-center rounded-control border border-rule px-5 text-ink transition-colors hover:border-ink";
+  "type-meta press t-base inline-flex min-h-11 items-center rounded-control border border-rule px-5 text-ink transition-colors hover:border-ink";
 
 export function Hero() {
   return (
     <CiteRegion mode="margin">
       <section aria-labelledby="hero-title" className="container-site pt-10 md:pt-16">
+        <HeroSequenceMarker />
         <div className="grid-site gap-y-10">
           <div className="col-span-12 lg:col-span-8">
             <h1 id="hero-title" className="type-display max-w-[14ch]">
               {profile.headline}
             </h1>
 
-            <p className="type-lead mt-8 max-w-[36em] text-graphite">
+            <p data-hero-seq className="type-lead mt-8 max-w-[36em] text-graphite">
               I&apos;m a final-year Computer Science student at Delhi Technological University. I&apos;ve built a research assistant that{" "}
               <Cite id="hero-researchpaper">cites the page behind every answer</Cite>, an{" "}
               <Cite id="hero-rang">attendance platform for 50+ employees at Rang Technologies</Cite>, and{" "}
