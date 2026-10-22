@@ -115,16 +115,27 @@ Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only
 
 Home page height: 7,768 px at 1440 (was 10,927), 9,874 px at 390 (was 13,221). Browser console shows only 404s for `/work/*` and `/about` link prefetches, which Phase 3 creates.
 
-## Phase 3 — Case studies and /about (not started)
+## Phase 3 — Case studies and /about (in progress)
 
-- [ ] `/work/[slug]` (`generateStaticParams`, `generateMetadata`, `opengraph-image`)
-- [ ] Architecture stepper, system design (overview / services / data model), decisions, results, limitations, "About this demo"
-- [ ] Top bar with All work / Next project (`transitionTypes`)
+### Plan (files I will touch)
+
+- **Routes:** `src/app/(site)/work/[slug]/{page.tsx, opengraph-image.tsx}` (static params, metadata from data, `dynamicParams = false`), `src/app/(site)/about/page.tsx`, shared `src/lib/og.tsx` for OG images.
+- **Components:** `src/components/work/{case-study-section, architecture-stepper (client), system-design, schema-tables, hero-media}.tsx`; Magic UI `Safari` via the shadcn CLI.
+- **Content:** `results` on `Project` (OptiLang only has measured data), per-page citation order for case studies in `citation-order.ts`.
+- **Redirects / robots:** `next.config.mjs` `redirects()` with a `has` query matcher for `/?project=<slug>`; `/blog` gets `robots: { index: false }`.
+- **Deletions:** modal flow (`project-details*`, `project-viewer`), saved/compare (`saved-projects`), `project-card`, old projects sections that depend on them.
+- **Verification:** screenshots `phase-3` (home, about, case study, demos), axe on `/about` and a case study, keyboard test of the stepper, redirect test.
+
+### Tasks
+
+- [ ] `/work/[slug]` for all 9 projects (static), metadata and `opengraph-image`
+- [ ] Top bar (All work / Next project), title, facts, links incl. interactive preview, hero media in a Safari frame
+- [ ] Problem → What I built → How it works (accessible stepper) → System design → Decisions → Results → Limitations → What I learned → About this demo → contact + next project
 - [ ] `/about`
-- [ ] `/?project=<slug>` → `/work/<slug>` redirect (`redirects()` with `has`)
-- [ ] `/blog` out of navigation + sitemap, `robots: { index: false }`
-- [ ] Delete modal flow (`project-details.tsx`, `project-viewer.tsx`, `ProjectDetailsShell`) and saved/compare feature
-- [ ] Demo pages checked in screenshots
+- [ ] `/?project=<slug>` → `/work/<slug>` redirect
+- [ ] `/blog` out of navigation, `robots: { index: false }`
+- [ ] Modal flow and saved/compare deleted
+- [ ] Demo pages still render (screenshots)
 - [ ] Screenshots `phase-3`
 
 ## Phase 4 — Motion and polish (not started)
