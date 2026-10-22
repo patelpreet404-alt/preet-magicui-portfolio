@@ -39,7 +39,7 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 
 | Check | Result |
 |---|---|
-| `lint` | passes, no warnings |
+| `lint` | passes with 0 errors. After a build it reports 1 warning from the generated `.content-collections/generated/allPosts.js` (`import/no-anonymous-default-export`); add `.content-collections/**` to the ESLint ignores in Phase 1 |
 | `build` | passes. Two warnings: (1) Next infers the workspace root as `/Users/preet/package-lock.json` because of a stray lockfile in the home directory; (2) "Using edge runtime on a page disables static generation" (an `opengraph-image` route). Both are addressed in Phase 1 / 3 |
 | Routes | `/`, `/projects/{ai-learning-management,optilang,researchpaper-ai}` static; `/blog`, `/blog/[slug]`, `/api/online-presence` and the OG images dynamic |
 | Console errors | none on any captured page |
