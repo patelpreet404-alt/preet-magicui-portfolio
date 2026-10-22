@@ -4,7 +4,7 @@ import { FEATURED_PROJECTS } from "@/data/resume";
 
 export default function ProjectsSection() {
   return (
-    <section id="projects">
+    <section id="work">
       <div className="flex min-h-0 flex-col gap-y-8">
         <div className="flex flex-col items-center justify-center gap-y-4">
           <div className="flex w-full items-center">
