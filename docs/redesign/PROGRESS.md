@@ -20,7 +20,7 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 - [x] **Phase 0 — Baseline**
 - [x] Phase 1 — Foundations
 - [x] Phase 2 — Home page
-- [ ] Phase 3 — Case studies and /about
+- [x] Phase 3 — Case studies and /about
 - [ ] Phase 4 — Motion and polish
 - [ ] Phase 5 — Performance, accessibility, SEO
 - [ ] Phase 6 — Final QA
@@ -115,7 +115,7 @@ Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only
 
 Home page height: 7,768 px at 1440 (was 10,927), 9,874 px at 390 (was 13,221). Browser console shows only 404s for `/work/*` and `/about` link prefetches, which Phase 3 creates.
 
-## Phase 3 — Case studies and /about (in progress)
+## Phase 3 — Case studies and /about (done)
 
 ### Plan (files I will touch)
 
@@ -128,15 +128,18 @@ Home page height: 7,768 px at 1440 (was 10,927), 9,874 px at 390 (was 13,221). B
 
 ### Tasks
 
-- [ ] `/work/[slug]` for all 9 projects (static), metadata and `opengraph-image`
-- [ ] Top bar (All work / Next project), title, facts, links incl. interactive preview, hero media in a Safari frame
-- [ ] Problem → What I built → How it works (accessible stepper) → System design → Decisions → Results → Limitations → What I learned → About this demo → contact + next project
-- [ ] `/about`
-- [ ] `/?project=<slug>` → `/work/<slug>` redirect
-- [ ] `/blog` out of navigation, `robots: { index: false }`
-- [ ] Modal flow and saved/compare deleted
-- [ ] Demo pages still render (screenshots)
-- [ ] Screenshots `phase-3`
+- [x] `/work/[slug]` for all 9 projects (statically generated, `dynamicParams = false`), `generateMetadata` (title, description, canonical, OG/Twitter) and a per-project `opengraph-image` in the new identity (also redone for the root; no more edge runtime)
+- [x] Top bar (All work / Next project, wraps from last to first), title, facts, links incl. interactive preview, hero media in a Safari frame (plain frame for the research project, which has no public page)
+- [x] Problem → What I built → How it works (accessible stepper: arrow keys, Home/End, wraps, `aria-current="step"`, live detail) → System design (overview, services, data model from the old explorer data; component graph for the research and prototype projects) → Decisions → Results (only OptiLang has measured data; cited) → Limitations → What I learned → About this demo → contact + next project
+- [x] `/about` (long timeline, education, toolbox, beyond code, elsewhere)
+- [x] `/?project=<slug>` → `/work/<slug>` (308 via `redirects()` with a `has` query matcher). Next keeps the original query string on the destination (`/work/optilang?project=optilang`); harmless, the page ignores it
+- [x] `/blog` has `robots: { index: false }` and is not linked anywhere
+- [x] Modal flow, saved/compare, project card, marquee-era sections and the engineering map deleted
+- [x] Demo pages still render (screenshots `phase-3`; heights unchanged)
+- [x] axe on `/`, `/about`, `/work/researchpaper-ai` in light and dark: 0 violations. No horizontal overflow on any case study at 390 px
+- [x] Screenshots `phase-3`
+
+**Not done yet (needs the Next 16.x / React 19.3 upgrade, Phase 4):** `<Link transitionTypes>` on All work / Next project and the `<ViewTransition>` morph.
 
 ## Phase 4 — Motion and polish (not started)
 
@@ -188,6 +191,10 @@ Home page height: 7,768 px at 1440 (was 10,927), 9,874 px at 390 (was 13,221). B
 | D15 | The portrait in the hero is capped at 22rem wide | So an open citation note sits fully inside a 1440×900 fold under it |
 | D16 | Work videos autoplay when ≥60% in view (as specified) and a visible Pause/Play button is always shown | WCAG 2.2.2: anything that moves for more than 5 s needs a pause control. The three MP4s are ~6 MB each until re-encoded (no `ffmpeg` here) |
 | D17 | Selected work shows at most 4 stack items per row; More work shows 3 | Keeps the rows scannable; full stacks are on the case-study pages |
+| D18 | Case-study "What I built" uses the contribution plus only the first sentence of the old card copy | The rest of that copy is demo caveats, which now live in "About this demo" |
+| D19 | The Safari frame (Magic UI) was edited: its autoplaying `<video>` and raw `<img>` props were replaced by a `children` slot, and its SVG is `pointer-events-none` | WCAG 2.2.2 (autoplay needs a pause control), `next/image`, and clickable video controls |
+| D20 | OG images use Schibsted Grotesk woff files copied to `src/lib/fonts/` (SIL OFL, licence kept alongside) and read with `readFile(join(process.cwd(), …))` | `fetch(file URL)` isn't supported in the Node runtime; this is the pattern Next's file tracing follows |
+| D21 | Case-study numbering uses `work:<slug>` reading orders built from each project's `results` | Same reason as the home page |
 
 ## Content needed from Preet
 
