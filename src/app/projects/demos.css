@@ -1,0 +1,647 @@
+/*
+ * Styles for the three interactive demo pages (/projects/*), loaded only by projects/layout.tsx.
+ * Each demo is a self-contained product with its own palette, so none of it follows the site theme.
+ * Rules below are moved verbatim from the old globals.css; only the token pinning and the
+ * `.site-content` base are new.
+ */
+
+.site-content {
+  isolation: isolate;
+}
+
+/* The demos were built against the original shadcn radius; keep it here while the site uses 6px/14px. */
+.optilang-theme,
+.research-theme,
+.studyroom-page {
+  --radius: 0.625rem;
+}
+
+/* The study-room demo is always light, regardless of the site theme. */
+.studyroom-page {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+}
+
+.optilang-theme {
+  color-scheme: dark;
+  --background: oklch(0.105 0.025 145);
+  --foreground: oklch(0.94 0.035 145);
+  --card: oklch(0.145 0.03 145);
+  --card-foreground: oklch(0.94 0.035 145);
+  --popover: oklch(0.145 0.03 145);
+  --popover-foreground: oklch(0.94 0.035 145);
+  --primary: oklch(0.82 0.23 140);
+  --primary-foreground: oklch(0.11 0.025 145);
+  --secondary: oklch(0.19 0.045 145);
+  --secondary-foreground: oklch(0.94 0.035 145);
+  --muted: oklch(0.18 0.035 145);
+  --muted-foreground: oklch(0.72 0.055 145);
+  --accent: oklch(0.22 0.055 145);
+  --accent-foreground: oklch(0.94 0.035 145);
+  --border: oklch(0.38 0.06 145 / 45%);
+  --input: oklch(0.38 0.06 145 / 45%);
+  --ring: oklch(0.82 0.23 140);
+}
+
+.research-theme {
+  color-scheme: dark;
+  --background: #101222;
+  --foreground: #f5f3ff;
+  --card: #181b2e;
+  --card-foreground: #f5f3ff;
+  --primary: #aaa2ff;
+  --primary-foreground: #101222;
+  --muted: #22263b;
+  --muted-foreground: #b1b5ce;
+  --border: #3b3f58;
+  --ring: #bcb2ff;
+}
+
+body:has(.project-demo-fullscreen) .site-content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+body:has(.project-demo-fullscreen) .site-grid {
+  display: none;
+}
+
+.demo-scroll-region {
+  min-height: 0;
+}
+
+@media (min-width: 1024px) {
+  body:has(.project-demo-fullscreen) .site-content {
+    height: 100dvh;
+  }
+
+  body:has(.project-demo-fullscreen) [data-floating-nav] {
+    display: none;
+  }
+
+  [data-demo-local-scroll] {
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+
+  body:has(.project-demo-fullscreen) {
+    overflow: hidden;
+  }
+
+  .project-demo-fullscreen {
+    display: flex;
+    height: 100dvh;
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: 1.5rem !important;
+  }
+
+  .project-demo-fullscreen > .demo-scroll-region {
+    width: 100%;
+    max-width: 1380px;
+    flex: 1 1 auto;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 0 0 2rem;
+    scrollbar-color: rgb(148 163 184 / 50%) transparent;
+    scrollbar-width: thin;
+  }
+
+  .project-demo-fullscreen.studyroom-page > .demo-scroll-region {
+    max-width: 1320px;
+  }
+
+  .project-demo-fullscreen.research-theme > .demo-scroll-region,
+  .project-demo-fullscreen.optilang-theme > .demo-scroll-region {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .studyroom-shell > header {
+    position: sticky;
+    z-index: 20;
+    top: 0;
+    padding-top: .25rem;
+    background: rgb(255 255 255 / 94%);
+    backdrop-filter: blur(16px);
+  }
+
+  .studyroom-tab-panel {
+    max-height: min(48vh, 520px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: rgb(214 51 132 / 35%) transparent;
+    scrollbar-width: thin;
+  }
+
+  .optilang-code[data-demo-local-scroll] {
+    max-height: min(34vh, 330px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: rgb(128 238 94 / 38%) #07110b;
+    scrollbar-width: thin;
+  }
+
+  .research-theme [data-demo-local-scroll] {
+    max-height: min(44vh, 460px);
+    overscroll-behavior: contain;
+    scrollbar-color: rgb(170 162 255 / 46%) transparent;
+    scrollbar-width: thin;
+  }
+
+  [data-demo-depth] {
+    position: relative;
+    z-index: 0;
+    transform: perspective(1200px) translate3d(calc(var(--demo-shift-x, 0px) * -.55), calc(var(--demo-shift-y, 0px) * -.55), 0) rotateX(var(--demo-tilt-x, 0deg)) rotateY(var(--demo-tilt-y, 0deg));
+    transform-style: preserve-3d;
+    transition: transform 160ms cubic-bezier(.2, .75, .25, 1), box-shadow 320ms ease, filter 320ms ease;
+    will-change: transform;
+  }
+
+  [data-demo-depth][data-demo-pointer-active="true"] {
+    z-index: 5;
+    transform: perspective(1200px) translate3d(calc(var(--demo-shift-x, 0px) * -.75), calc(var(--demo-shift-y, 0px) * -.75), 24px) rotateX(calc(var(--demo-tilt-x, 0deg) * 1.5)) rotateY(calc(var(--demo-tilt-y, 0deg) * 1.5)) scale(1.055);
+    box-shadow: 0 28px 60px -34px rgb(20 16 30 / 55%);
+    filter: saturate(1.08);
+  }
+
+  [data-demo-depth][data-demo-visible="true"] {
+    animation: demo-depth-breathe 7.2s ease-in-out infinite;
+    animation-delay: var(--demo-reveal-delay, 0ms);
+  }
+
+  [data-demo-depth][data-demo-visible="true"][data-demo-pointer-active="true"] {
+    animation-play-state: paused;
+  }
+
+  .demo-motion-root [data-demo-depth]:focus-within {
+    z-index: 4;
+    scale: 1.018;
+  }
+
+  [data-demo-depth][data-demo-visible="true"] {
+    animation-name: demo-scene-reveal, demo-depth-breathe;
+    animation-duration: 680ms, 7.2s;
+    animation-timing-function: cubic-bezier(.18, .85, .25, 1), ease-in-out;
+    animation-delay: var(--demo-reveal-delay, 0ms), var(--demo-reveal-delay, 0ms);
+    animation-iteration-count: 1, infinite;
+  }
+}
+
+.project-demo-fullscreen.research-theme > *,
+.project-demo-fullscreen.optilang-theme > * {
+  width: 100%;
+  max-width: 1380px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.project-demo-fullscreen.research-theme > .demo-scene-controller,
+.project-demo-fullscreen.optilang-theme > .demo-scene-controller {
+  width: min(94vw, 430px);
+  max-width: 430px;
+}
+
+.research-hero {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 10% 0%, #604458 0, transparent 38%), radial-gradient(circle at 100% 0%, #343a85 0, transparent 45%), #181b2e;
+}
+
+.research-hero::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, #f7c578, #e58fb5 48%, #9da4ff);
+  content: "";
+}
+
+.research-hero > div:first-child {
+  transform-origin: left center;
+  animation: research-focus 8s cubic-bezier(.45,0,.55,1) infinite;
+}
+
+.research-citation,
+.research-action,
+.research-send {
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.research-citation:hover,
+.research-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px -18px rgb(0 0 0 / 60%);
+}
+
+.research-send:not(:disabled) {
+  box-shadow: 0 9px 0 -6px #645dbe, 0 16px 22px -12px rgb(134 124 236 / 45%);
+}
+
+.research-send:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 0 -6px #645dbe, 0 20px 25px -12px rgb(134 124 236 / 45%);
+}
+
+.research-send:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.research-theme ::selection {
+  background: #c8bbff;
+  color: #101222;
+}
+
+.studyroom-page {
+  color-scheme: light;
+  background-image: linear-gradient(180deg, #fff5f8 0, #fff 220px);
+}
+
+.studyroom-page::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #f55261, #e85193 65%, #f9a4b6);
+  content: "";
+}
+
+.studyroom-shell button:not(:disabled):active {
+  transform: translateY(1px) scale(.985);
+}
+
+.studyroom-primary {
+  box-shadow: 0 10px 20px -12px rgb(23 18 23 / 65%);
+}
+
+.studyroom-primary:hover {
+  box-shadow: 0 16px 28px -14px rgb(23 18 23 / 58%);
+}
+
+.studyroom-page ::selection,
+.studyroom-material ::selection {
+  background: #ffd5e7;
+  color: #171217;
+}
+
+.studyroom-feature {
+  isolation: isolate;
+  background-image: radial-gradient(circle at 96% 9%, #ffedf4 0, transparent 38%);
+  box-shadow: 0 16px 40px -30px rgb(51 21 36 / 22%);
+}
+
+.studyroom-feature::before {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, #fa6570, #e65e9d 64%, transparent);
+  content: "";
+}
+
+.studyroom-feature::after {
+  position: absolute;
+  top: -128px;
+  right: -66px;
+  width: 280px;
+  height: 280px;
+  border: 1px solid rgb(214 51 132 / 12%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 24px rgb(214 51 132 / 3%), 0 0 0 56px rgb(214 51 132 / 2%);
+  content: "";
+  pointer-events: none;
+  animation: studyroom-parallax 9s ease-in-out infinite;
+}
+
+.studyroom-feature > .relative {
+  animation: studyroom-camera 8s cubic-bezier(.45,0,.55,1) infinite;
+  transform-origin: left center;
+}
+
+.studyroom-material {
+  box-shadow: 0 18px 44px -34px rgb(51 21 36 / 18%);
+}
+
+.studyroom-flashcard {
+  background-image: radial-gradient(circle at 50% 0, #fff1f7 0, #fff 60%);
+  box-shadow: 0 14px 28px -24px rgb(180 41 112 / 42%);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  animation: studyroom-card-float 4.5s ease-in-out infinite;
+}
+
+.studyroom-flashcard:hover {
+  box-shadow: 0 18px 36px -24px rgb(180 41 112 / 38%);
+  transform: perspective(900px) rotateY(-2deg) translateY(-2px);
+}
+
+.studyroom-card-face {
+  animation: project-demo-enter 320ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.studyroom-enter,
+.studyroom-tab-panel,
+.optilang-code-enter {
+  animation: project-demo-enter 360ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.studyroom-feature,
+.studyroom-material,
+.optilang-hero,
+.research-hero {
+  animation: project-demo-enter 520ms cubic-bezier(.2,.8,.2,1) both;
+}
+
+.studyroom-material { animation-delay: 90ms; }
+.optilang-hero-sample { animation: compiler-float 6s ease-in-out infinite; }
+.optilang-hero-sample:hover { animation-play-state: paused; }
+.research-hero { animation-delay: 70ms; }
+
+.studyroom-tour {
+  animation: project-demo-enter 420ms cubic-bezier(.2,.8,.2,1) both;
+  box-shadow: 0 12px 32px -28px rgb(176 48 111 / 34%);
+}
+
+.studyroom-tour-button {
+  box-shadow: 0 5px 0 -2px #eadfe5, 0 12px 22px -16px rgb(214 51 132 / 40%);
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease, color 180ms ease;
+}
+
+.studyroom-tour-button:hover {
+  transform: translateY(-2px) perspective(500px) rotateX(2deg);
+  box-shadow: 0 7px 0 -2px #eadfe5, 0 16px 25px -16px rgb(214 51 132 / 45%);
+}
+
+.studyroom-tour-pulse {
+  animation: studyroom-orbit 3.4s ease-in-out infinite;
+}
+
+.studyroom-tour-dot,
+.optilang-tour-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #9a8e96;
+}
+
+.studyroom-tour-dot.is-playing {
+  background: #d63384;
+  box-shadow: 0 0 0 4px rgb(214 51 132 / 12%);
+  animation: tour-dot 1.5s ease-in-out infinite;
+}
+
+.optilang-tour-dot.is-playing {
+  background: #80ee5e;
+  box-shadow: 0 0 0 4px rgb(128 238 94 / 12%);
+  animation: tour-dot 1.5s ease-in-out infinite;
+}
+
+.optilang-hero-sample {
+  transform: perspective(800px) rotateY(-8deg) rotateX(3deg);
+  transition: transform 360ms cubic-bezier(.2,.8,.2,1), box-shadow 360ms ease;
+}
+
+.optilang-hero-sample:hover {
+  transform: perspective(800px) rotateY(-2deg) rotateX(1deg) translateY(-4px);
+  box-shadow: 0 30px 56px -24px rgb(0 0 0 / 75%);
+}
+
+.optilang-code {
+  font-variant-ligatures: none;
+  tab-size: 4;
+  box-shadow: inset 0 1px 0 rgb(174 255 136 / 8%);
+}
+
+.optilang-code:hover {
+  box-shadow: inset 0 1px 0 rgb(174 255 136 / 8%), 0 16px 36px -28px rgb(113 250 87 / 38%);
+}
+
+.optilang-run {
+  box-shadow: 0 11px 0 -6px #2a7e1e, 0 20px 25px -16px rgb(92 244 61 / 60%);
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease, opacity 180ms ease;
+}
+
+.optilang-run:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 0 -6px #2a7e1e, 0 25px 30px -16px rgb(92 244 61 / 65%);
+}
+
+.optilang-run:active {
+  transform: translateY(2px);
+  box-shadow: 0 7px 0 -6px #2a7e1e, 0 12px 16px -12px rgb(92 244 61 / 55%);
+}
+
+.optilang-stage-active {
+  animation: stage-focus 1.45s ease-in-out infinite;
+}
+
+.optilang-tour {
+  box-shadow: 0 7px 0 -3px #1b4727, 0 15px 28px -20px rgb(113 250 87 / 48%);
+  transition: transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms ease;
+}
+
+.optilang-tour:hover {
+  transform: translateY(-2px) perspective(500px) rotateX(2deg);
+  box-shadow: 0 9px 0 -3px #1b4727, 0 19px 30px -18px rgb(113 250 87 / 58%);
+}
+
+.research-type-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: currentColor;
+  animation: caret-blink .8s steps(2, start) infinite;
+}
+
+@keyframes tour-dot {
+  50% { box-shadow: 0 0 0 7px transparent; }
+}
+
+@keyframes studyroom-parallax {
+  50% { transform: translate3d(-12px, 14px, 0) rotate(7deg) scale(1.04); }
+}
+
+@keyframes studyroom-card-float {
+  50% { box-shadow: 0 20px 38px -23px rgb(180 41 112 / 34%); }
+}
+
+@keyframes compiler-float {
+  0%, 100% { transform: perspective(800px) rotateY(-8deg) rotateX(3deg) translateY(0) scale(.985); }
+  50% { transform: perspective(800px) rotateY(-5deg) rotateX(1deg) translateY(-5px) scale(1.035); }
+}
+
+@keyframes studyroom-camera {
+  0%, 100% { transform: scale(.99); }
+  50% { transform: scale(1.012); }
+}
+
+@keyframes studyroom-orbit {
+  50% { transform: translateY(-2px) rotate(5deg); }
+}
+
+@keyframes stage-focus {
+  50% { box-shadow: 0 0 22px -9px rgb(113 250 87 / 38%); }
+}
+
+@keyframes caret-blink {
+  to { visibility: hidden; }
+}
+
+.optilang-workspace ::selection {
+  background: #a5f181;
+  color: #07110b;
+}
+
+[data-demo-scene] {
+  scroll-margin-block: 1rem;
+}
+
+.studyroom-shell button:not(:disabled):hover,
+.research-theme button:not(:disabled):hover,
+.optilang-workspace button:not(:disabled):hover {
+  transform: perspective(800px) translateY(-1px) rotateX(-2deg) scale(1.01);
+}
+
+.studyroom-shell button:not(:disabled):active,
+.research-theme button:not(:disabled):active,
+.optilang-workspace button:not(:disabled):active {
+  transform: translateY(1px) scale(.985);
+}
+
+@keyframes research-focus {
+  0%, 100% { transform: scale(.99); }
+  50% { transform: scale(1.025); }
+}
+
+@keyframes project-demo-enter {
+  from { opacity: .75; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes demo-scene-reveal {
+  0% { opacity: .78; filter: blur(3px); }
+  72% { opacity: 1; filter: blur(0); }
+  100% { opacity: 1; }
+}
+
+@keyframes demo-depth-breathe {
+  0%, 100% { scale: .985; }
+  50% { scale: 1.025; }
+}
+
+@media (min-width: 1024px) {
+  .demo-motion-root button:not(:disabled) {
+    transform: perspective(700px) translateZ(0);
+    transition: transform 190ms cubic-bezier(.2, .8, .2, 1), box-shadow 190ms ease, filter 190ms ease;
+    transform-style: preserve-3d;
+  }
+
+  .demo-motion-root button:not(:disabled):hover {
+    transform: perspective(700px) translateY(-3px) rotateX(5deg) translateZ(8px) scale(1.025);
+    box-shadow: 0 13px 24px -15px rgb(12 10 18 / 58%);
+    filter: saturate(1.1);
+  }
+
+  .demo-motion-root button:not(:disabled):active {
+    transform: perspective(700px) translateY(2px) rotateX(-4deg) translateZ(-3px) scale(.975);
+    box-shadow: 0 3px 8px -7px rgb(12 10 18 / 50%);
+    filter: saturate(.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-motion-root [data-demo-depth],
+  .demo-motion-root [data-demo-depth]:hover,
+  .demo-motion-root button:not(:disabled):hover,
+  .demo-motion-root button:not(:disabled):active {
+    animation: none !important;
+    scale: 1 !important;
+    transform: none !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .studyroom-tour,
+  .studyroom-tour-button,
+  .studyroom-tour-button:hover,
+  .optilang-tour,
+  .optilang-tour:hover {
+    animation: none;
+    transform: none;
+    transition: none;
+  }
+
+  .studyroom-feature,
+  .studyroom-material,
+  .optilang-hero,
+  .optilang-hero-sample,
+  .research-hero,
+  .studyroom-feature::after,
+  .studyroom-feature > .relative,
+  .studyroom-flashcard {
+    animation: none;
+  }
+
+  .research-hero > div:first-child {
+    animation: none;
+    transform: none;
+  }
+
+  .studyroom-enter,
+  .studyroom-tour-pulse,
+  .studyroom-tab-panel,
+  .studyroom-card-face,
+  .optilang-code-enter,
+  .optilang-stage-active,
+  .research-type-caret,
+  .studyroom-tour-dot.is-playing,
+  .optilang-tour-dot.is-playing,
+  .demo-scene-controller,
+  .demo-scene-control-button {
+    animation: none;
+    transition-duration: 0.01ms;
+    transform: none;
+  }
+
+  .studyroom-flashcard:hover {
+    transform: none;
+  }
+
+  .optilang-hero-sample,
+  .optilang-hero-sample:hover {
+    transform: none;
+  }
+
+  .optilang-run:hover,
+  .optilang-run:active,
+  .research-send:hover,
+  .research-send:active,
+  .research-citation:hover,
+  .research-action:hover {
+    transform: none;
+  }
+
+  .studyroom-shell button:hover,
+  .research-theme button:hover,
+  .optilang-workspace button:hover,
+  .studyroom-shell button:active,
+  .research-theme button:active,
+  .optilang-workspace button:active {
+    transform: none;
+  }
+}

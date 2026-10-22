@@ -20,7 +20,7 @@ const BLUR_FADE_DELAY = 0.04;
 
 export default function Page() {
   return (
-    <main className="min-h-dvh flex flex-col gap-14 relative">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-14 px-6 py-12 sm:py-24">
       <section id="hero" aria-labelledby="intro-heading" className="hero-section">
         <div className="mx-auto w-full max-w-3xl">
           <div className="flex flex-col-reverse items-start justify-between gap-7 sm:flex-row sm:items-center sm:gap-10">
@@ -43,7 +43,7 @@ export default function Page() {
             </p>
           </BlurFade>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a href="#projects" className="portfolio-button portfolio-button--primary">Explore projects <ArrowDown size={16} aria-hidden="true" /></a>
+            <a href="#work" className="portfolio-button portfolio-button--primary">Explore projects <ArrowDown size={16} aria-hidden="true" /></a>
             <a href="#contact" className="portfolio-button portfolio-button--secondary">Get in touch <ArrowUpRight size={16} aria-hidden="true" /></a>
             <a href={DATA.contact.social.Resume.url} target="_blank" rel="noopener noreferrer" className="portfolio-button portfolio-button--text"><FileText size={16} aria-hidden="true" /> Resume</a>
           </div>
@@ -81,7 +81,7 @@ export default function Page() {
           </div>
         </div>
       </section>
-      <section id="work">
+      <section id="experience">
         <div className="flex min-h-0 flex-col gap-y-6">
           <BlurFade delay={BLUR_FADE_DELAY * 7}>
             <h2 className="text-xl font-semibold tracking-tight">Experience</h2>
@@ -182,6 +182,6 @@ export default function Page() {
           <ContactSection />
         </BlurFade>
       </section>
-    </main>
+    </div>
   );
 }
