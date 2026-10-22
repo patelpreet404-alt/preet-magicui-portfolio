@@ -18,7 +18,7 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 ## Status
 
 - [x] **Phase 0 — Baseline**
-- [ ] Phase 1 — Foundations (in progress)
+- [x] Phase 1 — Foundations
 - [ ] Phase 2 — Home page
 - [ ] Phase 3 — Case studies and /about
 - [ ] Phase 4 — Motion and polish
@@ -51,7 +51,7 @@ Screenshots land in `docs/redesign/screenshots/<label>/` (git-ignored; each run 
 
 Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only `PORTFOLIO_REDESIGN_PLAN.md` and `SONNET_MASTER_PROMPT.md`). It was turned into the repo root with `git init` + `git fetch origin` + `git checkout -b redesign/v2 origin/main`. The two markdown files are listed in `.git/info/exclude` so they stay untracked.
 
-## Phase 1 — Foundations (in progress)
+## Phase 1 — Foundations (done)
 
 ### Plan (files I will touch)
 
@@ -72,20 +72,22 @@ Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only
 
 ### Tasks
 
-- [ ] Route groups + `projects/layout.tsx`
-- [ ] Tokens (light + dark) in `globals.css`, mapped into Tailwind v4 `@theme`; shadcn token names kept as aliases
-- [ ] Fonts: Schibsted Grotesk, Newsreader (opsz), DM Mono for code only; Bodoni Moda, Manrope, hard-coded Georgia removed
-- [ ] Type scale, 12-column grid / container, section spacing, `scroll-padding-top`
-- [ ] Motion tokens + reduced-motion rules tied to `html[data-reduced-motion]`
-- [ ] Remove `site-background.tsx`, HLS/Mux stream, `hls.js`
-- [ ] Delete the forced-dark `:root` overrides (`portfolio-polish.css`); remaining legacy rules in `legacy.css`
-- [ ] Demo CSS moved to `demos.css`, imported only by `/projects/*`; demos compared with `before`
-- [ ] Header (hide on scroll down / show on scroll up / always on focus; <640px name + Menu sheet, focus-trapped, Esc closes), footer, skip link
-- [ ] Theme toggle (Magic UI Animated Theme Toggler) and motion toggle in the footer
-- [ ] Data refactor into typed, JSX-free `src/content/*`
-- [ ] `turbopack.root` + ESLint ignore (baseline warnings gone)
-- [ ] Contrast ratios verified for both themes
-- [ ] Screenshots `phase-1`
+- [x] Route groups + `projects/layout.tsx`
+- [x] Tokens (light + dark) in `globals.css`, mapped into Tailwind v4 `@theme`; shadcn token names kept as aliases
+- [x] Fonts: Schibsted Grotesk, Newsreader (opsz), DM Mono for code only; Bodoni Moda, Manrope, hard-coded Georgia removed from the new system (legacy.css still has a few Georgia fallbacks until it is deleted)
+- [x] Type scale, 12-column grid / container, section spacing, `scroll-padding-top`
+- [x] Motion tokens + reduced-motion rules tied to `html[data-reduced-motion]` and the OS setting
+- [x] Remove `site-background.tsx`, HLS/Mux stream, `hls.js`
+- [x] Delete the forced-dark `:root` overrides (`portfolio-polish.css`); remaining legacy rules in `legacy.css`
+- [x] Demo CSS moved to `demos.css`, imported only by `/projects/*`; demos compared with `before` (same heights; one 28 px difference from the new font)
+- [x] Header (hide on scroll down / show on scroll up / always on focus; <640px name + Menu sheet, focus-trapped, Esc closes), footer, skip link. Verified with a Playwright run (skip link, hide/show, focus reveal, sheet open / Tab wrap / Esc / focus return, scroll lock)
+- [x] Theme toggle (Magic UI Animated Theme Toggler; plain button under reduced motion) and motion toggle in the footer
+- [x] Data refactor into typed, JSX-free `src/content/*`
+- [x] `turbopack.root` + ESLint ignore (both baseline warnings gone; the edge-runtime warning remains until the OG image is rebuilt in Phase 5)
+- [x] Contrast ratios verified for both themes (`node scripts/contrast.mjs`)
+- [x] Screenshots `phase-1`
+
+**Contrast (WCAG):** light: ink 16.7:1, graphite 6.1:1, link 6.9:1, ink on highlight 13.6:1. Dark: ink 15.5:1, graphite 7.2:1, link 8.6:1, ink on highlight underlay 6.0:1. Rule: the `[n]` citation marker sits after the highlighted phrase, never on the underlay (link on the dark underlay would be only 3.3:1).
 
 ## Phase 2 — Home page (not started)
 
@@ -151,6 +153,13 @@ Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only
 | D5 | Theme storage key stays `portfolio-space-theme` | The screenshot script and any returning visitor's saved choice keep working; rename is cosmetic |
 | D6 | When sources disagree, the conservative wording wins: intern title = résumé's "Software Development Intern"; OptiLang = the site's five-pass / "LLVM examples are separate" wording, not the résumé's "eight-stage … LLVM IR" | Per non-negotiables; each is also listed below as a TODO |
 | D7 | Product name "Studyloom" (subtitle "AI course builder") on the site, although the résumé and repo data call it "AI Learning Management System" | Brief says so; the demo route stays `/projects/ai-learning-management`. Résumé wording logged below |
+| D8 | The old home sections stay in `(site)/page.tsx` inside a narrow wrapper until Phase 2, styled by `legacy.css` (hex values and all). Their ids were renamed (`#experience`, `#work`) so the new header links land somewhere | Keeps the build and demo flows working between phases; nothing new may import `legacy.css` |
+| D9 | Header availability dot uses `--link` (not green) | No green in the palette; the dot's meaning is carried by its text |
+| D10 | Header availability text is the visible `[TODO: …]` placeholder (hidden below 1024 px, read by screen readers) | The brief forbids inventing an availability claim |
+| D11 | The theme toggle is a plain button when reduced motion is on | The Magic UI toggle runs a view transition and doesn't check reduced motion |
+| D12 | The `[n]` citation marker never sits on the highlight underlay | Dark-theme link-on-underlay contrast is 3.3:1 |
+| D13 | `details` markdown on the old project data was dropped from `src/content/projects.ts`; its facts are already in `caseStudy` | `react-markdown` can then be removed in Phase 5 |
+| D14 | `/styleguide` is a temporary `noindex` proof page | Verifies tokens and type in both themes; deleted in Phase 5 |
 
 ## Content needed from Preet
 
@@ -173,3 +182,7 @@ Repo note: `/Users/preet/Desktop/portfolio` was not a git checkout (it held only
 9. **Custom domain** (e.g. `preetpatel.dev`) before an Awwwards submission; currently `vercel.app`.
 10. **`ffmpeg`:** not installed here, so the three ~6 MB demo MP4s can't be re-encoded in Phase 5. Either `brew install ffmpeg` or hand over smaller files.
 11. **LinkedIn "100+ connections"** and LeetCode/NeetCode counts are being removed rather than shown. Confirm that's fine.
+12. **OptiLang demo page wording:** `/projects/optilang` itself says "8 pipeline stages" and "LICM + LLVM IR" (matching the résumé), while the project data and case study say five optimization passes and that the LLVM examples are a separate exercise. Demo pages were not edited; pick one wording.
+13. **Three names for one product:** "Studyloom" (site, live URL), "Studyroom" and "AI Learning Management System" (demo page header and résumé).
+14. **Foodfolk's preview image** is a "cook along." landing page. Confirm Foodfolk is the right name and that this is the image you want as its Selected work media.
+15. Dropped from the timeline as unverifiable: "Tableau" (not on the résumé or any project page).
