@@ -1,8 +1,12 @@
 import { withContentCollections } from "@content-collections/next";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // A stray lockfile in the home directory made Next pick the wrong workspace root.
+  turbopack: { root: path.dirname(fileURLToPath(import.meta.url)) },
   async headers() {
     return [
       {
